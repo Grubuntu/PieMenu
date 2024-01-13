@@ -1,0 +1,11 @@
+<svg id="svg6431" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" height="64" width="64" version="1.1" xmlns:cc="http://creativecommons.org/ns#" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/">
+ <defs id="defs6433">
+  <linearGradient id="linearGradient4161" y2="32" gradientUnits="userSpaceOnUse" x2="33" y1="30" x1="33">
+   <stop id="stop5260" stop-color="#fff" offset="0"/>
+   <stop id="stop5262" stop-color="#fff" stop-opacity="0" offset="1"/>
+  </linearGradient>
+ </defs>
+ <rect id="rect4155" stroke-linejoin="round" ry="0" height="12" width="52" stroke="#2e3436" y="26" x="6" stroke-width="2" fill="#729fcf"/>
+ <path id="path4157" opacity=".4" d="m8 28h48v8h-48v-8z" stroke="#fff" stroke-width="2" fill="none"/>
+ <path id="path4159" opacity=".3" d="m7 32v-5h50v5z" fill-rule="evenodd" fill="url(#linearGradient4161)"/>
+</svg>

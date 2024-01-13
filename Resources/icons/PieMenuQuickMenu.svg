@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<svg
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:cc="http://creativecommons.org/ns#"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    height="64"
+    width="64"
+    version="1.1"
+    viewBox="0 0 64.000001 64.000001"
+  >
+ <path
+      stroke-linejoin="round"
+      d="m32 49-22-34h44z"
+      fill-rule="evenodd"
+      stroke="#555753"
+      stroke-width="4"
+      fill="#babdb6"
+  />
+</svg
+>

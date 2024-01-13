@@ -1,0 +1,14 @@
+<svg xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/2000/svg" height="64" width="64" version="1.1" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" viewBox="0 0 64.000001 64.000001">
+ <g transform="translate(0 -988.36)">
+  <g transform="translate(15.458 972.9)">
+   <rect stroke-linejoin="round" height="36" width="36" stroke="#000" stroke-linecap="round" y="21.458" x="6.5424" stroke-width="2" fill="#eeeeec"/>
+   <rect opacity=".4" stroke-linejoin="round" height="32" width="32" stroke="#fff" stroke-linecap="round" y="23.458" x="8.5424" stroke-width="2" fill="none"/>
+   <rect opacity=".3" height="15" width="30" y="24.458" x="9.5424" fill="#fff"/>
+  </g>
+  <g transform="translate(-.54237 988.9)">
+   <rect stroke-linejoin="round" height="36" width="36" stroke="#000" stroke-linecap="round" y="21.458" x="6.5424" stroke-width="2" fill="#eeeeec"/>
+   <rect opacity=".4" stroke-linejoin="round" height="32" width="32" stroke="#fff" stroke-linecap="round" y="23.458" x="8.5424" stroke-width="2" fill="none"/>
+   <rect opacity=".3" height="15" width="30" y="24.458" x="9.5424" fill="#fff"/>
+  </g>
+ </g>
+</svg>

@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<svg
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:cc="http://creativecommons.org/ns#"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    height="64"
+    width="64"
+    version="1.1"
+    viewBox="0 0 64.000001 64.000001"
+  >
+  <g
+      transform="translate(0 -988.36)"
+    >
+    <path
+        d="m18.132 1041.2-6.9341-6.9341 13.868-13.868-13.868-13.868 6.9341-6.9341l13.868 13.83 13.868-13.868 6.9341 6.9341-13.868 13.868 13.868 13.868-6.9341 6.9341-13.868-13.8z"
+        fill-rule="evenodd"
+        stroke="#a40000"
+        stroke-width="3"
+        fill="#c00"
+    />
+    <path
+        stroke="#ef2929"
+        stroke-width="1px"
+        d="m43.313 1009h-0.000032l-11.313 11.312-11.313-11.312"
+        fill="none"
+    />
+    <path
+        stroke="#ef2929"
+        stroke-width="1px"
+        d="m43.313 1031.7-11.313-11.313 11.187 11.188m-22.375 0 11.187-11.188"
+        fill="none"
+    />
+  </g
+  >
+</svg
+>

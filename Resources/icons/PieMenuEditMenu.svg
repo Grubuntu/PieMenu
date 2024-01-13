@@ -1,0 +1,33 @@
+<svg id="svg2" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/2000/svg" height="64" width="64" version="1.1" xmlns:cc="http://creativecommons.org/ns#" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 64.000001 64.000001" xmlns:dc="http://purl.org/dc/elements/1.1/">
+ <defs id="defs4">
+  <linearGradient id="linearGradient4231">
+   <stop id="stop4233" stop-color="#fff" offset="0"/>
+   <stop id="stop4235" stop-color="#fff" stop-opacity="0" offset="1"/>
+  </linearGradient>
+  <linearGradient id="linearGradient4280" y2="32" xlink:href="#linearGradient4231" gradientUnits="userSpaceOnUse" x2="36.75" y1="32" x1="32"/>
+  <linearGradient id="linearGradient4613" y2="32" gradientUnits="userSpaceOnUse" y1="32" gradientTransform="matrix(.70711 .70711 -.70711 .70711 31.124 -12.379)" x2="37" x1="32">
+   <stop id="stop4609" stop-color="#fff" offset="0"/>
+   <stop id="stop4611" stop-color="#fff" stop-opacity="0" offset="1"/>
+  </linearGradient>
+ </defs>
+ <g id="g4490">
+  <g id="g4239" transform="matrix(0,-1,1,0,0,64)">
+   <path id="rect3357" stroke-linejoin="round" d="m32 6c-3.6862-0.18084-6.5305 3.6729-6 7v38c-0.53385 3.3206 2.3134 7.1823 6 7 3.6862 0.18084 6.5305-3.6729 6-7v-38c0.50373-3.3955-2.2593-7.1173-6-7z" stroke="#333" stroke-width="2" fill="#729fcf"/>
+   <path id="path4202" opacity=".4" stroke-linejoin="round" d="m32 8c-3.1091 0.15454-4.2545 3.9553-4 6.4615v35.077c-0.25624 2.5003 0.89082 6.3087 4 6.4615 3.1091-0.15454 4.2545-3.9553 4-6.4615v-35.077c0.22316-2.4998-0.85359-6.3166-4-6.4615z" stroke="#fff" stroke-width="2" fill="none"/>
+   <path id="path4226" opacity=".3" d="m32 7v50c3.4195 0.04886 5.4091-3.8266 5-6.7305v-36.54c0.375-2.94-1.53-6.7479-5-6.73z" fill="url(#linearGradient4280)"/>
+  </g>
+  <g id="g4248" transform="matrix(0,-1,1,0,0,84)">
+   <path id="path4258" stroke-linejoin="round" d="m32 6c-3.6862-0.18084-6.5305 3.6729-6 7v38c-0.53385 3.3206 2.3134 7.1823 6 7 3.6862 0.18084 6.5305-3.6729 6-7v-38c0.50373-3.3955-2.2593-7.1173-6-7z" stroke="#333" stroke-width="2" fill="#729fcf"/>
+   <path id="path4260" opacity=".4" stroke-linejoin="round" d="m32 8c-3.1091 0.15454-4.2545 3.9553-4 6.4615v35.077c-0.25624 2.5003 0.89082 6.3087 4 6.4615 3.1091-0.15454 4.2545-3.9553 4-6.4615v-35.077c0.22316-2.4998-0.85359-6.3166-4-6.4615z" stroke="#fff" stroke-width="2" fill="none"/>
+   <path id="path4262" opacity=".3" d="m32 7v50c3.4195 0.04886 5.4091-3.8266 5-6.7305v-36.54c0.375-2.94-1.53-6.7479-5-6.73z" fill="url(#linearGradient4280)"/>
+  </g>
+  <g id="g4264" transform="matrix(0,-1,1,0,0,44)">
+   <path id="path4274" stroke-linejoin="round" d="m32 6c-3.6862-0.18084-6.5305 3.6729-6 7v38c-0.53385 3.3206 2.3134 7.1823 6 7 3.6862 0.18084 6.5305-3.6729 6-7v-38c0.50373-3.3955-2.2593-7.1173-6-7z" stroke="#333" stroke-width="2" fill="#729fcf"/>
+   <path id="path4276" opacity=".4" stroke-linejoin="round" d="m32 8c-3.1091 0.15454-4.2545 3.9553-4 6.4615v35.077c-0.25624 2.5003 0.89082 6.3087 4 6.4615 3.1091-0.15454 4.2545-3.9553 4-6.4615v-35.077c0.22316-2.4998-0.85359-6.3166-4-6.4615z" stroke="#fff" stroke-width="2" fill="none"/>
+   <path id="path4278" opacity=".3" d="m32 7v50c3.4195 0.04886 5.4091-3.8266 5-6.7305v-36.54c0.375-2.94-1.53-6.7479-5-6.73z" fill="url(#linearGradient4280)"/>
+  </g>
+ </g>
+ <path id="rect3357-3" stroke-linejoin="round" d="m50.923 13.077c-2.4482-2.6199-7.1557-2.2141-9.1316 0.76788-0.88426 0.60006-1.7685 1.7285-2.6528 2.5312l-24.278 24.278c-1.1785 4.0069-2.357 8.0139-3.5355 12.021l12.021-3.5355 26.87-26.87c2.5073-1.8571 3.4373-6.1674 1.119-8.7367l-0.19908-0.23184-0.2128-0.22385 0.000005 0.000005z" stroke="#333" stroke-width="2" fill="#204a87"/>
+ <path id="path4590" opacity=".4" stroke-linejoin="round" d="m49.509 14.491c-2.3191-2.093-5.8304-0.18859-7.4246 1.7678l-25.481 25.481c-0.77236 2.658-1.5447 5.3159-2.3171 7.9739 2.7032-0.85201 5.509-1.5317 8.1482-2.4914l25.307-25.307c1.9267-1.6153 3.8968-5.0838 1.7678-7.4246z" stroke="#fff" stroke-width="2" fill="none"/>
+ <path id="path4594" opacity=".3" d="m50.216 13.784l-38.183 38.183c3.702-1.376 7.501-2.602 11.144-4.073l25.802-25.802c2.354-1.836 3.709-5.839 1.237-8.308z" fill="url(#linearGradient4613)"/>
+</svg>

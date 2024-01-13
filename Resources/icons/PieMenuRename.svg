@@ -1,0 +1,20 @@
+<svg xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/2000/svg" height="64" width="64" version="1.1" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" viewBox="0 0 63.999999 63.999999">
+ <defs>
+  <linearGradient id="a" y2="32" gradientUnits="userSpaceOnUse" x2="37" gradientTransform="matrix(.70711 .70711 -.70711 .70711 1.3119 -114.68)" y1="32" x1="32">
+   <stop stop-color="#fff" offset="0"/>
+   <stop stop-opacity="0" stop-color="#fff" offset="1"/>
+  </linearGradient>
+ </defs>
+ <g transform="translate(0 -988.36)">
+  <g transform="matrix(1.3247 0 0 1.3406 -2.6728 969.33)">
+   <rect stroke-linejoin="round" height="36" width="36" stroke="#000" stroke-linecap="round" y="21.458" x="6.5424" stroke-width="1.5008" fill="#eeeeec"/>
+   <rect opacity=".4" stroke-linejoin="round" height="32" width="32" stroke="#fff" stroke-linecap="round" y="23.458" x="8.5424" stroke-width="1.5008" fill="none"/>
+   <rect opacity=".3" height="15" width="30" y="24.458" x="9.5424" fill="#fff"/>
+  </g>
+  <g transform="translate(35.148 1085.4)">
+   <path stroke-linejoin="round" d="m21.111-89.226c-2.4482-2.6199-7.1557-2.2141-9.1316 0.76788-0.88426 0.60006-1.7685 1.7285-2.6528 2.5312l-24.278 24.278c-1.1785 4.0069-2.357 8.0139-3.5355 12.021l12.021-3.5355 26.87-26.87c2.5073-1.8571 3.4373-6.1674 1.119-8.7367l-0.19908-0.23184-0.2128-0.22385 0.000005 0.000005z" stroke="#333" stroke-width="2" fill="#204a87"/>
+   <path opacity=".4" stroke-linejoin="round" d="m19.697-87.812c-2.3191-2.093-5.8304-0.18859-7.4246 1.7678l-25.481 25.481c-0.77236 2.658-1.5447 5.3159-2.3171 7.9739 2.7032-0.85201 5.509-1.5317 8.1482-2.4914l25.307-25.307c1.9267-1.6153 3.8968-5.0838 1.7678-7.4246z" stroke="#fff" stroke-width="2" fill="none"/>
+   <path opacity=".3" d="m20.404-88.519-38.183 38.183c3.702-1.376 7.501-2.602 11.144-4.073l25.802-25.802c2.354-1.836 3.709-5.839 1.237-8.308z" fill="url(#a)"/>
+  </g>
+ </g>
+</svg>

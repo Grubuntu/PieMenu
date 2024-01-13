@@ -1,0 +1,11 @@
+<svg id="svg2" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64.000001 64.000001" height="64" width="64" version="1.1" xmlns:cc="http://creativecommons.org/ns#" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/">
+ <defs id="defs4">
+  <linearGradient id="linearGradient4237" y2="32" gradientUnits="userSpaceOnUse" x2="36.75" y1="32" x1="32">
+   <stop id="stop4233" stop-color="#fff" offset="0"/>
+   <stop id="stop4235" stop-color="#fff" stop-opacity="0" offset="1"/>
+  </linearGradient>
+ </defs>
+ <path id="rect3357" stroke-linejoin="round" d="m32 6c-3.6862-0.18084-6.5305 3.6729-6 7v38c-0.53385 3.3206 2.3134 7.1823 6 7 3.6862 0.18084 6.5305-3.6729 6-7v-38c0.50373-3.3955-2.2593-7.1173-6-7z" stroke="#333" stroke-width="2" fill="#729fcf"/>
+ <path id="path4202" opacity=".4" stroke-linejoin="round" d="m32 8c-3.1091 0.15454-4.2545 3.9553-4 6.4615v35.077c-0.25624 2.5003 0.89082 6.3087 4 6.4615 3.1091-0.15454 4.2545-3.9553 4-6.4615v-35.077c0.22316-2.4998-0.85359-6.3166-4-6.4615z" stroke="#fff" stroke-width="2" fill="none"/>
+ <path id="path4226" opacity=".3" d="m32 7v50c3.4195 0.04886 5.4091-3.8266 5-6.7305v-36.54c0.375-2.94-1.53-6.7479-5-6.73z" fill="url(#linearGradient4237)"/>
+</svg>
