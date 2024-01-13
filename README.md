@@ -59,3 +59,53 @@ Can change the global shortcut and can assign a shortcut for each PieMenu, remov
 
 ### Discussion
 FreeCAD forum thread: https://forum.freecad.org/viewtopic.php?t=84101
+
+
+
+Thanks to all the work done by mdkus, triplus, looo, microelly.
+
+# PieMenu widget for FreeCAD
+
+# Copyright (C) 2024 Grubuntu @ FreeCAD
+# Copyright (C) 2022, 2023 mdkus @ FreeCAD
+# Copyright (C) 2016, 2017 triplus @ FreeCAD
+# Copyright (C) 2015,2016 looo @ FreeCAD
+# Copyright (C) 2015 microelly <microelly2@freecadbuch.de>
+#
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
+
+# Attribution:
+# http://forum.freecadweb.org/
+# http://www.freecadweb.org/wiki/index.php?title=Code_snippets
+
+# Changelog :
+# 1.2.8 : 
+# Added validation/cancel buttons for validate or close features window rapidly
+# Added interactive spinbox for editing length/angle/size in features Pad, Pocket, Chamfer, Fillet, Thickness, Revolution
+# Added transparent theme : choose via settings menu
+# Added Sketcher context menu : show in context SketcherWB
+# Added tempo on the hover to avoid too fast triggering
+# Added 'PartDesign' and 'Sketcher' menu at first launch 
+# Removed close button (useless, we can click outside the widget to close it)
+#
+# 1.2.9 : 
+# Added ability to set global keyboard shortcut in settings menu
+#
+# 1.2.9.1 : 
+# Correction for Theme setting
+#
+# 1.3.0 : 
+# Added ability to set a keyboard shortcut for each PieMenu
