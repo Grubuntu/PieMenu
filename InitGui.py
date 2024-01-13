@@ -41,7 +41,7 @@
 # 1.2.9.1 : 
 # Correction for Theme setting
 #
-#1.3.0 :
+# 1.3.0 :
 # Added ability to set a keyboard shortcut for each PieMenu
 
 global PIE_MENU_VERSION
