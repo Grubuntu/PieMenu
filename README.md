@@ -1,13 +1,19 @@
 # PieMenu Improved
-PieMenu widget for FreeCAD
+PieMenu widget for FreeCAD 
 
 ![Capture d’écran (8)](https://github.com/Grubuntu/PieMenu-Improved/assets/56045316/95ce9087-06d2-4b5f-bffc-6bf867afadb6)
 
 
 ### Installation
-PieMenu (1.2.7) can be installed via the FreeCAD
+PieMenu (1.2.7) can be installed via the FreeCAD add-on manager
+You should replace originals files by this version in directory Mod/PieMenu.
 
-You should replace files by this version in directory Mod/PieMenu
+Or just add all files in a PieMenu directory in your FreeCAD Mod directory.
+![Capture d’écran (21)](https://github.com/Grubuntu/PieMenu-Improved/assets/56045316/a0fbcb3e-a5c5-4687-93ed-5b734e1ef63a)
+
+(Windows) Or in  %AppData%\FreeCAD\Mod\
+
+![Capture d’écran (20)](https://github.com/Grubuntu/PieMenu-Improved/assets/56045316/2acee710-2cee-42f3-ab3a-4e10c94d27af)
 
 Install path for FreeCAD modules depends on the operating system used.
 
@@ -42,8 +48,7 @@ Validate or Cancel, change length/size value directly with spinbox during editin
 Choose between 2 themes (Transparent, Legacy)
 
 ![Capture d’écran (10)](https://github.com/Grubuntu/PieMenu-Improved/assets/56045316/30f21f77-24ad-4491-bc75-11538d2ab527)
-![Capture d’écran (19)](https://github.com/Grubuntu/PieMenu-Improved/assets/56045316/9cff1e26-677c-40e6-a3e5-a651996f30c9)
-
+![Capture d’écran (19)](https://github.com/Grubuntu/PieMenu-Improved/assets/56045316/5339d57d-785b-4e27-a410-c79677c3d8b1)
 
 
 Can change the global shortcut and can assign a shortcut for each PieMenu, remove shortcuts by assigning an empty shortcut.
