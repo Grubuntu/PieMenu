@@ -2412,7 +2412,7 @@ def pieMenuStart():
         defaultToolsSketcher =["Sketcher_CreatePolyline",
                                "Sketcher_CompCreateCircle",
                                "Sketcher_CreateRectangle",
-                               "Sketcher_CompCurveEdition",
+                               #"Sketcher_CompCurveEdition",  #removed for compatibility with 0.21
                                "Sketcher_ToggleConstruction"]
 
         if indexList:
