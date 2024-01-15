@@ -26,26 +26,11 @@
 # http://www.freecadweb.org/wiki/index.php?title=Code_snippets
 
 # Changelog :
-# 1.2.8 : 
-# Added validation/cancel buttons for validate or close features window rapidly
-# Added interactive spinbox for editing length/angle/size in features Pad, Pocket, Chamfer, Fillet, Thickness, Revolution
-# Added transparent theme : choose via settings menu
-# Added Sketcher context menu : show in context SketcherWB
-# Added tempo on the hover to avoid too fast triggering
-# Added 'PartDesign' and 'Sketcher' menu at first launch 
-# Removed close button (useless, we can click outside the widget to close it)
-#
-# 1.2.9 : 
-# Added ability to set global keyboard shortcut in settings menu
-#
-# 1.2.9.1 : 
-# Correction for Theme setting
-#
-# 1.3.0 :
-# Added ability to set a keyboard shortcut for each PieMenu
+# 1.3.1 :
+# Added ability to set multi keys for  keyboard shortcuts
 
 global PIE_MENU_VERSION
-PIE_MENU_VERSION = "1.3.0"
+PIE_MENU_VERSION = "1.3.1"
 
 def pieMenuStart():
     import math
@@ -77,6 +62,7 @@ def pieMenuStart():
     global shortcutList
     shortcutKey = ''
     globalShortcutKey = 'TAB'
+    shortcutList =[]
     
     paramPath = "User parameter:BaseApp/PieMenu"
     paramIndexPath= "User parameter:BaseApp/PieMenu/Index"
@@ -132,17 +118,21 @@ def pieMenuStart():
             indexList = list(map(int, indexList.split(".,.")))
         else:
             indexList = []
-        resultShortcutList = []
+                               
         for i in indexList:
             param = paramIndexGet.GetGroup(str(i))
             namePie = paramIndexGet.GetString(str(i))
-            shortcut = param.GetString("ShortcutKey")
-            resultShortcutList.append((shortcut, namePie))
-        for shortcutKey, key_value in resultShortcutList:
+            shortcutKey = param.GetString("ShortcutKey")
+            if shortcutKey != '':
+                shortcutList.append(f"PieMenu_{namePie} => {shortcutKey}")
+
+        for result in shortcutList:
+            namePie, shortcutKey = result.split(" => ")
             shortcut = QShortcut(QKeySequence(shortcutKey), mw)
-            shortcut.activated.connect(lambda keyValue=key_value: PieMenuInstance.showAtMouse(keyValue=keyValue, notKeyTriggered=False))
+            namePie = namePie.split("PieMenu_")[1]
+            shortcut.activated.connect(lambda keyValue=namePie:  PieMenuInstance.showAtMouse(keyValue=keyValue, notKeyTriggered=False))
             shortcut.setEnabled(True)
-        return resultShortcutList
+        return shortcutList
         
     def setShortcutKey(shortcutKey):
         """ set shortcut in parameter """
@@ -1532,7 +1522,22 @@ def pieMenuStart():
             cBox.insertItem(0, i)
         cBox.blockSignals(False)
         onPieChange()
+ 
+    infoShortcut = QLabel()
 
+    def getAssignedShortcut():
+        shortcutsAssigned = [f"{act.whatsThis()} => {act.shortcut().toString()}" for act in Gui.getMainWindow().findChildren(QtGui.QAction) if not act.shortcut().isEmpty() and act.whatsThis()]
+        shortcutList = getShortcutList() 
+        shortcutsAssigned.extend(shortcutList)
+        return shortcutsAssigned
+
+    def compareAndDisplayWarning(shortcutsAssigned, currentShortcut):
+        infoShortcut.setText('')
+        for assignedShortcut in shortcutsAssigned:
+            command, shortcut = assignedShortcut.split(" => ")
+            if shortcut.replace(" ", "").lower() == currentShortcut.lower():
+                infoShortcut.setText(f'Warning: {currentShortcut} is already assigned for: {command}')
+                break
 
     class CustomLineEdit(QLineEdit):
         """ get key event from box shortcut in settings """
@@ -1542,28 +1547,66 @@ def pieMenuStart():
         def keyPressEvent(self, event):
             key_text = QKeySequence(event.key()).toString()
             modifier_text = self.get_modifier_text(event.modifiers())
-            if key_text and modifier_text:
-                shortcut_text = f"{modifier_text}+{key_text}"
-                self.setText(shortcut_text)
+
+            # Tab key
+            if event.key() == Qt.Key_Tab:
+                self.setText("TAB")
+                return
+
+            elif event.key() in [Qt.Key_Backspace, Qt.Key_Delete]:
+                if len(self.text()) > 0:
+                    current_text = self.text()
+                    if current_text and current_text[-1] == ',':
+                        self.setText(current_text[:-1])
+                    else:
+                        self.setText(current_text[:-1])
+                else:
+                    self.setText('')
+
+            elif modifier_text:
+                if key_text and modifier_text:
+                
+                    shortcut_text = f"{modifier_text}+{key_text}"
+                    self.setText(shortcut_text)
+
+            elif key_text:
+                if len(self.selectedText()) > 0:
+                    self.setText(key_text)
+                else:
+                    if len(key_text) == 1 and len(self.text()) > 0:
+                        # Ajouter une virgule uniquement si la touche précédente était une lettre
+                        last_char = self.text()[-1]
+                        if last_char.isalpha():
+                            self.setText(self.text() + ',' + key_text)
+                        else:
+                            self.setText(self.text() + key_text)
+                    else:
+                        self.setText(key_text)
             else:
                 super().keyPressEvent(event)
+                
+            currentShortcut = self.text()
+            shortcutsAssigned = getAssignedShortcut()
+            compareAndDisplayWarning(shortcutsAssigned, currentShortcut)
 
         def get_modifier_text(self, modifiers):
             modifier_names = {
                 Qt.ControlModifier: 'CTRL',
                 Qt.AltModifier: 'ALT',
                 Qt.ShiftModifier: 'SHIFT',
-                Qt.MetaModifier: 'META'
+                Qt.MetaModifier: 'META',
+                Qt.Key_Tab: 'TAB'
             }
             modifier_text = '+'.join([modifier_names[modifier] for modifier in modifier_names if modifiers & modifier])
             return modifier_text
-            
+                        
             
     shortcutLineEdit = CustomLineEdit()
     shortcutLineEdit.setText(shortcutKey)
     
     globalShortcutLineEdit = CustomLineEdit()
     globalShortcutLineEdit.setText(globalShortcutKey)
+    globalShortcutLineEdit.setToolTip("For TAB press CTRL+TAB")
     
     labelShortcut = QLabel()
     labelGlobalShortcut = QLabel()
@@ -2516,16 +2559,16 @@ def pieMenuStart():
                 labelShortcut.setText('Shortcut deleted ! No shortcut assigned ' + shortcutKey)
 
             else:
-                parties = set(newShortcut.split('+'))
+                parties = set(newShortcut.replace(',', '+').split('+'))
                 for partie in parties:
                     if partie not in touches_speciales and len(partie) > 1:
                         labelShortcut.setText('Invalid shortcut ! Current shortcut : ' + shortcutKey)
                     else :
                         shortcutKey = newShortcut
                         setShortcutKey(shortcutKey)
-                        #actionKey.setShortcut(QtGui.QKeySequence(shortcutKey))  
+                                                                                                                                                                                                
                         labelShortcut.setText('New shortcut assigned: ' + shortcutKey)
-                        setShortcutKey(shortcutKey)
+                                                   
             getShortcutList()
                 
         getShortcutKey()
@@ -2538,6 +2581,11 @@ def pieMenuStart():
         assignShortcutButton = QtGui.QPushButton("Assign")
         layoutShortcut.addWidget(assignShortcutButton)
         assignShortcutButton.clicked.connect(lambda: updateShortcutKey(shortcutLineEdit.text()))
+        
+        layoutInfoShortcut = QtGui.QHBoxLayout()
+        layoutInfoShortcut.addWidget(infoShortcut)
+        layoutInfoShortcut.addStretch(1)
+        infoShortcut.setText('')
       
         labelTheme = QLabel("Transparent theme")
         layoutTheme = QtGui.QHBoxLayout()
@@ -2545,7 +2593,7 @@ def pieMenuStart():
         layoutTheme.addStretch(1)
         layoutTheme.addWidget(actionTheme)
         actionTheme.stateChanged.connect(lambda state: setTheme(state))
-      
+        
         def updateGlobalShortcutKey(newShortcut):
             global globalShortcutKey
             touches_speciales = {'CTRL', 'ALT', 'SHIFT', 'META', 'TAB'}
@@ -2556,7 +2604,7 @@ def pieMenuStart():
                 labelGlobalShortcut.setText('Shortcut deleted ! No shortcut assigned ' + globalShortcutKey)
                 
             else:
-                parties = set(newShortcut.split('+'))
+                parties = set(newShortcut.replace(',', '+').split('+'))
                 for partie in parties:
                     if partie not in touches_speciales and len(partie) > 1:
                         labelGlobalShortcut.setText('Invalid shortcut  ! Current global shortcut : ' + globalShortcutKey)
@@ -2586,6 +2634,8 @@ def pieMenuStart():
         pieMenuTabLayout.insertSpacing(5, 40)
         pieMenuTabLayout.insertLayout(6, layoutTheme)
         pieMenuTabLayout.insertLayout(7, layoutGlobalShortcut)
+        pieMenuTabLayout.insertSpacing(8, 18)
+        pieMenuTabLayout.insertLayout(9, layoutInfoShortcut)
         pieMenuTabLayout.addStretch(0)
         
         contextTab = QtGui.QWidget()
