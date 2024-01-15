@@ -114,6 +114,8 @@ def pieMenuStart():
                 shortcut.activated.disconnect()
             shortcut.setParent(None)
             shortcut.deleteLater()
+        shortcutList =[]
+        
         if indexList:
             indexList = list(map(int, indexList.split(".,.")))
         else:
