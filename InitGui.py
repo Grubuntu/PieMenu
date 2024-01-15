@@ -2100,7 +2100,7 @@ def pieMenuStart():
 
     buttonDown.clicked.connect(onButtonDown)
 
-    buttonRemoveCommand = QtGui.QPushButton()
+    buttonRemoveCommand = QtGui.QToolButton()
     buttonRemoveCommand.setIcon(QtGui.QIcon(iconRemoveCommand))
     buttonRemoveCommand.setToolTip("Remove selected command")
     buttonRemoveCommand.setMinimumHeight(30)
