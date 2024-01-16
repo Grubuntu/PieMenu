@@ -1,3 +1,7 @@
 v1.2.8:
 added edit_Cancel.svg
 added edit_OK.svg
+v1.3.2
+updated PieMenuReload.svg
+updated PieMenuRemoveCommand.svg
+added backspace.svg
