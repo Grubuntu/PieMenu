@@ -294,6 +294,7 @@ def pieMenuStart():
     iconAdd = respath + "PieMenuAdd.svg"
     iconRemove = respath + "PieMenuRemove.svg"
     iconRename = respath + "PieMenuRename.svg"
+    iconReset = respath + "PieMenuReload.svg"
     iconCopy = respath + "PieMenuCopy.svg"
     iconRemoveCommand = respath + "PieMenuRemoveCommand.svg"
     iconValid = respath + "edit_OK.svg"
@@ -2387,9 +2388,10 @@ def pieMenuStart():
     contextTable.setCellWidget(3, 2, objectSpin)
 
     resetButton = QtGui.QToolButton()
+    resetButton.setIcon(QtGui.QIcon(iconReset))
+    resetButton.setToolTip("Reset to defaults")
     resetButton.setMinimumHeight(30)
     resetButton.setMinimumWidth(30)
-    resetButton.setText(u'\u27F3')
 
     resetButton.setEnabled(False)
 
