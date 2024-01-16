@@ -605,12 +605,13 @@ def pieMenuStart():
             if self.isMouseOver and self.defaultAction().isEnabled() and mode == "Hover":
                 PieMenuInstance.hide()
                 self.defaultAction().trigger()
+                module = None
                 try:
                     docName = App.ActiveDocument.Name
                     g = Gui.ActiveDocument.getInEdit()
                     module = g.Module
                 except:
-                    module = ''
+                    pass
                 if (module is not None and module != 'SketcherGui'):
                     PieMenuInstance.showAtMouse()
             else:
@@ -632,6 +633,7 @@ def pieMenuStart():
             if self.isMouseOver and self.defaultAction().isEnabled():
                 PieMenuInstance.hide()
                 self.defaultAction().trigger()
+                module = None
                 try:
                     docName = App.ActiveDocument.Name
                     g = Gui.ActiveDocument.getInEdit()
