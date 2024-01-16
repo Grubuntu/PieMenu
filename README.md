@@ -58,7 +58,8 @@ Can change the global shortcut and can assign a shortcut for each PieMenu, remov
 
 ![Hover](https://github.com/Grubuntu/PieMenu-Improved/assets/56045316/e845b0a6-9105-4965-a9c0-92034610598d)
 
-![Searchbox131](https://github.com/Grubuntu/PieMenu-Improved/assets/56045316/278b739c-60c2-486f-ba35-3e87e66c0ebb)
+![Capture d’écran (30)](https://github.com/Grubuntu/PieMenu-Improved/assets/56045316/c0394e49-7d7f-4b45-8ffb-b712edf10f2d)
+
 
 
 
