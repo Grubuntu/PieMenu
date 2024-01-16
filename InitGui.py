@@ -33,9 +33,15 @@
 # Fix an oversight (shortcutList)
 # Workaround for shadow ghosting on MacOS : not completely solved
 # Added setting for hover delay
+#
+# 1.3.2 :
+# Added close button to Preference Dialog
+# Added Hover settings in Preferences dialog
+# Icons update
+# Added button to clear Search Bar (new icon in resources)
 
 global PIE_MENU_VERSION
-PIE_MENU_VERSION = "1.3.1"
+PIE_MENU_VERSION = "1.3.2"
 
 def pieMenuStart():
     import math
@@ -299,6 +305,7 @@ def pieMenuStart():
     iconRemoveCommand = respath + "PieMenuRemoveCommand.svg"
     iconValid = respath + "edit_OK.svg"
     iconCancel = respath + "edit_Cancel.svg"
+    iconBackspace =  respath + "backspace.svg"
     
     def radiusSize(buttonSize):
         radius = str(math.trunc(buttonSize / 2))
@@ -1957,6 +1964,7 @@ def pieMenuStart():
     spinHoverDelay = QtGui.QSpinBox()
     spinHoverDelay.setMaximum(999)
     spinHoverDelay.setMinimumWidth(70)
+    
 
     def onSpinHoverDelay():
         value = spinHoverDelay.value()
@@ -1994,11 +2002,23 @@ def pieMenuStart():
                                                 .Qt.ScrollBarAlwaysOff)
     ###Search box ####
     toolListLayout = QVBoxLayout()
+    
+    searchLayout = QHBoxLayout()
+    
     searchLineEdit = QLineEdit()
     searchLineEdit.setPlaceholderText("Search")
     searchResultLabel = QLabel()
 
-    toolListLayout.addWidget(searchLineEdit)
+    clearButton = QtGui.QPushButton()
+    clearButton.setMaximumWidth(40)
+    clearButton.setIcon(QtGui.QIcon.fromTheme(iconBackspace))
+    clearButton.clicked.connect(searchLineEdit.clear)
+    
+    searchLayout.addWidget(searchLineEdit)
+    searchLayout.addWidget(clearButton)
+     
+    toolListLayout.addLayout(searchLayout)
+    #toolListLayout.addWidget(clearButton)
     toolListLayout.addWidget(toolListWidget) 
  
     widgetContainer = QWidget()
@@ -2693,11 +2713,37 @@ def pieMenuStart():
         layoutTheme.addStretch(1)
         layoutTheme.addWidget(actionTheme)
         actionTheme.stateChanged.connect(lambda state: setTheme(state))
+        ### Added Hover setting in Preferences
+        layoutTriggerButton = QtGui.QHBoxLayout()
+        labelTriggerButton  = QLabel("Trigger mode : ")
+
+        radioButtonPress = QtGui.QRadioButton("Press")
+        radioButtonHover = QtGui.QRadioButton("Hover")
+        radioButtonPress.setChecked(paramGet.GetString("TriggerMode") == "Press")
+        radioButtonHover.setChecked(paramGet.GetString("TriggerMode") == "Hover")
         
+        radioButtonPress.toggled.connect(lambda checked, data="Press": paramGet.SetString("TriggerMode", data))
+        radioButtonHover.toggled.connect(lambda checked, data="Hover":  paramGet.SetString("TriggerMode", data))
+
+        radioGroup = QtGui.QButtonGroup()
+        radioGroup.addButton(radioButtonPress)
+        radioGroup.addButton(radioButtonHover)
+
+        layoutActionHoverButton = QtGui.QVBoxLayout()
+        layoutActionHoverButton.addWidget(radioButtonPress)
+        layoutActionHoverButton.addWidget(radioButtonHover)
+        
+        layoutTriggerButton.addWidget(labelTriggerButton)
+        layoutTriggerButton.addStretch(1)
+        layoutTriggerButton.addLayout(layoutActionHoverButton)
+
         layoutHoverDelay = QtGui.QHBoxLayout()
         layoutHoverDelay.addWidget(labelHoverDelay)
         layoutHoverDelay.addStretch(1)
         layoutHoverDelay.addWidget(spinHoverDelay)
+        
+        def close_dialog():
+            pieMenuDialog.accept()
         
         def updateGlobalShortcutKey(newShortcut):
             global globalShortcutKey
@@ -2732,16 +2778,19 @@ def pieMenuStart():
         assignGlobalShortcutButton.clicked.connect(lambda: updateGlobalShortcutKey(globalShortcutLineEdit.text()))
         
         pieMenuTabLayout.insertLayout(0, layoutAddRemove)
-        pieMenuTabLayout.insertSpacing(1, 18)
+        pieMenuTabLayout.insertSpacing(1, 12)
         pieMenuTabLayout.insertLayout(2, layoutShortcut)
         pieMenuTabLayout.insertLayout(3, layoutRadius)
         pieMenuTabLayout.insertLayout(4, layoutButton)
-        pieMenuTabLayout.insertSpacing(5, 40)
+        pieMenuTabLayout.insertSpacing(5, 36)
         pieMenuTabLayout.insertLayout(6, layoutTheme)
         pieMenuTabLayout.insertLayout(7, layoutGlobalShortcut)
-        pieMenuTabLayout.insertLayout(8, layoutHoverDelay)
+        pieMenuTabLayout.insertLayout(8, layoutInfoShortcut)
         pieMenuTabLayout.insertSpacing(9, 18)
-        pieMenuTabLayout.insertLayout(10, layoutInfoShortcut)
+        pieMenuTabLayout.insertLayout(10,layoutTriggerButton)
+        pieMenuTabLayout.insertLayout(11, layoutHoverDelay)
+        pieMenuTabLayout.insertSpacing(12, 18)
+
         pieMenuTabLayout.addStretch(0)
         
         contextTab = QtGui.QWidget()
@@ -2798,8 +2847,17 @@ def pieMenuStart():
         pieMenuDialogLayout = QtGui.QVBoxLayout()
         pieMenuDialog.setLayout(pieMenuDialogLayout)
         pieMenuDialog.show()
+        ### Add close button to  preferences dialog
+        close_button = QtGui.QPushButton("Close", pieMenuDialog)
+        close_button.setMaximumWidth(70)
+        close_button.clicked.connect(close_dialog)
+        
+        button_layout = QtGui.QHBoxLayout()
+        button_layout.addWidget(close_button, alignment=QtCore.Qt.AlignCenter)
 
         pieMenuDialogLayout.addWidget(preferencesWidget)
+        pieMenuDialogLayout.addLayout(button_layout)
+
         
         cBoxUpdate()
 
