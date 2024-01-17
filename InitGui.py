@@ -760,8 +760,8 @@ def pieMenuStart():
             for i in commands:
                 if (Gui.ActiveDocument.getInEdit() is None) or (module == 'SketcherGui'):
                     """ show PieMenu in Edit Feature and in Sketcher """
-                    #button = HoverButton()
-                    button = QtGui.QToolButton()
+                    button = HoverButton()
+                    #button = QtGui.QToolButton() ## make a bug : pieMenu don't close in sketcher edit
                     button.setParent(self.menu)
                     button.setObjectName("pieMenu")
                     button.setAttribute(QtCore.Qt.WA_Hover)
