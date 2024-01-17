@@ -757,7 +757,6 @@ def pieMenuStart():
                 self.menu.setMinimumWidth(self.menuSize)
                 self.menu.setMinimumHeight(self.menuSize)
             num = 1
-            print(radius)
             for i in commands:
                 if (Gui.ActiveDocument.getInEdit() is None) or (module == 'SketcherGui'):
                     """ show PieMenu in Edit Feature and in Sketcher """
