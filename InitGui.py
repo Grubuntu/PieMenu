@@ -2009,7 +2009,7 @@ def pieMenuStart():
     searchLineEdit.setPlaceholderText("Search")
     searchResultLabel = QLabel()
 
-    clearButton = QtGui.QPushButton()
+    clearButton = QtGui.QToolButton()
     clearButton.setMaximumWidth(40)
     clearButton.setIcon(QtGui.QIcon.fromTheme(iconBackspace))
     clearButton.clicked.connect(searchLineEdit.clear)
