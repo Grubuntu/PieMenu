@@ -1,6 +1,6 @@
 # PieMenu widget for FreeCAD
 
-# Copyright (C) 2024 Grubuntu @ FreeCAD
+# Copyright (C) 2024 Grubuntu, Pgilfernandez @ FreeCAD
 # Copyright (C) 2022, 2023 mdkus @ FreeCAD
 # Copyright (C) 2016, 2017 triplus @ FreeCAD
 # Copyright (C) 2015,2016 looo @ FreeCAD
@@ -2009,7 +2009,7 @@ def pieMenuStart():
     searchLineEdit.setPlaceholderText("Search")
     searchResultLabel = QLabel()
 
-    clearButton = QtGui.QPushButton()
+    clearButton = QtGui.QToolButton()
     clearButton.setMaximumWidth(40)
     clearButton.setIcon(QtGui.QIcon.fromTheme(iconBackspace))
     clearButton.clicked.connect(searchLineEdit.clear)
