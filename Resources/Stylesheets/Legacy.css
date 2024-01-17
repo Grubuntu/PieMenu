@@ -1,0 +1,48 @@
+
+QToolButton#pieMenu{
+background-color: lightGray;
+border: 1px outset silver;
+}
+
+QToolButton#pieMenu:disabled {
+    background-color: darkGray;
+}
+
+QToolButton#pieMenu:hover {
+    background-color: lightBlue;
+}
+
+QToolButton#pieMenu:checked {
+    background-color: lightGreen;
+}
+
+QToolButton#pieMenu::menu-indicator {
+    subcontrol-origin: padding;
+    subcontrol-position: center center;
+}
+
+QToolButton#styleMenuClose {
+    background-color: rgba(60,60,60,255);
+    color: silver;
+    border: 1px solid #1e1e1e;
+}
+
+QToolButton#styleMenuClose::menu-indicator {
+    image: none;
+}
+
+QMenu#styleContainer{background: transparent}
+
+QComboBox#styleCombo {
+    background: transparent;
+    border: 1px solid transparent;
+}
+
+QMenu#styleQuickMenu = ("padding: 5px 10px 5px 10px")
+
+QMenu#styleQuickMenuItem::item {
+    padding: 5px 20px 5px 20px;
+    text-align: left;
+}
+    
+
