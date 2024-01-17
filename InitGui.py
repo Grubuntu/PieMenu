@@ -39,6 +39,7 @@
 # Added Hover settings in Preferences dialog
 # Icons update
 # Added button to clear Search Bar (new icon in resources)
+# In progress : Added stylesheets for theme
 
 global PIE_MENU_VERSION
 PIE_MENU_VERSION = "1.3.2"
@@ -53,7 +54,7 @@ def pieMenuStart():
     from PySide import QtGui
     import PieMenuLocator as locator
     from PySide2.QtGui import QKeyEvent
-    from PySide.QtWidgets import QApplication, QLineEdit, QWidget, QAction, QPushButton, QLabel, QVBoxLayout, QHBoxLayout, QDoubleSpinBox, QCheckBox, QMessageBox, QShortcut, QListWidgetItem, QListWidget
+    from PySide.QtWidgets import QApplication, QLineEdit, QWidget, QAction, QPushButton, QLabel, QVBoxLayout, QHBoxLayout, QDoubleSpinBox, QCheckBox, QMessageBox, QShortcut, QListWidgetItem, QListWidget, QComboBox
     from PySide2.QtGui import QKeySequence
     from PySide2.QtCore import Qt
 
@@ -61,24 +62,26 @@ def pieMenuStart():
     
     path = locator.path()
     respath = path + "/Resources/icons/"
+    stylepath = path + "/Resources/Stylesheets/"
     
     selectionTriggered = False
     contextPhase = False
-    
-    styleButton = ""
-    theme = ""
-    
     global shortcutKey
     global globalShortcutKey
     global shortcutList
-    shortcutKey = ''
-    globalShortcutKey = 'TAB'
+    shortcutKey = ""
+    globalShortcutKey = "TAB"
     shortcutList =[]
     
     paramPath = "User parameter:BaseApp/PieMenu"
     paramIndexPath= "User parameter:BaseApp/PieMenu/Index"
     paramGet = App.ParamGet(paramPath)
     paramIndexGet = App.ParamGet(paramIndexPath)
+    
+    theme = paramGet.GetString("Theme")
+    stylesheet_path = f"{stylepath}{theme}.qss"
+    with open(stylesheet_path, "r") as f:
+        styleCurrentTheme = f.read()
 
     
     def setGlobalShortcutKey(globalShortcutKey):
@@ -207,91 +210,38 @@ def pieMenuStart():
         """Open the preferences dialog."""
         onControl()
         
-    def setButtonStyle():
-        """ 2 stylesheets : Transparent and Legacy """
-        theme = paramGet.GetString("Theme")
-        if theme == "Transparent":
-            styleButton = ("""
-                QToolButton{
-                background-color: transparent; border: none;
-                }
 
-                QToolButton:hover {
-                    background-color: #888888; border: none;
-                }
+    # styleMenuClose = ("""
+        # QToolButton {
+            # background-color: rgba(60,60,60,255);
+            # color: silver;
+            # border: 1px solid #1e1e1e;
+        # }
 
-                QToolButton:checked {
-                    background-color: lightGreen;
-                }
+        # QToolButton::menu-indicator {
+            # image: none;
+        # }
 
-                QToolButton::menu-indicator {
-                    subcontrol-origin: padding;
-                    subcontrol-position: center center;
-                }
-                
-                """)
-        else:
-            styleButton = ("""
-                QToolButton {
-                    background-color: lightGray;
-                    border: 1px outset silver;
-                }
+        # """)
 
-                QToolButton:disabled {
-                    background-color: darkGray;
-                }
+    # styleContainer = ("QMenu{background: transparent}")
 
-                QToolButton:hover {
-                    background-color: lightBlue;
-                }
+    # styleCombo = ("""
+        # QComboBox {
+            # background: transparent;
+            # border: 1px solid transparent;
+        # }
 
-                QToolButton:checked {
-                    background-color: lightGreen;
-                }
+        # """)
 
-                QToolButton::menu-indicator {
-                    subcontrol-origin: padding;
-                    subcontrol-position: center center;
-                }
+    # styleQuickMenu = ("padding: 5px 10px 5px 10px")
 
-                """)
-        
-        return styleButton
-    
-    setButtonStyle()
-    
-
-    styleMenuClose = ("""
-        QToolButton {
-            background-color: rgba(60,60,60,255);
-            color: silver;
-            border: 1px solid #1e1e1e;
-        }
-
-        QToolButton::menu-indicator {
-            image: none;
-        }
-
-        """)
-
-    styleContainer = ("QMenu{background: transparent}")
-
-    styleCombo = ("""
-        QComboBox {
-            background: transparent;
-            border: 1px solid transparent;
-        }
-
-        """)
-
-    styleQuickMenu = ("padding: 5px 10px 5px 10px")
-
-    styleQuickMenuItem = ("""
-        QMenu::item {
-            padding: 5px 20px 5px 20px;
-            text-align: left;
-        }
-        """)
+    # styleQuickMenuItem = ("""
+        # QMenu::item {
+            # padding: 5px 20px 5px 20px;
+            # text-align: left;
+        # }
+        # """)
         
     iconClose = respath + "PieMenuClose.svg"
     iconMenu = respath + "PieMenuQuickMenu.svg"
@@ -315,7 +265,7 @@ def pieMenuStart():
         icon = buttonSize / 3 * 2
         return icon
 
-### Begin QuickMenu  Def ###
+    ### Begin QuickMenu  Def ###
     def quickMenu(buttonSize=20):
         mw = Gui.getMainWindow()
         
@@ -323,14 +273,16 @@ def pieMenuStart():
         radius = radiusSize(buttonSize)
 
         menu = QtGui.QMenu(mw)
-        menu.setStyleSheet(styleQuickMenu)
+        menu.setObjectName("styleQuickMenu")
+        menu.setStyleSheet(styleCurrentTheme)
 
         button = QtGui.QToolButton()
+        button.setObjectName("styleMenuClose")
         button.setMenu(menu)
         button.setProperty("ButtonX", 0)
         button.setProperty("ButtonY", 32)
         button.setGeometry(0, 0, buttonSize, buttonSize)
-        button.setStyleSheet(styleMenuClose + radius)
+        button.setStyleSheet(styleCurrentTheme + radius)
         button.setIconSize(QtCore.QSize(icon, icon))
         button.setIcon(QtGui.QIcon(iconMenu))
         button.setAttribute(QtCore.Qt.WA_TranslucentBackground)
@@ -367,8 +319,9 @@ def pieMenuStart():
         pieGroup.setExclusive(True)
 
         menuToolBar = QtGui.QMenu()
+        menuToolBar.setObjectName("styleQuickMenuItem")
         menuToolBar.setTitle("ToolBar")
-        menuToolBar.setStyleSheet(styleQuickMenuItem)
+        menuToolBar.setStyleSheet(styleCurrentTheme)
 
         toolbarGroup = QtGui.QMenu()
 
@@ -670,7 +623,8 @@ def pieMenuStart():
             self.buttonSize = 32
             self.menu = QtGui.QMenu(mw)
             self.menuSize = 0
-            self.menu.setStyleSheet(styleContainer)
+            self.menu.setObjectName("styleContainer")
+            self.menu.setStyleSheet(styleCurrentTheme)
             self.menu.setWindowFlags(self.menu.windowFlags() | QtCore.Qt.FramelessWindowHint | Qt.NoDropShadowWindowHint)
             self.menu.setAttribute(QtCore.Qt.WA_TranslucentBackground)
             
@@ -698,25 +652,25 @@ def pieMenuStart():
         def validButton(self, buttonSize=38):
             icon = iconSize(buttonSize)
             button = QtGui.QToolButton()
+            button.setObjectName("pieMenu")
             button.setProperty("ButtonX", -25)
             button.setProperty("ButtonY", 0)
             button.setGeometry(0, 0, buttonSize, buttonSize)
             button.setIconSize(QtCore.QSize(icon, icon))
             button.setIcon(QtGui.QIcon(iconValid))
-            styleButton = setButtonStyle()
-            button.setStyleSheet(styleButton + " QWidget { border-radius: 5px; }")
+            button.setStyleSheet(styleCurrentTheme)
             return button
             
         def cancelButton(self, buttonSize=38):
             icon = iconSize(buttonSize)
             button = QtGui.QToolButton()
+            button.setObjectName("pieMenu")
             button.setProperty("ButtonX", 25)
             button.setProperty("ButtonY", 0)
             button.setGeometry(0, 0, buttonSize, buttonSize)
             button.setIconSize(QtCore.QSize(icon, icon))
             button.setIcon(QtGui.QIcon(iconCancel))
-            styleButton = setButtonStyle()
-            button.setStyleSheet(styleButton + " QWidget { border-radius: 5px; }")
+            button.setStyleSheet(styleCurrentTheme)
             return button
             
         def doubleSpinbox(self, buttonSize=32):
@@ -744,6 +698,7 @@ def pieMenuStart():
 
 
         def add_commands(self, commands, context=False):
+            styleCurrentTheme = getTheme()
             try:
                 docName = App.ActiveDocument.Name
                 g = Gui.ActiveDocument.getInEdit()
@@ -802,14 +757,16 @@ def pieMenuStart():
                 self.menu.setMinimumWidth(self.menuSize)
                 self.menu.setMinimumHeight(self.menuSize)
             num = 1
+            print(radius)
             for i in commands:
                 if (Gui.ActiveDocument.getInEdit() is None) or (module == 'SketcherGui'):
                     """ show PieMenu in Edit Feature and in Sketcher """
-                    button = HoverButton()
+                    #button = HoverButton()
+                    button = QtGui.QToolButton()
                     button.setParent(self.menu)
+                    button.setObjectName("pieMenu")
                     button.setAttribute(QtCore.Qt.WA_Hover)
-                    styleButton = setButtonStyle()
-                    button.setStyleSheet(styleButton + radius)
+                    button.setStyleSheet(styleCurrentTheme + radius)
                     button.setDefaultAction(commands[commands.index(i)])
                     button.setGeometry(0, 0, buttonSize, buttonSize)
                     button.setIconSize(QtCore.QSize(icon, icon))
@@ -1433,21 +1390,53 @@ def pieMenuStart():
     buttonListWidget.setHorizontalScrollBarPolicy(QtCore
                                                   .Qt.ScrollBarAlwaysOff)
 
-    def setTheme(state):
-        if state == Qt.Checked:
-            paramGet.SetString("Theme", "Transparent")
-        else:
-            paramGet.SetString("Theme", "Legacy")
+    def setTheme():
+        comboBoxTheme.blockSignals(True)
+        # Get the selected stylesheet from the combobox
+        theme = comboBoxTheme.currentText()
+        # Set Theme in parameters
+        paramGet.SetString("Theme", theme)
+        # Get qss file
+        stylesheet_path = f"{stylepath}{theme}.qss"
+        with open(stylesheet_path, "r") as f:
+            styleCurrentTheme = f.read()
+
+        comboBoxTheme.blockSignals(False)
+        return styleCurrentTheme
+        
+
 
     def getTheme():
+        ## TODO : warn user if there is no stylesheet
+        # Listez tous les fichiers dans le répertoire
+        all_files = os.listdir(stylepath)
+        # Filtrez les fichiers avec l'extension ".qss"
+        qss_files = [file for file in all_files if file.endswith(".qss")]
+        # Supprimez l'extension ".qss" pour obtenir les noms des styles
+        available_styles = [file[:-4] for file in qss_files]
+        # Clear existing items in the combobox
+        comboBoxTheme.blockSignals(True)
+        comboBoxTheme.clear()
+        # Add available stylesheets to the combobox
+        comboBoxTheme.addItems(available_styles)
+        # Set the current index based on the stored theme preference
         theme = paramGet.GetString("Theme")
-        actionTheme.setChecked(theme == "Transparent")
+        index = comboBoxTheme.findText(theme)
+        if index != -1:
+            comboBoxTheme.setCurrentIndex(index)
+            
+        stylesheet_path = f"{stylepath}{theme}.qss"
+        with open(stylesheet_path, "r") as f:
+            styleCurrentTheme = f.read()
+            #print('gettheme : ', styleCurrentTheme)
+        comboBoxTheme.blockSignals(False)
+        return styleCurrentTheme
 
-
-    actionTheme = QCheckBox()
-    actionTheme.setCheckable(True)
-    getTheme()
     
+    #####ComboBox####
+    comboBoxTheme = QComboBox()
+    getTheme()
+
     
     def buttonList():
         group = getGroup()
@@ -2018,7 +2007,6 @@ def pieMenuStart():
     searchLayout.addWidget(clearButton)
      
     toolListLayout.addLayout(searchLayout)
-    #toolListLayout.addWidget(clearButton)
     toolListLayout.addWidget(toolListWidget) 
  
     widgetContainer = QWidget()
@@ -2302,8 +2290,9 @@ def pieMenuStart():
             item.setData(TopoType, QtCore.Qt.UserRole)
             model.setItem(signList.index(i), 0, item)
         comboBoxSign = QtGui.QComboBox()
+        comboBoxSign.setObjectName("styleCombo")
         comboBoxSign.setModel(model)
-        comboBoxSign.setStyleSheet(styleCombo)
+        comboBoxSign.setStyleSheet(styleCurrentTheme)
 
 
         def onCurrentIndexChanged():
@@ -2707,13 +2696,12 @@ def pieMenuStart():
         layoutInfoShortcut.addStretch(1)
         infoShortcut.setText('')
       
-        labelTheme = QLabel("Transparent theme")
+        labelTheme = QLabel("Theme style")
         layoutTheme = QtGui.QHBoxLayout()
         layoutTheme.addWidget(labelTheme)
         layoutTheme.addStretch(1)
-        layoutTheme.addWidget(actionTheme)
-        actionTheme.stateChanged.connect(lambda state: setTheme(state))
-        ### Added Hover setting in Preferences
+        layoutTheme.addWidget(comboBoxTheme)
+        comboBoxTheme.currentIndexChanged.connect(setTheme)
         layoutTriggerButton = QtGui.QHBoxLayout()
         labelTriggerButton  = QLabel("Trigger mode : ")
 
