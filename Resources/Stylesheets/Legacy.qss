@@ -1,7 +1,7 @@
 
-QToolButton#pieMenu{
-background-color: lightGray;
-border: 1px outset silver;
+QToolButton#pieMenu {
+    background-color: lightGray;
+    border: 1px outset silver;
 }
 
 QToolButton#pieMenu:disabled {
@@ -31,14 +31,18 @@ QToolButton#styleMenuClose::menu-indicator {
     image: none;
 }
 
-QMenu#styleContainer{background: transparent}
+QMenu#styleContainer {
+    background: transparent;
+}
 
 QComboBox#styleCombo {
     background: transparent;
     border: 1px solid transparent;
 }
 
-QMenu#styleQuickMenu = ("padding: 5px 10px 5px 10px")
+QMenu#styleQuickMenu {
+    padding: 5px 10px 5px 10px;
+}
 
 QMenu#styleQuickMenuItem::item {
     padding: 5px 20px 5px 20px;
