@@ -1167,7 +1167,7 @@ def pieMenuStart():
         for i in actionMapAll:
             action = actionMapAll[i]
             for widgets in action.associatedWidgets():
-                if widgets.objectName() == idToolBar:
+                if widgets.windowTitle() == idToolBar:
                     getActionData(action, actions, commands, workbenches)
                     
 
