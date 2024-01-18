@@ -1,6 +1,6 @@
 QToolButton#pieMenu{
-background-color: transparent; 
-border: none;
+    background-color: transparent; 
+    border: none;
 }
 
 QToolButton#pieMenu:disabled {
@@ -8,7 +8,8 @@ QToolButton#pieMenu:disabled {
 }
 
 QToolButton#pieMenu:hover {
-    background-color: #888888; border: none;
+    background-color: #888888;
+    border: none;
 }
 
 QToolButton#pieMenu:checked {
@@ -30,14 +31,18 @@ QToolButton#styleMenuClose::menu-indicator {
     image: none;
 }
 
-QMenu#styleContainer{background: transparent}
+QMenu#styleContainer {
+    background: transparent;
+}
 
 QComboBox#styleCombo {
     background: transparent;
     border: 1px solid transparent;
 }
 
-QMenu#styleQuickMenu = ("padding: 5px 10px 5px 10px")
+QMenu#styleQuickMenu {
+    padding: 5px 10px 5px 10px;
+}
 
 QMenu#styleQuickMenuItem::item {
     padding: 5px 20px 5px 20px;
