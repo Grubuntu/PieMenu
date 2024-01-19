@@ -39,6 +39,11 @@
 # Added Hover settings in Preferences dialog
 # Icons update
 # Added button to clear Search Bar (new icon in resources)
+# Began to added some docstrings
+# Fixed a bug with toolbars when the language is not English
+# Fixed a bug with FreeCAD 0.21 in Sketcher Edit 
+# Added possibility to adjust the spinbox to x10, x1, x0.1, x0.01 with CTRL+Wheel and Shift+Wheel and CTRL+Shift+Wheel
+# Clean some comments
 
 global PIE_MENU_VERSION
 PIE_MENU_VERSION = "1.3.2"
@@ -86,7 +91,6 @@ def pieMenuStart():
         paramGet.SetString("GlobalShortcutKey", globalShortcutKey)
 
     def getGlobalShortcutKey():
-        global globalShortcutKey
         """Get global shortcut key from user parameters."""
         globalShortcutKey = paramGet.GetString("GlobalShortcutKey")
         return globalShortcutKey
@@ -94,8 +98,9 @@ def pieMenuStart():
     globalShortcutKey = getGlobalShortcutKey()
     
     def getShortcutKey():
+        """Get shortcut key from user parameters."""               
         global shortcutKey
-        """Get shortcut key from user parameters."""
+        
         indexList = paramIndexGet.GetString("IndexList")
         if indexList:
             indexList = list(map(int, indexList.split(".,.")))
@@ -308,6 +313,7 @@ def pieMenuStart():
     iconBackspace =  respath + "backspace.svg"
     
     def radiusSize(buttonSize):
+        """ Return radius size """                          
         radius = str(math.trunc(buttonSize / 2))
         return "QToolButton {border-radius: " + radius + "px}"
 
@@ -315,8 +321,9 @@ def pieMenuStart():
         icon = buttonSize / 3 * 2
         return icon
 
-### Begin QuickMenu  Def ###
+    ### Begin QuickMenu  Def ###
     def quickMenu(buttonSize=20):
+        """ Build QuickMenu """                       
         mw = Gui.getMainWindow()
         
         icon = iconSize(buttonSize)
@@ -386,6 +393,7 @@ def pieMenuStart():
         
 
         def setChecked():
+            """ Get states of Hover and Context modes"""
             if paramGet.GetString("TriggerMode") == "Hover":
                 actionHover.setChecked(True)
             else:
@@ -401,6 +409,7 @@ def pieMenuStart():
 
 
         def onModeGroup():
+            """Handle the Hover mode group selection event."""
             text = modeGroup.checkedAction().data()
             paramGet.SetString("TriggerMode", text)
             PieMenuInstance.hide()
@@ -411,6 +420,7 @@ def pieMenuStart():
 
 
         def onActionContext():
+            """ Set state of Context mode"""
             if actionContext.isChecked():
                 paramGet.SetBool("EnableContext", True)
                 contextList()
@@ -423,6 +433,7 @@ def pieMenuStart():
 
 
         def pieList():
+            """Populate the menuPieMenu with actions based on user parameters."""
             indexList = paramIndexGet.GetString("IndexList")
             menuPieMenu.clear()
             if indexList:
@@ -470,6 +481,7 @@ def pieMenuStart():
 
 
         def onPieGroup():
+            """Handle the default pieMenu selection event in quickMenu."""
             paramGet.SetBool("ToolBar", False)
             paramGet.RemString("ToolBar")
             try:
@@ -486,6 +498,7 @@ def pieMenuStart():
 
 
         def onMenuToolBar():
+            """Handle the toolbar menu setup event."""
             menuToolBar.clear()
             if paramGet.GetBool("ToolBar"):
                 text = paramGet.GetString("ToolBar")
@@ -518,6 +531,7 @@ def pieMenuStart():
 
 
         def isActualPie(text):
+            """Check if the given text corresponds to the current toolbar (or menu)."""
             if paramGet.GetBool("ToolBar"):
                 entry = paramGet.GetString("ToolBar")
                 if ": " in entry:
@@ -531,6 +545,7 @@ def pieMenuStart():
 
 
         def onMenuToolbarGroup(sender):
+            """Handle the toolbar menu group setup event."""
             if not sender.actions():
                 action = QtGui.QAction(sender)
                 action.setText("Show")
@@ -547,6 +562,7 @@ def pieMenuStart():
 
 
         def onToolbarGroup(sender):
+            """Handle actions triggered in response to a toolbar menu."""
             if sender.text() == "Show":
                 paramGet.SetBool("ToolBar", True)
             elif sender.text() == "Save":
@@ -560,9 +576,7 @@ def pieMenuStart():
                 getGuiToolButtonData(sender.data(), None, commands, None)
                 newPieGroup.SetString("ToolList", ".,.".join(commands))
             elif sender.text() == "Show":
-                #Bug toolbar :  sender.data() est en français (langue locale) et est comparé plus loin à widgets.objectName() en Anglais
-                #print('sender.data :', sender.data())
-                
+
                 # write persistent toolbar and its workbenches
                 getGuiToolButtonData(sender.data(), None, None, workbenches)
                 toolbar_desc = ", ".join(workbenches)
@@ -576,6 +590,7 @@ def pieMenuStart():
 
 
         def onPrefButton():
+            """Handle the preferences button event."""
             PieMenuInstance.hide()
             onControl()
             
@@ -591,10 +606,11 @@ def pieMenuStart():
 
         return button 
 
-### END QuickMenu   Def ###
+    ### END QuickMenu   Def ###
 
 
     class HoverButton(QtGui.QToolButton):
+        """ Custom class : hover timer to avoid too fast triggering on hover mode """
 
         def __init__(self, parent=None):
             super(HoverButton, self).__init__()
@@ -606,6 +622,7 @@ def pieMenuStart():
             self.leaveEvent = self.onLeaveEvent
 
         def onHoverTimeout(self):
+            """Handle hover timeout event."""
             mode = paramGet.GetString("TriggerMode")
             if self.isMouseOver and self.defaultAction().isEnabled() and mode == "Hover":
                 PieMenuInstance.hide()
@@ -628,10 +645,10 @@ def pieMenuStart():
         def enterEvent(self, event):
             hoverDelay = paramGet.GetInt("HoverDelay")
             if not self.enterEventConnected:
-                self.hoverTimer.start(hoverDelay) # timer to avoid too fast triggering at  hover
+                self.hoverTimer.start(hoverDelay)
                 self.enterEventConnected = True
             self.hoverTimer.stop()  
-            self.hoverTimer.start(hoverDelay) # timer to avoid too fast triggering at hover
+            self.hoverTimer.start(hoverDelay)
             self.isMouseOver = True  
 
         def mouseReleaseEvent(self, event):
@@ -652,6 +669,7 @@ def pieMenuStart():
 
 
     class PieMenu(QWidget):
+        """ Main widget for PieMenu """
         mw = Gui.getMainWindow()
         event_filter_installed = False
         offset_x = 0
@@ -673,8 +691,6 @@ def pieMenuStart():
             self.menu.setStyleSheet(styleContainer)
             self.menu.setWindowFlags(self.menu.windowFlags() | QtCore.Qt.FramelessWindowHint | Qt.NoDropShadowWindowHint)
             self.menu.setAttribute(QtCore.Qt.WA_TranslucentBackground)
-            
-            
             if compositingManager:
                 pass
             else:
@@ -719,7 +735,7 @@ def pieMenuStart():
             button.setStyleSheet(styleButton + " QWidget { border-radius: 5px; }")
             return button
             
-        def doubleSpinbox(self, buttonSize=32):
+        def doubleSpinbox(self, buttonSize=32, step=1.0):
             button = QtGui.QDoubleSpinBox()
             button.setDecimals(3)
             button.setFixedWidth(90)
@@ -728,22 +744,47 @@ def pieMenuStart():
             button.setProperty("ButtonX", 0)
             button.setProperty("ButtonY", -30)
             button.setAttribute(QtCore.Qt.WA_TranslucentBackground)
-            button.setStyleSheet(" QWidget { border-radius: 5px; }")            
-            return button                      
-                                        
+            button.setStyleSheet(" QWidget { border-radius: 5px; }")
+            button.setSingleStep(step)
+            return button
+
+        def setupSpinBox(self):
+            self.double_spinbox = self.doubleSpinbox(step=1.0)  
+            self.double_spinbox.valueChanged.connect(self.spin_interactif)
+  
+            self.double_spinbox.setVisible(True)
+            self.buttons.append(self.double_spinbox)
+            
+            
         def eventFilter(self, obj, event):
+            """ Handle key and wheel event """
             if event.type() == QtCore.QEvent.KeyPress:
                 key = event.key()
                 if key == QtCore.Qt.Key_Enter or key == QtCore.Qt.Key_Return:
                     try:
-                        if (self.double_spinbox.isVisible() == True):
+                        if self.double_spinbox.isVisible():
                             self.validation()  
                     except:
                         None
+                        
+            elif event.type() == QtCore.QEvent.Wheel:
+                """ Press CTRL + rotate Wheel = X10, Press SHIFT + rotate Wheel = X0.1, Press CTRL+SHIFT + rotate Wheel= X0.01 """
+                modifiers = event.modifiers()
+                if modifiers & QtCore.Qt.ControlModifier and modifiers & QtCore.Qt.ShiftModifier:
+                    step = 0.001 # weird behavior, you have to set 0.001 to modify the hundredths...
+                elif modifiers & QtCore.Qt.ShiftModifier:
+                    step = 0.1
+                else:
+                    step = 1.0
+                try:
+                    self.double_spinbox.setSingleStep(step)
+                except:
+                    None
             return super(PieMenu, self).eventFilter(obj, event)
 
 
         def add_commands(self, commands, context=False):
+            """ Add commands to mieMenus """
             try:
                 docName = App.ActiveDocument.Name
                 g = Gui.ActiveDocument.getInEdit()
@@ -989,6 +1030,7 @@ def pieMenuStart():
             g = Gui.ActiveDocument.getInEdit()
             fonctionActive = g.Object
             featureName = g.Object.Name
+            self.double_spinbox.installEventFilter(self)
             size = self.double_spinbox.value()
             if (str(fonctionActive) == '<PartDesign::Fillet>'):
                 App.getDocument(docName).getObject(featureName).Radius = size
@@ -1006,6 +1048,7 @@ def pieMenuStart():
                 self.double_spinbox.setVisible(False)
             else:
                 self.double_spinbox.setVisible(False)
+            self.double_spinbox.removeEventFilter(self)
             App.ActiveDocument.recompute()
            
     sign = {
@@ -1206,7 +1249,6 @@ def pieMenuStart():
                 workbenches.append(workbench)
 
     def getGuiToolButtonData(idToolBar, actions, commands, workbenches):
-        #idToolBar is in the locale language setting, but need to be in english
         actionMapAll = getGuiActionMapAll()
         for i in actionMapAll:
             action = actionMapAll[i]
@@ -1239,7 +1281,7 @@ def pieMenuStart():
                     cmdWb = cmd_parts[0] + "Workbench"
                     # after workbench activation actionMap has to be actualized
                     Gui.activateWorkbench(cmdWb)
-                    return True
+                    #return True ## return a bug in 0.21 in Sketcher edit
         return False
 
 
@@ -1297,7 +1339,7 @@ def pieMenuStart():
             else:
                 indexList = []
             
-            # keyValue != de None when a shortcutkey is pressed
+
             if keyValue == None:
                 try:
                     docName = App.ActiveDocument.Name
@@ -1327,10 +1369,8 @@ def pieMenuStart():
                                 except AttributeError:
                                     text = paramGet.GetString("CurrentPie")
                             else :
-                                """ get text send in shortcutkey sender """
                                 text = keyValue
             else:
-                """ get text send in shortcutkey sender"""
                 text = keyValue
                 
             toolList = None
@@ -1591,7 +1631,6 @@ def pieMenuStart():
                     self.setText(key_text)
                 else:
                     if len(key_text) == 1 and len(self.text()) > 0:
-                        # Ajouter une virgule uniquement si la touche précédente était une lettre
                         last_char = self.text()[-1]
                         if last_char.isalpha():
                             self.setText(self.text() + ',' + key_text)
@@ -2000,7 +2039,7 @@ def pieMenuStart():
     toolListWidget.sortItems(QtCore.Qt.AscendingOrder)
     toolListWidget.setHorizontalScrollBarPolicy(QtCore
                                                 .Qt.ScrollBarAlwaysOff)
-    ###Search box ####
+
     toolListLayout = QVBoxLayout()
     
     searchLayout = QHBoxLayout()
@@ -2018,12 +2057,10 @@ def pieMenuStart():
     searchLayout.addWidget(clearButton)
      
     toolListLayout.addLayout(searchLayout)
-    #toolListLayout.addWidget(clearButton)
     toolListLayout.addWidget(toolListWidget) 
  
     widgetContainer = QWidget()
     widgetContainer.setLayout(toolListLayout)
-    ####Search Box ####
 
     def toolList():
         indexList = paramIndexGet.GetString("IndexList")
@@ -2713,7 +2750,7 @@ def pieMenuStart():
         layoutTheme.addStretch(1)
         layoutTheme.addWidget(actionTheme)
         actionTheme.stateChanged.connect(lambda state: setTheme(state))
-        ### Added Hover setting in Preferences
+        
         layoutTriggerButton = QtGui.QHBoxLayout()
         labelTriggerButton  = QLabel("Trigger mode : ")
 
