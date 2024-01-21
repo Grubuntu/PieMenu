@@ -41,8 +41,18 @@
 # Added button to clear Search Bar (new icon in resources)
 # In progress : Added stylesheets for theme
 
+# 1.3.3 :
+# Added stylesheets for theme
+# Updated Transparent and Legacy styles to new styling system
+# Added Dark and Light themes
+# Moved Pie icons to /Stylesheets/images_dark-light to make them stylable as well
+# Removed on pie dropdown menu to make them simpler
+# Added cancel button "ring" to help closing pies faster and let user have a visual reference of pie center
+# Made "OK" and "Cancel" fillet/chamfer fast radius pie stylable via stylesheets
+
+
 global PIE_MENU_VERSION
-PIE_MENU_VERSION = "1.3.2"
+PIE_MENU_VERSION = "1.3.3"
 
 def pieMenuStart():
     import math
@@ -83,6 +93,7 @@ def pieMenuStart():
     with open(stylesheet_path, "r") as f:
         styleCurrentTheme = f.read()
 
+    styleCurrentTheme = styleCurrentTheme.replace("pieMenuQss:", stylepath)
     
     def setGlobalShortcutKey(globalShortcutKey):
         """ Set shortcut in user parameters """
@@ -210,40 +221,6 @@ def pieMenuStart():
         """Open the preferences dialog."""
         onControl()
         
-
-    # styleMenuClose = ("""
-        # QToolButton {
-            # background-color: rgba(60,60,60,255);
-            # color: silver;
-            # border: 1px solid #1e1e1e;
-        # }
-
-        # QToolButton::menu-indicator {
-            # image: none;
-        # }
-
-        # """)
-
-    # styleContainer = ("QMenu{background: transparent}")
-
-    # styleCombo = ("""
-        # QComboBox {
-            # background: transparent;
-            # border: 1px solid transparent;
-        # }
-
-        # """)
-
-    # styleQuickMenu = ("padding: 5px 10px 5px 10px")
-
-    # styleQuickMenuItem = ("""
-        # QMenu::item {
-            # padding: 5px 20px 5px 20px;
-            # text-align: left;
-        # }
-        # """)
-        
-    iconClose = respath + "PieMenuClose.svg"
     iconMenu = respath + "PieMenuQuickMenu.svg"
     iconUp = respath + "PieMenuUp.svg"
     iconDown = respath + "PieMenuDown.svg"
@@ -253,9 +230,7 @@ def pieMenuStart():
     iconReset = respath + "PieMenuReload.svg"
     iconCopy = respath + "PieMenuCopy.svg"
     iconRemoveCommand = respath + "PieMenuRemoveCommand.svg"
-    iconValid = respath + "edit_OK.svg"
-    iconCancel = respath + "edit_Cancel.svg"
-    iconBackspace =  respath + "backspace.svg"
+    iconBackspace =  respath + "PieMenuBackspace.svg"
     
     def radiusSize(buttonSize):
         radius = str(math.trunc(buttonSize / 2))
@@ -264,6 +239,29 @@ def pieMenuStart():
     def iconSize(buttonSize):
         icon = buttonSize / 3 * 2
         return icon
+    
+    def closeButton(buttonSize=32):
+
+        icon = iconSize(buttonSize)
+        radius = radiusSize(buttonSize)
+
+        button = QtGui.QToolButton()
+        button.setObjectName("styleMenuClose")
+        button.setProperty("ButtonX", 0)
+        button.setProperty("ButtonY", 0)
+        button.setGeometry(0, 0, buttonSize, buttonSize)
+        button.setIconSize(QtCore.QSize(icon, icon))
+        # button.setIcon(QtGui.QIcon(iconClose))
+        button.setStyleSheet(styleCurrentTheme + radius)
+        button.setAttribute(QtCore.Qt.WA_TranslucentBackground)
+
+        def onButton():
+
+            PieMenuInstance.hide()
+
+        button.clicked.connect(onButton)
+
+        return button
 
     ### Begin QuickMenu  Def ###
     def quickMenu(buttonSize=20):
@@ -652,24 +650,24 @@ def pieMenuStart():
         def validButton(self, buttonSize=38):
             icon = iconSize(buttonSize)
             button = QtGui.QToolButton()
-            button.setObjectName("pieMenu")
+            button.setObjectName("styleComboValid")
             button.setProperty("ButtonX", -25)
-            button.setProperty("ButtonY", 0)
+            button.setProperty("ButtonY", 8)
             button.setGeometry(0, 0, buttonSize, buttonSize)
             button.setIconSize(QtCore.QSize(icon, icon))
-            button.setIcon(QtGui.QIcon(iconValid))
+            # button.setIcon(QtGui.QIcon(iconValid))
             button.setStyleSheet(styleCurrentTheme)
             return button
             
         def cancelButton(self, buttonSize=38):
             icon = iconSize(buttonSize)
             button = QtGui.QToolButton()
-            button.setObjectName("pieMenu")
+            button.setObjectName("styleComboCancel")
             button.setProperty("ButtonX", 25)
-            button.setProperty("ButtonY", 0)
+            button.setProperty("ButtonY", 8)
             button.setGeometry(0, 0, buttonSize, buttonSize)
             button.setIconSize(QtCore.QSize(icon, icon))
-            button.setIcon(QtGui.QIcon(iconCancel))
+            # button.setIcon(QtGui.QIcon(iconCancel))
             button.setStyleSheet(styleCurrentTheme)
             return button
             
@@ -777,11 +775,15 @@ def pieMenuStart():
                 else:
                     None
                 num = num + 1 
-            buttonQuickMenu = quickMenu()
-            buttonQuickMenu.setParent(self.menu)
-            if (module != 'SketcherGui'): # TO SOLVE : we hide setting menu in sketcher to prevent user to go in the preferences dialog : there is a bug with settings
-                self.buttons.append(buttonQuickMenu)
-            buttonQuickMenu.hide()
+            # buttonQuickMenu = quickMenu()
+            # buttonQuickMenu.setParent(self.menu)
+            # if (module != 'SketcherGui'): # TO SOLVE : we hide setting menu in sketcher to prevent user to go in the preferences dialog : there is a bug with settings
+            #     self.buttons.append(buttonQuickMenu)
+            # buttonQuickMenu.hide()
+            if (Gui.ActiveDocument.getInEdit() == None):
+                buttonClose = closeButton()
+                buttonClose.setParent(self.menu)
+                self.buttons.append(buttonClose)
 
             """ show Valid and Cancel buttons always """
             # buttonValid = self.validButton()
