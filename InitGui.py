@@ -46,9 +46,16 @@
 # Removed on pie dropdown menu to make them simpler
 # Added cancel button "ring" to help closing pies faster and let user have a visual reference of pie center
 # Made "OK" and "Cancel" fillet/chamfer fast radius pie stylable via stylesheets
+#
+# 1.3.4
+# Move globals settings on a new tab
+# Added setting for show or not the QuickMenu 
+# Added checkbox in parameters for Contextual activation
+# Set default theme (Legacy) on a new installation
+# Update stylesheets for #styleButtonMenu::menu-indicator (setting for QuickMenu)
 
 global PIE_MENU_VERSION
-PIE_MENU_VERSION = "1.3.3"
+PIE_MENU_VERSION = "1.3.4"
 
 def pieMenuStart():
     import math
@@ -373,9 +380,11 @@ def pieMenuStart():
             """ Set state of Context mode"""
             if actionContext.isChecked():
                 paramGet.SetBool("EnableContext", True)
+                checkboxGlobalContext.setChecked(True)
                 contextList()
             else:
                 paramGet.SetBool("EnableContext", False)
+                checkboxGlobalContext.setChecked(False)
             addObserver()
 
 
@@ -555,7 +564,6 @@ def pieMenuStart():
         menu.addAction(prefButtonWidgetAction)
 
         return button 
-
     ### END QuickMenu   Def ###
 
 
@@ -671,7 +679,7 @@ def pieMenuStart():
             button.setGeometry(0, 0, buttonSize, buttonSize)
             button.setIconSize(QtCore.QSize(icon, icon))
             # button.setIcon(QtGui.QIcon(iconValid))
-            #button.setStyleSheet(styleCurrentTheme)
+            # button.setStyleSheet(styleCurrentTheme)
             return button
             
         def cancelButton(self, buttonSize=38):
@@ -683,7 +691,7 @@ def pieMenuStart():
             button.setGeometry(0, 0, buttonSize, buttonSize)
             button.setIconSize(QtCore.QSize(icon, icon))
             # button.setIcon(QtGui.QIcon(iconCancel))
-            #button.setStyleSheet(styleCurrentTheme)
+            # button.setStyleSheet(styleCurrentTheme)
             return button
             
         def doubleSpinbox(self, buttonSize=32, step=1.0):
@@ -815,11 +823,13 @@ def pieMenuStart():
                 else:
                     None
                 num = num + 1 
-            # buttonQuickMenu = quickMenu()
-            # buttonQuickMenu.setParent(self.menu)
-            # if (module != 'SketcherGui'): # TO SOLVE : we hide setting menu in sketcher to prevent user to go in the preferences dialog : there is a bug with settings
-                # self.buttons.append(buttonQuickMenu)
-            # buttonQuickMenu.hide()
+            buttonQuickMenu = quickMenu()
+            buttonQuickMenu.setParent(self.menu)
+            if checkboxQuickMenu.checkState():
+                if (module != 'SketcherGui'): # TO SOLVE : we hide setting menu in sketcher to prevent user to go in the preferences dialog : there is a bug with settings
+                    self.buttons.append(buttonQuickMenu)
+            else:
+                buttonQuickMenu.hide()
             
             if (Gui.ActiveDocument.getInEdit() == None):
                 buttonClose = closeButton()
@@ -1563,7 +1573,7 @@ def pieMenuStart():
         for assignedShortcut in shortcutsAssigned:
             command, shortcut = assignedShortcut.split(" => ")
             if shortcut.replace(" ", "").lower() == currentShortcut.lower():
-                infoShortcut.setText(f'Warning: {currentShortcut} is already assigned for: {command}')
+                infoShortcut.setText(f' Warning: {currentShortcut} is already assigned for {command}')
                 break
 
     class CustomLineEdit(QLineEdit):
@@ -2030,6 +2040,40 @@ def pieMenuStart():
  
     widgetContainer = QWidget()
     widgetContainer.setLayout(toolListLayout)
+    widgetContainer.setMinimumHeight(380)
+    
+    def setShowQuickMenu(state):
+        if state == Qt.Checked:
+            paramGet.SetBool("ShowQuickMenu", True)
+        else:
+            paramGet.SetBool("ShowQuickMenu", False)
+
+    def getShowQuickMenu():
+        showQuickMenu = paramGet.GetBool("ShowQuickMenu")
+        
+        return showQuickMenu
+        
+        
+    checkboxQuickMenu = QCheckBox()
+    checkboxQuickMenu.setCheckable(True)
+    checkboxQuickMenu.setChecked(getShowQuickMenu())
+    
+    
+    def setContext(state):
+        nonlocal contextPhase
+        if state == Qt.Checked:
+            paramGet.SetBool("EnableContext", True)
+        else:
+            paramGet.SetBool("EnableContext", False)
+
+    
+    checkboxGlobalContext = QCheckBox()
+    checkboxGlobalContext.setCheckable(True)
+    enableContext = paramGet.GetBool("EnableContext")
+    checkboxGlobalContext.setChecked(enableContext)
+    
+    checkboxGlobalContext.stateChanged.connect(lambda state: setContext(state))
+
 
     def toolList():
         indexList = paramIndexGet.GetString("IndexList")
@@ -2633,7 +2677,9 @@ def pieMenuStart():
         paramGet.SetString("CurrentPie", "View")
         paramGet.SetString("Theme", "Legacy")
         paramGet.SetString("GlobalShortcutKey", "TAB")
+        paramGet.SetBool("ShowQuickMenu", True)
         paramGet.SetInt("HoverDelay", 100)
+        paramGet.SetBool("EnableContext", False)
 
         group = getGroup(mode=1)
 
@@ -2693,9 +2739,8 @@ def pieMenuStart():
                     else :
                         shortcutKey = newShortcut
                         setShortcutKey(shortcutKey)
-                                                                                                                                                                                                
                         labelShortcut.setText('New shortcut assigned: ' + shortcutKey)
-                                                   
+ 
             getShortcutList()
                 
         getShortcutKey()
@@ -2713,7 +2758,15 @@ def pieMenuStart():
         layoutInfoShortcut.addWidget(infoShortcut)
         layoutInfoShortcut.addStretch(1)
         infoShortcut.setText('')
-      
+        
+        labelshowQuickMenu = QLabel("Show QuickMenu")
+        layoutshowQuickMenu = QtGui.QHBoxLayout()
+        layoutshowQuickMenu.addWidget(labelshowQuickMenu)
+        layoutshowQuickMenu.addStretch(1)
+        layoutshowQuickMenu.addWidget(checkboxQuickMenu)
+        
+        checkboxQuickMenu.stateChanged.connect(lambda state: setShowQuickMenu(state))
+        
         labelTheme = QLabel("Theme style")
         layoutTheme = QtGui.QHBoxLayout()
         layoutTheme.addWidget(labelTheme)
@@ -2749,6 +2802,7 @@ def pieMenuStart():
         layoutHoverDelay.addWidget(labelHoverDelay)
         layoutHoverDelay.addStretch(1)
         layoutHoverDelay.addWidget(spinHoverDelay)
+        
         
         def close_dialog():
             pieMenuDialog.accept()
@@ -2787,28 +2841,40 @@ def pieMenuStart():
         
         pieMenuTabLayout.insertLayout(0, layoutAddRemove)
         pieMenuTabLayout.insertSpacing(1, 12)
-        pieMenuTabLayout.insertLayout(2, layoutShortcut)
-        pieMenuTabLayout.insertLayout(3, layoutRadius)
-        pieMenuTabLayout.insertLayout(4, layoutButton)
-        pieMenuTabLayout.insertSpacing(5, 36)
-        pieMenuTabLayout.insertLayout(6, layoutTheme)
-        pieMenuTabLayout.insertLayout(7, layoutGlobalShortcut)
-        pieMenuTabLayout.insertLayout(8, layoutInfoShortcut)
-        pieMenuTabLayout.insertSpacing(9, 18)
-        pieMenuTabLayout.insertLayout(10,layoutTriggerButton)
-        pieMenuTabLayout.insertLayout(11, layoutHoverDelay)
-        pieMenuTabLayout.insertSpacing(12, 18)
+        pieMenuTabLayout.insertLayout(2, layoutRadius)
+        pieMenuTabLayout.insertLayout(3, layoutButton)
+        pieMenuTabLayout.insertSpacing(4, 36)
+        pieMenuTabLayout.insertLayout(5, layoutShortcut)
 
         pieMenuTabLayout.addStretch(0)
         
         contextTab = QtGui.QWidget()
         contextTabLayout = QtGui.QVBoxLayout()
         contextTab.setLayout(contextTabLayout)
-
+        
+        settingsTab = QtGui.QWidget()
+        settingsTabLayout = QtGui.QVBoxLayout()
+        settingsTab.setLayout(settingsTabLayout)
+        
+        
+        labelGlobalContext = QLabel("Global context : ")
+        layoutGlobalContext = QtGui.QHBoxLayout()
+        layoutGlobalContext.addWidget(labelGlobalContext)
+        layoutGlobalContext.addStretch(1)
+        layoutGlobalContext.addWidget(checkboxGlobalContext)
+        
         layoutCheckContext = QtGui.QHBoxLayout()
         layoutCheckContext.addWidget(labelContext)
         layoutCheckContext.addStretch(1)
         layoutCheckContext.addWidget(checkContext)
+        
+        settingsTabLayout.insertLayout(1, layoutTheme)
+        settingsTabLayout.insertLayout(2, layoutshowQuickMenu)
+        settingsTabLayout.insertLayout(3, layoutTriggerButton)
+        settingsTabLayout.insertLayout(4, layoutHoverDelay)
+        settingsTabLayout.insertLayout(5, layoutGlobalContext)
+        settingsTabLayout.insertLayout(6, layoutGlobalShortcut)
+
 
         resetLayout = QtGui.QHBoxLayout()
         resetLayout.addStretch(1)
@@ -2820,10 +2886,10 @@ def pieMenuStart():
         contextTabLayout.addStretch(1)
 
         tabs.addTab(pieMenuTab, "PieMenu")
-       # tabs.addTab(toolListWidget, "Tools")
         tabs.addTab(widgetContainer, "Tools")
         tabs.addTab(contextTab, "Context")
-
+        tabs.addTab(settingsTab, "Global settings")
+        
         pieButtons = QtGui.QWidget()
         pieButtonsLayout = QtGui.QVBoxLayout()
         pieButtons.setLayout(pieButtonsLayout)
@@ -2855,22 +2921,22 @@ def pieMenuStart():
         pieMenuDialogLayout = QtGui.QVBoxLayout()
         pieMenuDialog.setLayout(pieMenuDialogLayout)
         pieMenuDialog.show()
-        ### Add close button to  preferences dialog
+
         close_button = QtGui.QPushButton("Close", pieMenuDialog)
         close_button.setMaximumWidth(70)
         close_button.clicked.connect(close_dialog)
         
-        button_layout = QtGui.QHBoxLayout()
+        button_layout = QtGui.QVBoxLayout()
+        button_layout.addLayout(layoutInfoShortcut)
+        button_layout.setAlignment(Qt.AlignTop)
         button_layout.addWidget(close_button, alignment=QtCore.Qt.AlignCenter)
-
+        
         pieMenuDialogLayout.addWidget(preferencesWidget)
         pieMenuDialogLayout.addLayout(button_layout)
 
-        
         cBoxUpdate()
 
 
-        
     def addAccessoriesMenu():
         if mw.property("eventLoop"):
             startAM = False
