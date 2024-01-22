@@ -101,3 +101,7 @@ QMenu#styleQuickMenuItem::item {
     padding: 5px 20px 5px 20px;
     text-align: left;
 }
+
+QToolButton#styleButtonMenu::menu-indicator {
+    image: none;
+}
