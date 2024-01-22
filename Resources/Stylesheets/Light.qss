@@ -12,25 +12,25 @@ QToolButton#pieMenu::menu-indicator {
 }
 
 QToolButton#pieMenu {
-    background-color: lightGray;
-    border: 1px outset silver;
+    background-color: rgba(0, 0, 0, 0.05);
+    border: none;
 }
 
 QToolButton#pieMenu:disabled {
-    background-color: darkGray;
+    border: 2px solid rgba(0, 0, 0, 0.05);
 }
 
 QToolButton#pieMenu:hover {
-    background-color: lightBlue;
+    background-color: rgba(0, 0, 0, 0.2);
 }
 
 /* When the button is checkeable and it's in "checked" state */
 QToolButton#pieMenu:checked {
-    background-color: lightGreen;
+    border: 2px solid #7f7f7f;
 }
 
 QToolButton#pieMenu:checked:hover {
-    background-color: #6db96d;
+    background-color: rgba(0, 0, 0, 0.2);
 }
 
 
@@ -39,9 +39,8 @@ QToolButton#pieMenu:checked:hover {
 /* ====================================================== */
 /* It is the ring that helps to visually locate the middle of the pie */
 QToolButton#styleMenuClose {
-    background-color: rgba(60,60,60,255);
-    color: silver;
-    border: 1px solid #1e1e1e;
+    background-color: transparent;
+    border: 4px solid #7f7f7f;
 }
 
 QToolButton#styleMenuClose:hover {
@@ -66,15 +65,13 @@ QComboBox#styleCombo {
 
 QToolButton#styleComboValid,
 QToolButton#styleComboCancel {
-    background-color: transparent;
+    background-color: rgba(0, 0, 0, 0.05);
     border-radius: 4px;
 }
 
 QToolButton#styleComboValid:hover,
 QToolButton#styleComboCancel:hover {
     background-color: rgba(0, 0, 0, 0.2);
-    background-color: lightGray;
-    border: 1px outset silver;
 }
 
 QToolButton#styleComboValid {

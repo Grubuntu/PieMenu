@@ -5,3 +5,6 @@ v1.3.2
 updated PieMenuReload.svg
 updated PieMenuRemoveCommand.svg
 added backspace.svg
+v1.3.3
+renamed backspace.svg to PieMenuBackspace.svg
+moved PieMenuBackspace.svg, edit_Cancel.svg and edit_OK.svg to /Stylesheets/images_dark-light/ folder so that they become styleable via stylesheets

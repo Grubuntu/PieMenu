@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   height="64"
+   width="64"
+   version="1.1"
+   viewBox="0 0 64.000001 64.000001"
+   id="svg3"
+   sodipodi:docname="PieMenuClose.svg"
+   inkscape:version="1.3.2 (091e20e, 2023-11-25)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs3" />
+  <sodipodi:namedview
+     id="namedview3"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#505050"
+     showgrid="true"
+     inkscape:zoom="9.5644253"
+     inkscape:cx="20.388052"
+     inkscape:cy="34.136918"
+     inkscape:current-layer="svg3">
+    <inkscape:grid
+       id="grid3"
+       units="px"
+       originx="0"
+       originy="0"
+       spacingx="1"
+       spacingy="1"
+       empcolor="#ff3f3f"
+       empopacity="0.25098039"
+       color="#0099e5"
+       opacity="0.14901961"
+       empspacing="5"
+       dotted="false"
+       gridanglex="30"
+       gridanglez="30"
+       visible="true" />
+  </sodipodi:namedview>
+  <path
+     id="path4"
+     style="color:#000000;fill:#000000;fill-opacity:0.60349125;stroke-linecap:round;-inkscape-stroke:none;paint-order:markers stroke fill"
+     d="M 25 22 A 3 3 0 0 0 22.878906 22.878906 A 3 3 0 0 0 22.878906 27.121094 L 28.257812 32.5 L 22.878906 37.878906 A 3 3 0 0 0 22.878906 42.121094 A 3 3 0 0 0 27.121094 42.121094 L 32.5 36.742188 L 37.878906 42.121094 A 3 3 0 0 0 42.121094 42.121094 A 3 3 0 0 0 42.121094 37.878906 L 36.742188 32.5 L 42.121094 27.121094 A 3 3 0 0 0 42.121094 22.878906 A 3 3 0 0 0 40 22 A 3 3 0 0 0 37.878906 22.878906 L 32.5 28.257812 L 27.121094 22.878906 A 3 3 0 0 0 25 22 z " />
+</svg>
