@@ -26,13 +26,6 @@
 # http://www.freecadweb.org/wiki/index.php?title=Code_snippets
 
 # Changelog :
-# 1.3.1 :
-# Added ability to set multi keys for  keyboard shortcuts
-# Added search box for command list
-# Fix problem on Hover mode
-# Fix an oversight (shortcutList)
-# Workaround for shadow ghosting on MacOS : not completely solved
-# Added setting for hover delay
 #
 # 1.3.2 :
 # Added close button to Preference Dialog
@@ -72,8 +65,11 @@ def pieMenuStart():
     
     path = locator.path()
     respath = path + "/Resources/icons/"
+    respath = respath.replace("\\", "/")
     stylepath = path + "/Resources/Stylesheets/"
-    
+    stylepath = stylepath.replace("\\", "/")
+
+
     selectionTriggered = False
     contextPhase = False
     global shortcutKey
@@ -83,17 +79,23 @@ def pieMenuStart():
     globalShortcutKey = "TAB"
     shortcutList =[]
     
+    
     paramPath = "User parameter:BaseApp/PieMenu"
     paramIndexPath= "User parameter:BaseApp/PieMenu/Index"
     paramGet = App.ParamGet(paramPath)
     paramIndexGet = App.ParamGet(paramIndexPath)
     
-    theme = paramGet.GetString("Theme")
-    stylesheet_path = f"{stylepath}{theme}.qss"
-    with open(stylesheet_path, "r") as f:
-        styleCurrentTheme = f.read()
-
-    styleCurrentTheme = styleCurrentTheme.replace("pieMenuQss:", stylepath)
+    def getStyle():
+        theme = paramGet.GetString("Theme")
+        if theme == "":
+            theme = "Legacy" # default theme if new installation
+        stylesheet_path = f"{stylepath}{theme}.qss"
+        with open(stylesheet_path, "r") as f:
+            styleCurrentTheme = f.read()
+        styleCurrentTheme = styleCurrentTheme.replace("pieMenuQss:", stylepath)
+        return styleCurrentTheme
+        
+    styleCurrentTheme = getStyle()
     
     def setGlobalShortcutKey(globalShortcutKey):
         """ Set shortcut in user parameters """
@@ -133,7 +135,6 @@ def pieMenuStart():
         global globalShortcutKey
         """Get keyboard shortcut and  namePie from user parameters"""
         indexList = paramIndexGet.GetString("IndexList")
-         # Effacer les raccourcis existants
         for shortcut in mw.findChildren(QShortcut):
             if shortcut.activated is not None:
                 shortcut.activated.disconnect()
@@ -150,7 +151,7 @@ def pieMenuStart():
             param = paramIndexGet.GetGroup(str(i))
             namePie = paramIndexGet.GetString(str(i))
             shortcutKey = param.GetString("ShortcutKey")
-            if shortcutKey != '':
+            if shortcutKey != "":
                 shortcutList.append(f"PieMenu_{namePie} => {shortcutKey}")
 
         for result in shortcutList:
@@ -275,7 +276,7 @@ def pieMenuStart():
         menu.setStyleSheet(styleCurrentTheme)
 
         button = QtGui.QToolButton()
-        button.setObjectName("styleMenuClose")
+        button.setObjectName("styleButtonMenu")
         button.setMenu(menu)
         button.setProperty("ButtonX", 0)
         button.setProperty("ButtonY", 32)
@@ -334,7 +335,7 @@ def pieMenuStart():
 
         prefButtonWidgetAction = QtGui.QWidgetAction(menu)
         prefButtonWidgetAction.setDefaultWidget(prefButton)
-        
+
 
         def setChecked():
             if paramGet.GetString("TriggerMode") == "Hover":
@@ -511,9 +512,6 @@ def pieMenuStart():
                 getGuiToolButtonData(sender.data(), None, commands, None)
                 newPieGroup.SetString("ToolList", ".,.".join(commands))
             elif sender.text() == "Show":
-                #Bug toolbar :  sender.data() est en français (langue locale) et est comparé plus loin à widgets.objectName() en Anglais
-                #print('sender.data :', sender.data())
-                
                 # write persistent toolbar and its workbenches
                 getGuiToolButtonData(sender.data(), None, None, workbenches)
                 toolbar_desc = ", ".join(workbenches)
@@ -542,7 +540,7 @@ def pieMenuStart():
 
         return button 
 
-### END QuickMenu   Def ###
+    ### END QuickMenu   Def ###
 
 
     class HoverButton(QtGui.QToolButton):
@@ -579,10 +577,10 @@ def pieMenuStart():
         def enterEvent(self, event):
             hoverDelay = paramGet.GetInt("HoverDelay")
             if not self.enterEventConnected:
-                self.hoverTimer.start(hoverDelay) # timer to avoid too fast triggering at  hover
+                self.hoverTimer.start(hoverDelay)
                 self.enterEventConnected = True
             self.hoverTimer.stop()  
-            self.hoverTimer.start(hoverDelay) # timer to avoid too fast triggering at hover
+            self.hoverTimer.start(hoverDelay)
             self.isMouseOver = True  
 
         def mouseReleaseEvent(self, event):
@@ -656,7 +654,7 @@ def pieMenuStart():
             button.setGeometry(0, 0, buttonSize, buttonSize)
             button.setIconSize(QtCore.QSize(icon, icon))
             # button.setIcon(QtGui.QIcon(iconValid))
-            button.setStyleSheet(styleCurrentTheme)
+            #button.setStyleSheet(styleCurrentTheme)
             return button
             
         def cancelButton(self, buttonSize=38):
@@ -668,7 +666,7 @@ def pieMenuStart():
             button.setGeometry(0, 0, buttonSize, buttonSize)
             button.setIconSize(QtCore.QSize(icon, icon))
             # button.setIcon(QtGui.QIcon(iconCancel))
-            button.setStyleSheet(styleCurrentTheme)
+            #button.setStyleSheet(styleCurrentTheme)
             return button
             
         def doubleSpinbox(self, buttonSize=32):
@@ -696,7 +694,7 @@ def pieMenuStart():
 
 
         def add_commands(self, commands, context=False):
-            styleCurrentTheme = getTheme()
+            styleCurrentTheme = getStyle()
             try:
                 docName = App.ActiveDocument.Name
                 g = Gui.ActiveDocument.getInEdit()
@@ -778,8 +776,9 @@ def pieMenuStart():
             # buttonQuickMenu = quickMenu()
             # buttonQuickMenu.setParent(self.menu)
             # if (module != 'SketcherGui'): # TO SOLVE : we hide setting menu in sketcher to prevent user to go in the preferences dialog : there is a bug with settings
-            #     self.buttons.append(buttonQuickMenu)
+                # self.buttons.append(buttonQuickMenu)
             # buttonQuickMenu.hide()
+            
             if (Gui.ActiveDocument.getInEdit() == None):
                 buttonClose = closeButton()
                 buttonClose.setParent(self.menu)
@@ -802,11 +801,13 @@ def pieMenuStart():
                 if (Gui.ActiveDocument.getInEdit() != None):
                     """ or show Valid and Cancel buttons in Edit Feature Only """
                     buttonValid = self.validButton()
+                    buttonValid.setStyleSheet(styleCurrentTheme)
                     buttonValid.setParent(self.menu)
                     buttonValid.clicked.connect(self.validation)
                     self.buttons.append(buttonValid)
                     
                     buttonCancel = self.cancelButton()
+                    buttonCancel.setStyleSheet(styleCurrentTheme)
                     buttonCancel.setParent(self.menu)
                     buttonCancel.clicked.connect(self.cancel)
                     self.buttons.append(buttonCancel)
@@ -1164,7 +1165,6 @@ def pieMenuStart():
                 workbenches.append(workbench)
 
     def getGuiToolButtonData(idToolBar, actions, commands, workbenches):
-        #idToolBar is in the locale language setting, but need to be in english
         actionMapAll = getGuiActionMapAll()
         for i in actionMapAll:
             action = actionMapAll[i]
@@ -1255,7 +1255,6 @@ def pieMenuStart():
             else:
                 indexList = []
             
-            # keyValue != de None when a shortcutkey is pressed
             if keyValue == None:
                 try:
                     docName = App.ActiveDocument.Name
@@ -1393,45 +1392,24 @@ def pieMenuStart():
 
     def setTheme():
         comboBoxTheme.blockSignals(True)
-        # Get the selected stylesheet from the combobox
         theme = comboBoxTheme.currentText()
-        # Set Theme in parameters
         paramGet.SetString("Theme", theme)
-        # Get qss file
-        stylesheet_path = f"{stylepath}{theme}.qss"
-        with open(stylesheet_path, "r") as f:
-            styleCurrentTheme = f.read()
-
         comboBoxTheme.blockSignals(False)
-        return styleCurrentTheme
-        
 
 
     def getTheme():
-        ## TODO : warn user if there is no stylesheet
-        # Listez tous les fichiers dans le répertoire
         all_files = os.listdir(stylepath)
-        # Filtrez les fichiers avec l'extension ".qss"
         qss_files = [file for file in all_files if file.endswith(".qss")]
-        # Supprimez l'extension ".qss" pour obtenir les noms des styles
         available_styles = [file[:-4] for file in qss_files]
-        # Clear existing items in the combobox
         comboBoxTheme.blockSignals(True)
         comboBoxTheme.clear()
-        # Add available stylesheets to the combobox
         comboBoxTheme.addItems(available_styles)
-        # Set the current index based on the stored theme preference
+
         theme = paramGet.GetString("Theme")
         index = comboBoxTheme.findText(theme)
         if index != -1:
             comboBoxTheme.setCurrentIndex(index)
-            
-        stylesheet_path = f"{stylepath}{theme}.qss"
-        with open(stylesheet_path, "r") as f:
-            styleCurrentTheme = f.read()
-            #print('gettheme : ', styleCurrentTheme)
         comboBoxTheme.blockSignals(False)
-        return styleCurrentTheme
 
     
     #####ComboBox####
@@ -1581,7 +1559,6 @@ def pieMenuStart():
                     self.setText(key_text)
                 else:
                     if len(key_text) == 1 and len(self.text()) > 0:
-                        # Ajouter une virgule uniquement si la touche précédente était une lettre
                         last_char = self.text()[-1]
                         if last_char.isalpha():
                             self.setText(self.text() + ',' + key_text)
@@ -1631,8 +1608,7 @@ def pieMenuStart():
         labelShortcut.setText('Current shortcut : ' + shortcutKey)
         labelGlobalShortcut.setText('Global shortcut : ' + globalShortcutKey)
 
-        
-        
+
     cBox.currentIndexChanged.connect(onPieChange)
 
     buttonAddPieMenu = QtGui.QToolButton()
@@ -1778,7 +1754,7 @@ def pieMenuStart():
 
                 paramIndexGet.RemGroup(a)
                 paramIndexGet.RemString(a)
-                # special case treatment                                             
+                # special case treatment
                 if pie == currentPie:
                     currentPie = "View"
                     try:
@@ -1990,7 +1966,7 @@ def pieMenuStart():
     toolListWidget.sortItems(QtCore.Qt.AscendingOrder)
     toolListWidget.setHorizontalScrollBarPolicy(QtCore
                                                 .Qt.ScrollBarAlwaysOff)
-    ###Search box ####
+
     toolListLayout = QVBoxLayout()
     
     searchLayout = QHBoxLayout()
@@ -2012,7 +1988,7 @@ def pieMenuStart():
  
     widgetContainer = QWidget()
     widgetContainer.setLayout(toolListLayout)
-    ####Search Box ####
+
 
     def toolList():
         indexList = paramIndexGet.GetString("IndexList")
