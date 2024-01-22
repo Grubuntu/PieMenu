@@ -2718,9 +2718,6 @@ def pieMenuStart():
         layoutTheme = QtGui.QHBoxLayout()
         layoutTheme.addWidget(labelTheme)
         layoutTheme.addStretch(1)
-
-        layoutTheme.addWidget(actionTheme)
-        actionTheme.stateChanged.connect(lambda state: setTheme(state))
         
         layoutTheme.addWidget(comboBoxTheme)
         comboBoxTheme.currentIndexChanged.connect(setTheme)
