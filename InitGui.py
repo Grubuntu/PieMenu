@@ -2829,7 +2829,7 @@ def pieMenuStart():
 
         getGlobalShortcutKey()
 
-        labelGlobalShortcut.setText('Global shortcut : ' + globalShortcutKey)
+        labelGlobalShortcut.setText('Global shortcut: ' + globalShortcutKey)
         layoutGlobalShortcut = QtGui.QHBoxLayout()
         layoutGlobalShortcut.addWidget(labelGlobalShortcut)
         layoutGlobalShortcut.addStretch(1)
@@ -2857,7 +2857,7 @@ def pieMenuStart():
         settingsTab.setLayout(settingsTabLayout)
         
         
-        labelGlobalContext = QLabel("Global context : ")
+        labelGlobalContext = QLabel("Global context: ")
         layoutGlobalContext = QtGui.QHBoxLayout()
         layoutGlobalContext.addWidget(labelGlobalContext)
         layoutGlobalContext.addStretch(1)
