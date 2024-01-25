@@ -242,6 +242,7 @@ def pieMenuStart():
     iconCopy = respath + "PieMenuCopy.svg"
     iconRemoveCommand = respath + "PieMenuRemoveCommand.svg"
     iconBackspace =  respath + "PieMenuBackspace.svg"
+    iconInfo =  respath + "PieMenuInfo.svg"
     
     def radiusSize(buttonSize):
         """ Return radius size """                          
@@ -2829,7 +2830,7 @@ def pieMenuStart():
 
         getGlobalShortcutKey()
 
-        labelGlobalShortcut.setText('Global shortcut : ' + globalShortcutKey)
+        labelGlobalShortcut.setText('Global shortcut: ' + globalShortcutKey)
         layoutGlobalShortcut = QtGui.QHBoxLayout()
         layoutGlobalShortcut.addWidget(labelGlobalShortcut)
         layoutGlobalShortcut.addStretch(1)
@@ -2857,7 +2858,7 @@ def pieMenuStart():
         settingsTab.setLayout(settingsTabLayout)
         
         
-        labelGlobalContext = QLabel("Global context : ")
+        labelGlobalContext = QLabel("Global context: ")
         layoutGlobalContext = QtGui.QHBoxLayout()
         layoutGlobalContext.addWidget(labelGlobalContext)
         layoutGlobalContext.addStretch(1)
@@ -2921,15 +2922,44 @@ def pieMenuStart():
         pieMenuDialogLayout = QtGui.QVBoxLayout()
         pieMenuDialog.setLayout(pieMenuDialogLayout)
         pieMenuDialog.show()
+        
+        def infoPopup():
+            msg = """
+                <h2>Pie menu</h2>
+                <p style='font-weight:normal;font-style:italic;'>version """ + PIE_MENU_VERSION + """</p>
+                <p style='font-weight:normal;'>This macro adds pie menu to FreeCAD GUI</p>
+                <hr>
+                <h2>Licence</h2>
+                <p style='font-weight:normal;'>Copyright (C) 2024 Grubuntu, Pgilfernandez @ FreeCAD</p>
+                <p style='font-weight:normal;'>Copyright (C) 2022, 2023 mdkus @ FreeCAD</p>
+                <p style='font-weight:normal;'>Copyright (C) 2016, 2017 triplus @ FreeCAD</p>
+                <p style='font-weight:normal;'>Copyright (C) 2015,2016 looo @ FreeCAD</p>
+                <p style='font-weight:normal;'>Copyright (C) 2015 microelly <microelly2@freecadbuch.de></p>
+                <p style='font-weight:normal;'>This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option) any later version.</p>
+                <p style='font-weight:normal;'>This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.</p>
+                <p style='font-weight:normal;'>You should have received a copy of the GNU Lesser General Public License along with this library; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA</p>
+            """
+            res = QtGui.QMessageBox.question(None,"Help",msg,QtGui.QMessageBox.Ok)
+        
+        info_button = QtGui.QPushButton()
+        info_button.setMaximumWidth(80)
+        info_button.setIcon(QtGui.QIcon.fromTheme(iconInfo))
+        info_button.clicked.connect(infoPopup)
 
         close_button = QtGui.QPushButton("Close", pieMenuDialog)
-        close_button.setMaximumWidth(70)
+        close_button.setMaximumWidth(120)
         close_button.clicked.connect(close_dialog)
         
+        # Create a horizontal layout for the buttons
+        button_row_layout = QtGui.QHBoxLayout()
+        button_row_layout.addWidget(info_button)
+        button_row_layout.addStretch(1)
+        button_row_layout.addWidget(close_button, 0, alignment=QtCore.Qt.AlignCenter)
+        button_row_layout.addStretch(1)
+
         button_layout = QtGui.QVBoxLayout()
         button_layout.addLayout(layoutInfoShortcut)
-        button_layout.setAlignment(Qt.AlignTop)
-        button_layout.addWidget(close_button, alignment=QtCore.Qt.AlignCenter)
+        button_layout.addLayout(button_row_layout)
         
         pieMenuDialogLayout.addWidget(preferencesWidget)
         pieMenuDialogLayout.addLayout(button_layout)
