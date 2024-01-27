@@ -1490,6 +1490,7 @@ def pieMenuStart():
 
 
     comboBoxTheme = QComboBox()
+    comboBoxTheme.setMinimumWidth(120)
     getTheme()
 
     
@@ -1662,8 +1663,21 @@ def pieMenuStart():
     globalShortcutLineEdit.setToolTip("For TAB press CTRL+TAB")
     
     labelShortcut = QLabel()
+    labelShortcut.setAlignment(QtCore.Qt.AlignRight)
     labelGlobalShortcut = QLabel()
-
+    labelGlobalShortcut.setAlignment(QtCore.Qt.AlignRight)
+    
+    separatorPieMenu = QtGui.QFrame()
+    separatorPieMenu.setObjectName("separatorPieMenu")
+    separatorPieMenu.setFrameShape(QtGui.QFrame.HLine)
+    separatorPieMenu.setFrameShadow(QtGui.QFrame.Sunken)
+    separatorPieMenu.setStyleSheet(styleCurrentTheme)
+    
+    separatorSettings = QtGui.QFrame()
+    separatorSettings.setObjectName("separatorSettings")
+    separatorSettings.setFrameShape(QtGui.QFrame.HLine)
+    separatorSettings.setFrameShadow(QtGui.QFrame.Sunken)
+    separatorSettings.setStyleSheet(styleCurrentTheme)
 
     def onPieChange():
         """ Update values for all settings """
@@ -1969,20 +1983,24 @@ def pieMenuStart():
     
     buttonCopyPieMenu.clicked.connect(onButtonCopyPieMenu)
 
-    labelRadius = QtGui.QLabel("Pie size")
+    labelRadius = QtGui.QLabel("Pie size:")
+    labelRadius.setAlignment(QtCore.Qt.AlignRight)
     spinRadius = QtGui.QSpinBox()
     spinRadius.setMaximum(9999)
-    spinRadius.setMinimumWidth(70)
+    spinRadius.setMinimumWidth(160)
     
     
-    labelHoverDelay = QtGui.QLabel("Hover delay (ms)")
+    labelHoverDelay = QtGui.QLabel("Hover delay (ms):")
+    labelHoverDelay.setAlignment(QtCore.Qt.AlignRight)
     spinHoverDelay = QtGui.QSpinBox()
     spinHoverDelay.setMaximum(999)
-    spinHoverDelay.setMinimumWidth(70)
+    spinHoverDelay.setMinimumWidth(90)
     
-    labelShape = QtGui.QLabel("Shape :")
+    labelShape = QtGui.QLabel("Shape:")
+    labelShape.setAlignment(QtCore.Qt.AlignRight)
     
-    labeldisplayCommandName = QtGui.QLabel("Show command name in PieMenu :")
+    labeldisplayCommandName = QtGui.QLabel("Show command names:")
+    labeldisplayCommandName.setAlignment(QtCore.Qt.AlignRight)
     
     spinNumColumn = QtGui.QSpinBox()
     
@@ -2074,12 +2092,13 @@ def pieMenuStart():
                 param.SetBool("DisplayCommand", state)
     
     comboShape = QComboBox()
+    comboShape.setMinimumWidth(160)
     comboShape.currentIndexChanged.connect(setShape)
     
-    labelNumColumn= QtGui.QLabel("Number of columns :")
+    labelNumColumn= QtGui.QLabel("Number of columns:")
 
     spinNumColumn.setMaximum(12)
-    spinNumColumn.setMinimumWidth(70)
+    spinNumColumn.setMinimumWidth(120)
     
     cboxDisplayCommandName = QCheckBox()
     cboxDisplayCommandName.setCheckable(True)
@@ -2128,10 +2147,11 @@ def pieMenuStart():
 
     spinRadius.valueChanged.connect(onSpinRadius)
 
-    labelButton = QtGui.QLabel("Button size")
+    labelButton = QtGui.QLabel("Button size:")
+    labelButton.setAlignment(QtCore.Qt.AlignRight)
     spinButton = QtGui.QSpinBox()
     spinButton.setMaximum(999)
-    spinButton.setMinimumWidth(70)
+    spinButton.setMinimumWidth(160)
     
     
     def onSpinButton():
@@ -2745,7 +2765,7 @@ def pieMenuStart():
 
             paramIndexGet.SetString("0", "View")
             paramIndexGet.SetString("IndexList", ".,.".join(indexList))
-            
+
             group = paramIndexGet.GetGroup("0")
             group.SetString("ToolList", ".,.".join(defaultTools))
             group.SetInt("Radius", 80)
@@ -2810,16 +2830,25 @@ def pieMenuStart():
         layoutAddRemove.addWidget(buttonRenamePieMenu)
         layoutAddRemove.addWidget(buttonCopyPieMenu)
 
-
+        layoutRadiusLeft = QtGui.QHBoxLayout()
+        layoutRadiusLeft.addStretch(1)
+        layoutRadiusLeft.addWidget(labelRadius)
+        layoutRadiusRight = QtGui.QHBoxLayout()
+        layoutRadiusRight.addWidget(spinRadius)
+        layoutRadiusRight.addStretch(1)
         layoutRadius = QtGui.QHBoxLayout()
-        layoutRadius.addWidget(labelRadius)
-        layoutRadius.addStretch(1)
-        layoutRadius.addWidget(spinRadius)
-
+        layoutRadius.addLayout(layoutRadiusLeft, 1)
+        layoutRadius.addLayout(layoutRadiusRight, 1)
+        
+        layoutButtonLeft = QtGui.QHBoxLayout()
+        layoutButtonLeft.addStretch(1)
+        layoutButtonLeft.addWidget(labelButton)
+        layoutButtonRight = QtGui.QHBoxLayout()
+        layoutButtonRight.addWidget(spinButton)
+        layoutButtonRight.addStretch(1)
         layoutButton = QtGui.QHBoxLayout()
-        layoutButton.addWidget(labelButton)
-        layoutButton.addStretch(1)
-        layoutButton.addWidget(spinButton)
+        layoutButton.addLayout(layoutButtonLeft, 1)
+        layoutButton.addLayout(layoutButtonRight, 1)
 
         def updateShortcutKey(newShortcut):
             global shortcutKey
@@ -2844,55 +2873,79 @@ def pieMenuStart():
                 
         getShortcutKey()
         
-        labelShortcut.setText('Current shortcut : ' + shortcutKey)
+        labelShortcut.setText('Current shortcut: ' + shortcutKey)
+        
         layoutShortcut = QtGui.QHBoxLayout()
         layoutShortcut.addWidget(labelShortcut)
         layoutShortcut.addStretch(1)
         layoutShortcut.addWidget(shortcutLineEdit)
+        
         assignShortcutButton = QtGui.QPushButton("Assign")
         layoutShortcut.addWidget(assignShortcutButton)
         assignShortcutButton.clicked.connect(lambda: updateShortcutKey(shortcutLineEdit.text()))
         
+        layoutShapeLeft = QtGui.QHBoxLayout()
+        layoutShapeLeft.addStretch(1)
+        layoutShapeLeft.addWidget(labelShape)
+        layoutShapeRight = QtGui.QHBoxLayout()
+        layoutShapeRight.addWidget(comboShape)
+        # layoutShapeRight.addStretch(1)
         layoutShape = QtGui.QHBoxLayout()
-        layoutShape.addWidget(labelShape)
-        layoutShape.addStretch(1)
-        layoutShape.addWidget(comboShape)
+        layoutShape.addLayout(layoutShapeLeft, 1)
+        layoutShape.addLayout(layoutShapeRight, 1)
         
         layoutColumn = QtGui.QHBoxLayout()
         layoutColumn.addWidget(labelNumColumn)
         layoutColumn.addStretch(1)
         layoutColumn.addWidget(spinNumColumn)
         
-
-        layoutdisplayCommandName = QtGui.QHBoxLayout()
-        layoutdisplayCommandName.addWidget(labeldisplayCommandName)
-        layoutdisplayCommandName.addStretch(1)
-        layoutdisplayCommandName.addWidget(cboxDisplayCommandName)
-        
+        layoutDisplayCommandNameLeft = QtGui.QHBoxLayout()
+        layoutDisplayCommandNameLeft.addStretch(1)
+        layoutDisplayCommandNameLeft.addWidget(labeldisplayCommandName)
+        layoutDisplayCommandNameRight = QtGui.QHBoxLayout()
+        layoutDisplayCommandNameRight.addWidget(cboxDisplayCommandName)
+        layoutDisplayCommandNameRight.addStretch(1)
+        layoutDisplayCommandName = QtGui.QHBoxLayout()
+        layoutDisplayCommandName.addLayout(layoutDisplayCommandNameLeft, 1)
+        layoutDisplayCommandName.addLayout(layoutDisplayCommandNameRight, 1)
         
         layoutInfoShortcut = QtGui.QHBoxLayout()
         layoutInfoShortcut.addWidget(infoShortcut)
         layoutInfoShortcut.addStretch(1)
         infoShortcut.setText('')
         
-        labelshowQuickMenu = QLabel("Show QuickMenu")
-        layoutshowQuickMenu = QtGui.QHBoxLayout()
-        layoutshowQuickMenu.addWidget(labelshowQuickMenu)
-        layoutshowQuickMenu.addStretch(1)
-        layoutshowQuickMenu.addWidget(checkboxQuickMenu)
+        labelShowQuickMenu = QLabel("Show QuickMenu:")
+        labelShowQuickMenu.setAlignment(QtCore.Qt.AlignRight)
+        
+        layoutShowQuickMenuLeft = QtGui.QHBoxLayout()
+        layoutShowQuickMenuLeft.addStretch(1)
+        layoutShowQuickMenuLeft.addWidget(labelShowQuickMenu)
+        layoutShowQuickMenuRight = QtGui.QHBoxLayout()
+        layoutShowQuickMenuRight.addWidget(checkboxQuickMenu)
+        layoutShowQuickMenuRight.addStretch(1)
+        layoutShowQuickMenu = QtGui.QHBoxLayout()
+        layoutShowQuickMenu.addLayout(layoutShowQuickMenuLeft, 1)
+        layoutShowQuickMenu.addLayout(layoutShowQuickMenuRight, 1)
         
         checkboxQuickMenu.stateChanged.connect(lambda state: setShowQuickMenu(state))
         
-        labelTheme = QLabel("Theme style")
+        labelTheme = QLabel("Theme style:")
+        labelTheme.setMinimumWidth(160)
+        labelTheme.setAlignment(QtCore.Qt.AlignRight)
+
+        layoutThemeLeft = QtGui.QHBoxLayout()
+        layoutThemeLeft.addStretch(1)
+        layoutThemeLeft.addWidget(labelTheme)
+        layoutThemeRight = QtGui.QHBoxLayout()
+        layoutThemeRight.addWidget(comboBoxTheme)
+        # layoutThemeRight.addStretch(1)
         layoutTheme = QtGui.QHBoxLayout()
-        layoutTheme.addWidget(labelTheme)
-        layoutTheme.addStretch(1)
-        
-        layoutTheme.addWidget(comboBoxTheme)
+        layoutTheme.addLayout(layoutThemeLeft, 1)
+        layoutTheme.addLayout(layoutThemeRight, 1)
         comboBoxTheme.currentIndexChanged.connect(setTheme)
 
-        layoutTriggerButton = QtGui.QHBoxLayout()
-        labelTriggerButton  = QLabel("Trigger mode : ")
+        labelTriggerButton  = QLabel("Trigger mode:")
+        labelTriggerButton.setAlignment(QtCore.Qt.AlignRight)
 
         radioButtonPress = QtGui.QRadioButton("Press")
         radioButtonHover = QtGui.QRadioButton("Hover")
@@ -2910,14 +2963,25 @@ def pieMenuStart():
         layoutActionHoverButton.addWidget(radioButtonPress)
         layoutActionHoverButton.addWidget(radioButtonHover)
         
-        layoutTriggerButton.addWidget(labelTriggerButton)
-        layoutTriggerButton.addStretch(1)
-        layoutTriggerButton.addLayout(layoutActionHoverButton)
+        layoutTriggerButtonLeft = QtGui.QHBoxLayout()
+        layoutTriggerButtonLeft.addStretch(1)
+        layoutTriggerButtonLeft.addWidget(labelTriggerButton)
+        layoutTriggerButtonRight = QtGui.QHBoxLayout()
+        layoutTriggerButtonRight.addLayout(layoutActionHoverButton)
+        layoutTriggerButtonRight.addStretch(1)
+        layoutTriggerButton = QtGui.QHBoxLayout()
+        layoutTriggerButton.addLayout(layoutTriggerButtonLeft, 1)
+        layoutTriggerButton.addLayout(layoutTriggerButtonRight, 1)
 
+        layoutHoverDelayLeft = QtGui.QHBoxLayout()
+        layoutHoverDelayLeft.addStretch(1)
+        layoutHoverDelayLeft.addWidget(labelHoverDelay)
+        layoutHoverDelayRight = QtGui.QHBoxLayout()
+        layoutHoverDelayRight.addWidget(spinHoverDelay)
+        layoutHoverDelayRight.addStretch(1)
         layoutHoverDelay = QtGui.QHBoxLayout()
-        layoutHoverDelay.addWidget(labelHoverDelay)
-        layoutHoverDelay.addStretch(1)
-        layoutHoverDelay.addWidget(spinHoverDelay)
+        layoutHoverDelay.addLayout(layoutHoverDelayLeft, 1)
+        layoutHoverDelay.addLayout(layoutHoverDelayRight, 1)
 
         
         
@@ -2962,9 +3026,10 @@ def pieMenuStart():
         pieMenuTabLayout.insertLayout(3, layoutButton)
         pieMenuTabLayout.insertLayout(4, layoutShape)
         pieMenuTabLayout.insertLayout(5, layoutColumn)
-        pieMenuTabLayout.insertLayout(6, layoutdisplayCommandName)
-        pieMenuTabLayout.insertSpacing(7, 36)
-        pieMenuTabLayout.insertLayout(8, layoutShortcut)
+        pieMenuTabLayout.insertLayout(6, layoutDisplayCommandName)
+        pieMenuTabLayout.insertSpacing(7, 42)
+        pieMenuTabLayout.insertWidget(8, separatorPieMenu)
+        pieMenuTabLayout.insertLayout(9, layoutShortcut)
 
         pieMenuTabLayout.addStretch(0)
         
@@ -2976,23 +3041,37 @@ def pieMenuStart():
         settingsTabLayout = QtGui.QVBoxLayout()
         settingsTab.setLayout(settingsTabLayout)
         
-        labelGlobalContext = QLabel("Global context : ")
-        layoutGlobalContext = QtGui.QHBoxLayout()
-        layoutGlobalContext.addWidget(labelGlobalContext)
-        layoutGlobalContext.addStretch(1)
-        layoutGlobalContext.addWidget(checkboxGlobalContext)
+        labelGlobalContext = QLabel("Global context:")
+        labelGlobalContext.setAlignment(QtCore.Qt.AlignRight)
         
+        layoutGlobalContextLeft = QtGui.QHBoxLayout()
+        layoutGlobalContextLeft.addStretch(1)
+        layoutGlobalContextLeft.addWidget(labelGlobalContext)
+        layoutGlobalContextRight = QtGui.QHBoxLayout()
+        layoutGlobalContextRight.addWidget(checkboxGlobalContext)
+        layoutGlobalContextRight.addStretch(1)
+        layoutGlobalContext = QtGui.QHBoxLayout()
+        layoutGlobalContext.addLayout(layoutGlobalContextLeft, 1)
+        layoutGlobalContext.addLayout(layoutGlobalContextRight, 1)
+        
+        layoutCheckContextLeft = QtGui.QHBoxLayout()
+        layoutCheckContextLeft.addStretch(1)
+        layoutCheckContextLeft.addWidget(labelContext)
+        layoutCheckContextRight = QtGui.QHBoxLayout()
+        layoutCheckContextRight.addWidget(checkContext)
+        layoutCheckContextRight.addStretch(1)
         layoutCheckContext = QtGui.QHBoxLayout()
-        layoutCheckContext.addWidget(labelContext)
-        layoutCheckContext.addStretch(1)
-        layoutCheckContext.addWidget(checkContext)
+        layoutCheckContext.addLayout(layoutCheckContextLeft, 1)
+        layoutCheckContext.addLayout(layoutCheckContextRight, 1)
         
         settingsTabLayout.insertLayout(1, layoutTheme)
-        settingsTabLayout.insertLayout(2, layoutshowQuickMenu)
+        settingsTabLayout.insertLayout(2, layoutShowQuickMenu)
         settingsTabLayout.insertLayout(3, layoutTriggerButton)
         settingsTabLayout.insertLayout(4, layoutHoverDelay)
         settingsTabLayout.insertLayout(5, layoutGlobalContext)
-        settingsTabLayout.insertLayout(6, layoutGlobalShortcut)
+        settingsTabLayout.insertSpacing(6, 42)
+        settingsTabLayout.insertWidget(7, separatorSettings)
+        settingsTabLayout.insertLayout(8, layoutGlobalShortcut)
 
         resetLayout = QtGui.QHBoxLayout()
         resetLayout.addStretch(1)
