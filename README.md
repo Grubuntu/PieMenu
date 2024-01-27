@@ -4,11 +4,37 @@ PieMenu widget for FreeCAD
 PieMenu Improved is a fork of original PieMenu developped by mdkus, triplus, looo, microelly : https://github.com/triplus/PieMenu
 
 
-![Capture d’écran (6)](https://github.com/Grubuntu/PieMenu-Improved/assets/56045316/4a65f6da-0247-410c-a27e-99703c6da994)
+You can choose between many shapes :
+
+![Capture d’écran (65)](https://github.com/Grubuntu/PieMenu-Improved/assets/56045316/44302640-bb98-4612-b951-0e999fa280c6) 
+![Capture d’écran (66)](https://github.com/Grubuntu/PieMenu-Improved/assets/56045316/e2788ed3-ceec-4871-9142-afd9a31d34e5)
+
+Validate or Cancel, change length/size value directly with spinbox during editing of a function (Pad, Pocket, Chamfer, Fillet, Thickness)
+
+![Capture d’écran (1)](https://github.com/Grubuntu/PieMenu-Improved/assets/56045316/9ac46209-a050-4571-b9bf-0832c93315ba)
+
+
+'Sketcher' PieMenu is a special PieShortcutBar, which is called when you edit a sketch in Sketcher.
+
+![Capture d’écran (2)](https://github.com/Grubuntu/PieMenu-Improved/assets/56045316/1a449eda-b29a-40de-b06d-b55f672a4aa2)
+
+
+Choose between many themes :
+
+![Capture d’écran (10)](https://github.com/Grubuntu/PieMenu-Improved/assets/56045316/30f21f77-24ad-4491-bc75-11538d2ab527)
+![Capture d’écran (19)](https://github.com/Grubuntu/PieMenu-Improved/assets/56045316/5339d57d-785b-4e27-a410-c79677c3d8b1)
+![Capture d’écran (48)](https://github.com/Grubuntu/PieMenu-Improved/assets/56045316/e87f5706-4642-46b1-aaab-e1e17b9ede20)
+
+
+
+
+Can change the global shortcut and can assign a shortcut for each PieMenu, remove shortcuts by assigning an empty shortcut.
+
+![Capture d’écran (66)](https://github.com/Grubuntu/PieMenu-Improved/assets/56045316/3a2db868-8cc5-482d-a5bb-95edce97736c)
 
 
 ### Installation
-PieMenu (1.2.7) can be installed via the FreeCAD add-on manager
+PieMenu (1.2.7) can be installed via the FreeCAD add-on manager. 
 You should replace originals files by this version in directory Mod/PieMenu.
 
 Or just add all files in a PieMenu directory in your FreeCAD Mod directory.
@@ -36,30 +62,6 @@ Windows:
 
 ### Usage
 Press the Tab key on the keyboard to invoke PieMenu or set shortcut via Accessories Menu
-
-Validate or Cancel, change length/size value directly with spinbox during editing of a function (Pad, Pocket, Chamfer, Fillet, Thickness)
-
-![Capture d’écran (1)](https://github.com/Grubuntu/PieMenu-Improved/assets/56045316/9ac46209-a050-4571-b9bf-0832c93315ba)
-
-
-'Sketcher' PieMenu is a special PieShortcutBar, which is called when you edit a sketch in Sketcher.
-
-![Capture d’écran (2)](https://github.com/Grubuntu/PieMenu-Improved/assets/56045316/1a449eda-b29a-40de-b06d-b55f672a4aa2)
-
-
-
-Choose between 2 themes (Transparent, Legacy)
-
-![Capture d’écran (10)](https://github.com/Grubuntu/PieMenu-Improved/assets/56045316/30f21f77-24ad-4491-bc75-11538d2ab527)
-![Capture d’écran (19)](https://github.com/Grubuntu/PieMenu-Improved/assets/56045316/5339d57d-785b-4e27-a410-c79677c3d8b1)
-
-
-Can change the global shortcut and can assign a shortcut for each PieMenu, remove shortcuts by assigning an empty shortcut.
-
-![Hover](https://github.com/Grubuntu/PieMenu-Improved/assets/56045316/e845b0a6-9105-4965-a9c0-92034610598d)
-
-![Capture d’écran (30)](https://github.com/Grubuntu/PieMenu-Improved/assets/56045316/c0394e49-7d7f-4b45-8ffb-b712edf10f2d)
-
 
 
 
