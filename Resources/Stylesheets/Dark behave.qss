@@ -1,0 +1,108 @@
+/* PieMenu widget stylesheet for FreeCAD */
+/* Copyright (C) 2024 Pgilfernandez @ FreeCAD */
+
+
+/* ====================================================== */
+/*                 Normal pie button style                */
+/* ====================================================== */
+/* Default style applied to buttons */
+QToolButton#pieMenu::menu-indicator {
+    subcontrol-origin: padding;
+    subcontrol-position: center center;
+}
+
+QToolButton#pieMenu {
+    background-color: #232932;
+    border-radius : 4px;
+    border: 1px solid #2c333d;
+    color: #557bb6
+}
+
+QToolButton#pieMenu:disabled {
+    border: 2px solid rgba(255, 255, 255, 0.05);
+}
+
+QToolButton#pieMenu:hover {
+    background-color: #2c333d;
+}
+
+/* When the button is checkeable and it's in "checked" state */
+QToolButton#pieMenu:checked {
+    border: 3px solid #7f7f7f;
+}
+
+QToolButton#pieMenu:checked:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+
+/* ====================================================== */
+/*                 Close pie button style                 */
+/* ====================================================== */
+/* It is the ring that helps to visually locate the middle of the pie */
+QToolButton#styleMenuClose {
+    background-color: transparent;
+    border: 4px solid #5f5f5f;
+}
+
+QToolButton#styleMenuClose:hover {
+    background-color: transparent;
+    /* image: url(pieMenuQss:images_dark-light/PieMenuClose.svg); */
+}
+
+QToolButton#styleMenuClose::menu-indicator {
+    image: none;
+}
+
+
+/* ====================================================== */
+/*                      comboBox style                    */
+/* ====================================================== */
+/* Used for fillet/chamfer fast radius setting (and probably others) */
+
+QComboBox#styleCombo {
+    background-color: transparent   ;
+    border: 1px solid transparent;
+}
+
+QToolButton#styleComboValid,
+QToolButton#styleComboCancel {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+}
+
+QToolButton#styleComboValid:hover,
+QToolButton#styleComboCancel:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+QToolButton#styleComboValid {
+    image: url(pieMenuQss:images_dark-light/edit_OK.svg);
+}
+
+QToolButton#styleComboCancel {
+    image: url(pieMenuQss:images_dark-light/edit_Cancel.svg);
+}
+
+
+/* ====================================================== */
+/*                     Quick menu style                   */
+/* ====================================================== */
+QMenu#styleContainer {
+    background-color: transparent; /* Important, do not change */
+}
+
+QMenu#styleQuickMenu {
+    padding: 5px 10px 5px 10px;
+    
+}
+
+QMenu#styleQuickMenuItem::item {
+    padding: 5px 20px 5px 20px;
+    text-align: left;
+    
+}
+
+QToolButton#styleButtonMenu::menu-indicator {
+    image: none;
+}
