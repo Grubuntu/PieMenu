@@ -1675,8 +1675,8 @@ def pieMenuStart():
         getShortcutList()
         shortcutLineEdit.setText(shortcutKey)
         globalShortcutLineEdit.setText(globalShortcutKey)
-        labelShortcut.setText('Current shortcut : ' + shortcutKey)
-        labelGlobalShortcut.setText('Global shortcut : ' + globalShortcutKey)
+        labelShortcut.setText('Current shortcut: ' + shortcutKey)
+        labelGlobalShortcut.setText('Global shortcut: ' + globalShortcutKey)
         getdisplayCommandName(cBox.currentText())
         shape = getShape(cBox.currentText())
         onShape(shape)
@@ -2828,13 +2828,13 @@ def pieMenuStart():
             if not newShortcut:
                 shortcutKey = newShortcut
                 setShortcutKey(shortcutKey)
-                labelShortcut.setText('Shortcut deleted ! No shortcut assigned ' + shortcutKey)
+                labelShortcut.setText('Shortcut deleted! No shortcut assigned ' + shortcutKey)
 
             else:
                 parties = set(newShortcut.replace(',', '+').split('+'))
                 for partie in parties:
                     if partie not in touches_speciales and len(partie) > 1:
-                        labelShortcut.setText('Invalid shortcut ! Current shortcut : ' + shortcutKey)
+                        labelShortcut.setText('Invalid shortcut! Current shortcut: ' + shortcutKey)
                     else :
                         shortcutKey = newShortcut
                         setShortcutKey(shortcutKey)
