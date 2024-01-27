@@ -2096,7 +2096,7 @@ def pieMenuStart():
     comboShape.currentIndexChanged.connect(setShape)
     
     labelNumColumn= QtGui.QLabel("Number of columns:")
-
+    labelNumColumn.setAlignment(QtCore.Qt.AlignRight)
     spinNumColumn.setMaximum(12)
     spinNumColumn.setMinimumWidth(120)
     
@@ -2894,10 +2894,15 @@ def pieMenuStart():
         layoutShape.addLayout(layoutShapeLeft, 1)
         layoutShape.addLayout(layoutShapeRight, 1)
         
+        layoutColumnLeft = QtGui.QHBoxLayout()
+        layoutColumnLeft.addStretch(1)
+        layoutColumnLeft.addWidget(labelNumColumn)
+        layoutColumnRight = QtGui.QHBoxLayout()
+        layoutColumnRight.addWidget(spinNumColumn)
+        layoutColumnRight.addStretch(1)
         layoutColumn = QtGui.QHBoxLayout()
-        layoutColumn.addWidget(labelNumColumn)
-        layoutColumn.addStretch(1)
-        layoutColumn.addWidget(spinNumColumn)
+        layoutColumn.addLayout(layoutColumnLeft, 1)
+        layoutColumn.addLayout(layoutColumnRight, 1)
         
         layoutDisplayCommandNameLeft = QtGui.QHBoxLayout()
         layoutDisplayCommandNameLeft.addStretch(1)
