@@ -2745,17 +2745,26 @@ def pieMenuStart():
 
             paramIndexGet.SetString("0", "View")
             paramIndexGet.SetString("IndexList", ".,.".join(indexList))
-
+            
             group = paramIndexGet.GetGroup("0")
             group.SetString("ToolList", ".,.".join(defaultTools))
+            group.SetInt("Radius", 80)
+            group.SetInt("Button", 32)
+            group.SetString("Shape", "Pie")
             
             paramIndexGet.SetString("1", "PartDesign")
             group = paramIndexGet.GetGroup("1")
             group.SetString("ToolList", ".,.".join(defaultToolsPartDesign))
+            group.SetInt("Radius", 80)
+            group.SetInt("Button", 32)
+            group.SetString("Shape", "Pie")
             
             paramIndexGet.SetString("2", "Sketcher")
             group = paramIndexGet.GetGroup("2")
             group.SetString("ToolList", ".,.".join(defaultToolsSketcher))
+            group.SetInt("Radius", 80)
+            group.SetInt("Button", 32)
+            group.SetString("Shape", "Pie")
             
         paramGet.SetBool("ToolBar", False)
         paramGet.RemString("ToolBar")
@@ -2763,13 +2772,14 @@ def pieMenuStart():
         paramGet.SetString("Theme", "Legacy")
         paramGet.SetString("GlobalShortcutKey", "TAB")
         paramGet.SetBool("ShowQuickMenu", True)
+        paramGet.SetString("TriggerMode", "Press")
         paramGet.SetInt("HoverDelay", 100)
         paramGet.SetBool("EnableContext", False)
 
-        group = getGroup(mode=1)
+        # group = getGroup(mode=1)
 
-        group.SetInt("Radius", 80)
-        group.SetInt("Button", 32)
+        # group.SetInt("Radius", 80)
+        # group.SetInt("Button", 32)
         
     def onControl():
         # getTheme()
@@ -3123,6 +3133,7 @@ def pieMenuStart():
         contextList()
         selObserver = SelObserver()
         addObserver()
+        setDefaults()
         PieMenuInstance = PieMenu()
         actionKey = QtGui.QAction(mw)
         actionKey.setText("Invoke pie menu")
