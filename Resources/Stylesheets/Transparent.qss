@@ -109,3 +109,8 @@ QFrame#separatorSettings {
     border: 1px solid transparent;
     border-bottom-color: rgba(255, 255, 255, 0.2);
 }
+
+/* Important fix to override QLabel styling from FreeCAD stylesheets, do not remove */
+QLabel#iconLabel {
+    background-color: transparent;
+}

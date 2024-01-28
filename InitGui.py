@@ -848,7 +848,9 @@ def pieMenuStart():
                         layout.setContentsMargins((icon/4), 0, 0, 0)
                         iconButton = QtGui.QIcon(commands[commands.index(i)].icon())
                         iconLabel = QtGui.QLabel()
+                        iconLabel.setObjectName("iconLabel")
                         iconLabel.setPixmap(iconButton.pixmap(QtCore.QSize(icon, icon)))
+                        iconLabel.setStyleSheet(styleCurrentTheme)
                         layout.addWidget(iconLabel)
 
                     if shape == "TableTop":
