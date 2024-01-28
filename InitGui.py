@@ -39,10 +39,17 @@
 # Added differents shapes for PieMenus
 # Added possibility to display the command name in the menu (only Pie shape)
 # Added a button with information about developers and licence (Pgilfernandez)
+#
+# 1.3.6
+# Update layout of PieMenu Preferences for better readability (Pgilfernandez)
+# Fix some typos (Pgilfernandez)
+# Added some styles for QLabel command name (Pgilfernandez)
+# Added "LeftRight" shape
+# Fix problem with ghosting when reload workbenches
 
 
 global PIE_MENU_VERSION
-PIE_MENU_VERSION = "1.3.5"
+PIE_MENU_VERSION = "1.3.6"
 
 def pieMenuStart():
     import math
@@ -80,6 +87,13 @@ def pieMenuStart():
     paramGet = App.ParamGet(paramPath)
     paramIndexGet = App.ParamGet(paramIndexPath)
     
+    ## workkaround to avoid ghosting : we find wbs already loaded,
+    ## so as not to reload them again in the function 'updateCommands'
+    global loadedWorkbenches
+    paramLoadedWb = "User parameter:BaseApp/Preferences/General"
+    paramWb = App.ParamGet(paramLoadedWb)
+    loadedWorkbenches = paramWb.GetString("BackgroundAutoloadModules")
+    loadedWorkbenches = loadedWorkbenches.split(",")                                                                
     def getStyle():
         theme = paramGet.GetString("Theme")
         if theme == "":
@@ -738,7 +752,7 @@ def pieMenuStart():
             buttonSize = valueButton
             self.offset_x = 0
             self.offset_y = 0
-            # "Pie", "RainbowUp", "RainbowDown", "UpDown", "TableTop", "TableDown" 
+            # "Pie", "RainbowUp", "RainbowDown", "UpDown", "TableTop", "TableDown", "LeftRight" 
             shape = getShape(keyValue)
             num_per_row = getNumColumn(keyValue)
             
@@ -883,6 +897,18 @@ def pieMenuStart():
                         button.setProperty("ButtonX", X - ((num_per_row - 1) * buttonSize) / 2)
                         button.setProperty("ButtonY", -Y)
                         
+                    elif shape == "LeftRight":
+                        ### Table Up and Down  ###
+                        num_per_row = math.ceil(commandNumber/2)
+                        Y = ((num -1) % num_per_row) * buttonSize
+                        if ((num-1) < (num_per_row)) :
+                            offset = 0
+                        else : 
+                            offset = 2*self.radius
+                        X = (self.radius - offset ) 
+                            
+                        button.setProperty("ButtonX", -X)
+                        button.setProperty("ButtonY", Y - ((num_per_row - 1) * buttonSize) / 2)
                     else :
                         ### Pie / RainbowUp / RainbowDown  ###
                         button.setProperty("ButtonX", self.radius *
@@ -1311,6 +1337,9 @@ def pieMenuStart():
                     # Sheet Metal workbench
                     if cmd_parts[0][:2] == "SM":
                         cmd_parts[0] = cmd_parts[0][:2]
+                    # Assembly4 workbench  
+                    if cmd_parts[0][:4] == "Asm4":
+                        cmd_parts[0] = "Assembly4"
                     cmdWb = cmd_parts[0] + "Workbench"
                     # after workbench activation actionMap has to be actualized
                     Gui.activateWorkbench(cmdWb)
@@ -1323,7 +1352,7 @@ def pieMenuStart():
 
         if paramGet.GetBool("ToolBar") and context is False:
             toolbar = paramGet.GetString("ToolBar")
-            text = ""
+            text = keyValue
             if ": " in toolbar:
                 toolbar_desc = toolbar.split(": ")
                 toolbar = toolbar_desc[1]
@@ -1333,8 +1362,8 @@ def pieMenuStart():
                 for i in workbenches:
                     # rule out special cases
                     if i == None or i == "Std":
-                        #wb = Gui.activeWorkbench()
-                        #workbenches = wb.name()
+                        # wb = Gui.activeWorkbench()
+                        # workbenches = wb.name()
                         pass
                     else:
                         # match special cases
@@ -1347,11 +1376,12 @@ def pieMenuStart():
                         # Assembly4 workbench  
                         if i == "Asm4":
                             i = "Assembly4"
+                    if (i + "Workbench") not in loadedWorkbenches:
                         try:
                             Gui.activateWorkbench(i + "Workbench")
                         except:
                             None
-
+                        loadedWorkbenches.append(i + "Workbench")
                 Gui.activateWorkbench(lastWorkbench.__class__.__name__)
                     
             else:
@@ -1406,12 +1436,12 @@ def pieMenuStart():
             actions = []
 
             actionMapAll = getGuiActionMapAll()
-            #lastWorkbench = Gui.activeWorkbench()
+            lastWorkbench = Gui.activeWorkbench()
             while actualizeWorkbenchActions(actions, toolList, actionMapAll):
                 actionMapAll = getGuiActionMapAll()
             else:
                 pass
-            #Gui.activateWorkbench(lastWorkbench.__class__.__name__)
+            Gui.activateWorkbench(lastWorkbench.__class__.__name__)
         
         PieMenuInstance.add_commands(actions, context, text)
 
@@ -1527,6 +1557,8 @@ def pieMenuStart():
                             # Sheet Metal workbench
                             if cmd_parts[0][:2] == "SM":
                                 cmd_parts[0] = cmd_parts[0][:2]
+                            if cmd_parts[0][:4] == "Asm4":
+                                cmd_parts[0] = "Assembly4"
                             workbenches.append(cmd_parts[0])
                             Gui.activateWorkbench(cmd_parts[0] + "Workbench")
                     else:
@@ -2056,7 +2088,7 @@ def pieMenuStart():
 
         comboShape.blockSignals(True)
         comboShape.clear()
-        available_shape = [ "Pie", "RainbowUp", "RainbowDown", "UpDown", "TableTop", "TableDown" ]
+        available_shape = [ "Pie", "RainbowUp", "RainbowDown", "UpDown", "TableTop", "TableDown", "LeftRight" ]
         comboShape.addItems(available_shape)
         index = comboShape.findText(shape)
         if index != -1:
