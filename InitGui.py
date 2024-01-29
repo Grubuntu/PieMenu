@@ -27,29 +27,12 @@
 
 # Changelog :
 #
-# 1.3.4
-# Move globals settings on a new tab
-# Added setting for show or not the QuickMenu 
-# Added checkbox in parameters for Contextual activation
-# Set default theme (Legacy) on a new installation
-# Update stylesheets for #styleButtonMenu::menu-indicator (setting for QuickMenu)
-#
-# 1.3.5
-# Factorization and clean some code
-# Added differents shapes for PieMenus
-# Added possibility to display the command name in the menu (only Pie shape)
-# Added a button with information about developers and licence (Pgilfernandez)
-#
-# 1.3.6
-# Update layout of PieMenu Preferences for better readability (Pgilfernandez)
-# Fix some typos (Pgilfernandez)
-# Added some styles for QLabel command name (Pgilfernandez)
-# Added "LeftRight" shape
-# Fix problem with ghosting when reload workbenches
-
+# 1.3.Dev
+# Can set a different default PieMenu for each Workbench
+# 
 
 global PIE_MENU_VERSION
-PIE_MENU_VERSION = "1.3.6"
+PIE_MENU_VERSION = "1.3.Dev"
 
 def pieMenuStart():
     import math
@@ -310,11 +293,11 @@ def pieMenuStart():
         actionContext.setCheckable(True)
 
         menuPieMenu = QtGui.QMenu()
-        menuPieMenu.setTitle("PieMenu")
+        menuPieMenu.setTitle("Default PieMenu")
 
         pieGroup = QtGui.QActionGroup(menu)
         pieGroup.setExclusive(True)
-
+        
         menuToolBar = QtGui.QMenu()
         menuToolBar.setObjectName("styleQuickMenuItem")
         menuToolBar.setTitle("ToolBar")
@@ -412,8 +395,8 @@ def pieMenuStart():
                         action.setChecked(True)
                 else:
                     pass
+             
                 menuPieMenu.addAction(action)
-
 
         menuPieMenu.aboutToShow.connect(pieList)
 
@@ -737,16 +720,33 @@ def pieMenuStart():
             for i in self.buttons:
                 i.deleteLater()
             self.buttons = []
-            if context:
+            group = ""
+            
+            if keyValue != None:
+                indexList = getIndexList()
+                for i in indexList:
+                    a = str(i)
+                    try:
+                        pie = paramIndexGet.GetString(a).decode("UTF-8")
+                    except AttributeError:
+                        pie = paramIndexGet.GetString(a)
+                        
+                    if pie == keyValue:
+                        group = paramIndexGet.GetGroup(a)
+                    else:
+                        pass
+            elif context:
                 group = getGroup(mode=2)
             else:
                 group = getGroup(mode=1)
+
             if len(commands) == 0:
                 commandNumber = 1
             else:
                 commandNumber = len(commands)
 
             valueRadius = group.GetInt("Radius")
+
             self.radius = valueRadius
             valueButton = group.GetInt("Button")
             buttonSize = valueButton
@@ -765,6 +765,7 @@ def pieMenuStart():
                 self.radius = valueRadius
             else:
                 self.radius = 100
+
             if valueButton:
                 self.buttonSize = valueButton
             else:
@@ -834,6 +835,7 @@ def pieMenuStart():
                 
             num = 1
             for i in commands:
+
                 if (Gui.ActiveDocument.getInEdit() is None) or (module == 'SketcherGui'):
                     """ show PieMenu in Edit Feature and in Sketcher """
              
@@ -898,7 +900,7 @@ def pieMenuStart():
                         button.setProperty("ButtonY", -Y)
                         
                     elif shape == "LeftRight":
-                        ### Table Up and Down  ###
+                        ### LeftRight  ###
                         num_per_row = math.ceil(commandNumber/2)
                         Y = ((num -1) % num_per_row) * buttonSize
                         if ((num-1) < (num_per_row)) :
@@ -1391,31 +1393,26 @@ def pieMenuStart():
 
         else:
             if keyValue == None:
-                try:
-                    docName = App.ActiveDocument.Name
-                    g = Gui.ActiveDocument.getInEdit()
-                    module = g.Module
-                except:
-                    module = None
-                if (module == "SketcherGui"): 
-                    """ In Sketcher WB we load the Sketcher PieMenu """
-                    text = 'Sketcher'
-                else :    
-                    if context:
-                        try:
-                            text = paramGet.GetString("ContextPie").decode("UTF-8")
-                        except AttributeError:
-                            text = paramGet.GetString("ContextPie")
-                    else:
-                        try:
-                            text = paramGet.GetString("CurrentPie").decode("UTF-8")
-                        except AttributeError:
-                            text = paramGet.GetString("CurrentPie")
+                wb = Gui.activeWorkbench()
+                wbName = wb.name()
+                wbName = wbName.replace("Workbench", "")
+                text =  getPieName(wbName)
+    
+                if context:
+                    try:
+                        text = paramGet.GetString("ContextPie").decode("UTF-8")
+                    except AttributeError:
+                        text = paramGet.GetString("ContextPie")
+                if text == None:
+                    try:
+                        text = paramGet.GetString("CurrentPie").decode("UTF-8")
+                    except AttributeError:
+                        text = paramGet.GetString("CurrentPie")
             else:
                 text = keyValue
                 
             toolList = None
-
+            
             for i in indexList:
                 a = str(i)
                 try:
@@ -1448,28 +1445,18 @@ def pieMenuStart():
 
     def getGroup(mode=0):
         indexList = getIndexList()
-        try:
-            docName = App.ActiveDocument.Name
-            g = Gui.ActiveDocument.getInEdit()
-            module = g.Module
-        except:
-            module = None
-            
-        if (module != None and module == 'SketcherGui'): 
-            text = 'Sketcher'
-        else :    
-            if mode == 2:
-                try:
-                    text = paramGet.GetString("ContextPie").decode("UTF-8")
-                except AttributeError:
-                    text = paramGet.GetString("ContextPie")
-            elif mode == 1:
-                try:
-                    text = paramGet.GetString("CurrentPie").decode("UTF-8")
-                except AttributeError:
-                    text = paramGet.GetString("CurrentPie")
-            else:
-                text = cBox.currentText()
+        if mode == 2:
+            try:
+                text = paramGet.GetString("ContextPie").decode("UTF-8")
+            except AttributeError:
+                text = paramGet.GetString("ContextPie")
+        elif mode == 1:
+            try:
+                text = paramGet.GetString("CurrentPie").decode("UTF-8")
+            except AttributeError:
+                text = paramGet.GetString("CurrentPie")
+        else:
+            text = cBox.currentText()
         group = None
 
         for i in indexList:
@@ -1729,6 +1716,7 @@ def pieMenuStart():
         shape = getShape(cBox.currentText())
         onShape(shape)
         spinNumColumn.setValue(getNumColumn(cBox.currentText()))
+        setDefaultMenuBarWb()
 
 
     cBox.currentIndexChanged.connect(onPieChange)
@@ -2016,7 +2004,96 @@ def pieMenuStart():
         cBoxUpdate()
     
     buttonCopyPieMenu.clicked.connect(onButtonCopyPieMenu)
+    
+    labelDefaultMenuBarWb = QtGui.QLabel("Set default Workbench:")
+    labelDefaultMenuBarWb.setAlignment(QtCore.Qt.AlignRight)
+ 
+    def getListWorkbenches():
+        workenchList = Gui.listWorkbenches()
+        wbList = []
+        for i in workenchList:
+            wbName = i.replace("Workbench", "")
+            wbList.append(wbName)
+        wbList.sort()
+        if 'None' in wbList:
+            wbList.remove('None')
+            wbList.insert(0, 'None')
+        
+        return wbList
+ 
+    def getWbAlreadySet():
+        indexList = getIndexList()
+        wbAlreadySet = []
+        for i in indexList:
+            a = str(i)
+            try:
+                pie = paramIndexGet.GetString(a).decode("UTF-8")
+            except AttributeError:
+                pie = paramIndexGet.GetString(a)
+                
+            group = paramIndexGet.GetGroup(a)
+            defWb  = group.GetString("DefaultWorkbench")
+            if defWb != 'None':
+                wbAlreadySet.append(defWb)
 
+        return wbAlreadySet
+ 
+    def setDefaultMenuBarWb():
+        group = getGroup()
+        
+        comboDefaultMenuBarWb.blockSignals(True)
+        wbList = getListWorkbenches()
+        wbAlreadySet = getWbAlreadySet()
+
+        for item in wbList[:]:
+            if item in wbAlreadySet:
+                wbList.remove(item)
+                wbAlreadySet.remove(item)
+
+        defWorkbench = getDefaultMenuBarWb()
+        wbList.append(defWorkbench)
+        if 'None' not in wbList:
+            wbList.insert(0, 'None')
+
+        comboDefaultMenuBarWb.clear()
+        comboDefaultMenuBarWb.addItems(wbList)
+        index = comboDefaultMenuBarWb.findText(defWorkbench)
+        if index != -1:
+            comboDefaultMenuBarWb.setCurrentIndex(index)
+        comboDefaultMenuBarWb.blockSignals(False)
+
+ 
+    def getDefaultMenuBarWb():
+        group = getGroup(mode=0)
+        defWorkbench = group.GetString("DefaultWorkbench")
+        return defWorkbench
+    
+    def onDefaultMenuBarWb():
+        group = getGroup()
+        defWorkbench = comboDefaultMenuBarWb.currentText()
+        group.SetString("DefaultWorkbench", defWorkbench)
+        
+    def getPieName(wbName):
+        text = None
+        indexList = getIndexList()
+        for i in indexList:
+            a = str(i)
+            try:
+                pie = paramIndexGet.GetString(a).decode("UTF-8")
+            except AttributeError:
+                pie = paramIndexGet.GetString(a)
+            group = paramIndexGet.GetGroup(a)
+            defWb  = group.GetString("DefaultWorkbench")
+            if defWb == wbName:
+                text = pie
+        return text
+
+    comboDefaultMenuBarWb = QComboBox()
+    comboDefaultMenuBarWb.setMinimumWidth(160)
+    
+    comboDefaultMenuBarWb.currentIndexChanged.connect(onDefaultMenuBarWb)
+       
+       
     labelRadius = QtGui.QLabel("Pie size:")
     labelRadius.setAlignment(QtCore.Qt.AlignRight)
     spinRadius = QtGui.QSpinBox()
@@ -2195,7 +2272,6 @@ def pieMenuStart():
 
 
     spinButton.valueChanged.connect(onSpinButton)
-
 
     toolListWidget = QtGui.QListWidget()
     toolListWidget.setSortingEnabled(True)
@@ -2819,6 +2895,7 @@ def pieMenuStart():
             group.SetInt("Radius", 80)
             group.SetInt("Button", 32)
             group.SetString("Shape", "Pie")
+            group.SetString("DefaultWorkbench", "Sketcher")
             
         paramGet.SetBool("ToolBar", False)
         paramGet.RemString("ToolBar")
@@ -2837,7 +2914,6 @@ def pieMenuStart():
         
     def onControl():
         # getTheme()
-        
         shape = getShape(cBox.currentText())
         onShape(shape)
         
@@ -2863,6 +2939,17 @@ def pieMenuStart():
         layoutAddRemove.addWidget(buttonRemovePieMenu)
         layoutAddRemove.addWidget(buttonRenamePieMenu)
         layoutAddRemove.addWidget(buttonCopyPieMenu)
+
+        
+        layoutMenuBarWbLeft = QtGui.QHBoxLayout()
+        layoutMenuBarWbLeft.addStretch(1)
+        layoutMenuBarWbLeft.addWidget(labelDefaultMenuBarWb)
+        layoutMenuBarWbRight = QtGui.QHBoxLayout()
+        layoutMenuBarWbRight.addWidget(comboDefaultMenuBarWb)
+        layoutMenuBarWbRight.addStretch(1)
+        layoutMenuBarWb = QtGui.QHBoxLayout()
+        layoutMenuBarWb.addLayout(layoutMenuBarWbLeft, 1)
+        layoutMenuBarWb.addLayout(layoutMenuBarWbRight, 1)
 
         layoutRadiusLeft = QtGui.QHBoxLayout()
         layoutRadiusLeft.addStretch(1)
@@ -3061,14 +3148,15 @@ def pieMenuStart():
         
         pieMenuTabLayout.insertLayout(0, layoutAddRemove)
         pieMenuTabLayout.insertSpacing(1, 12)
-        pieMenuTabLayout.insertLayout(2, layoutRadius)
-        pieMenuTabLayout.insertLayout(3, layoutButton)
-        pieMenuTabLayout.insertLayout(4, layoutShape)
-        pieMenuTabLayout.insertLayout(5, layoutColumn)
-        pieMenuTabLayout.insertLayout(6, layoutDisplayCommandName)
-        pieMenuTabLayout.insertSpacing(7, 42)
-        pieMenuTabLayout.insertWidget(8, separatorPieMenu)
-        pieMenuTabLayout.insertLayout(9, layoutShortcut)
+        pieMenuTabLayout.insertLayout(2, layoutMenuBarWb)
+        pieMenuTabLayout.insertLayout(3, layoutRadius)
+        pieMenuTabLayout.insertLayout(4, layoutButton)
+        pieMenuTabLayout.insertLayout(5, layoutShape)
+        pieMenuTabLayout.insertLayout(6, layoutColumn)
+        pieMenuTabLayout.insertLayout(7, layoutDisplayCommandName)
+        pieMenuTabLayout.insertSpacing(8, 42)
+        pieMenuTabLayout.insertWidget(9, separatorPieMenu)
+        pieMenuTabLayout.insertLayout(10, layoutShortcut)
 
         pieMenuTabLayout.addStretch(0)
         
