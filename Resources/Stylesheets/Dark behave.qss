@@ -86,25 +86,37 @@ QToolButton#styleComboCancel {
 
 
 /* ====================================================== */
-/*                     Quick menu style                   */
+/*                      Quick Menu                        */
 /* ====================================================== */
-QMenu#styleContainer {
-    background-color: transparent; /* Important, do not change */
-}
-
 QMenu#styleQuickMenu {
     padding: 5px 10px 5px 10px;
-    
 }
 
 QMenu#styleQuickMenuItem::item {
     padding: 5px 20px 5px 20px;
     text-align: left;
-    
+}
+
+QToolButton#styleButtonMenu {
+    image: url(pieMenuQss:images_dark-light/PieMenuQuickMenu.svg);
+    background-color: transparent;
+}
+
+QToolButton#styleButtonMenu:hover {
+    image: url(pieMenuQss:images_dark-light/PieMenuQuickMenuHover.svg);
+    background-color: rgba(255, 255, 255, 0.1); /* necessary for overriding QToolButton stylesheets */
 }
 
 QToolButton#styleButtonMenu::menu-indicator {
     image: none;
+}
+
+
+/* ====================================================== */
+/*                     Quick menu style                   */
+/* ====================================================== */
+QMenu#styleContainer {
+    background-color: transparent; /* Important, do not change */
 }
 
 QFrame#separatorPieMenu,
