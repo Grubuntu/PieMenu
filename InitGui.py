@@ -2086,6 +2086,11 @@ def pieMenuStart():
             spinNumColumn.setEnabled(False)
             labelNumColumn.setVisible(False)
             spinNumColumn.setVisible(False)
+            
+        if shape in ["TableTop", "TableDown"]:
+            labelNumColumn.setText("Number of columns:")
+        else:
+            labelNumColumn.setText("Number of rows:")
 
         if shape == "Pie":
             labeldisplayCommandName.setVisible(True)
