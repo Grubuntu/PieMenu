@@ -210,7 +210,6 @@ def pieMenuStart():
                 addMenu()
                 mw.workbenchActivated.connect(addMenu)
 
-
     iconMenu = respath + "PieMenuQuickMenu.svg"
     iconUp = respath + "PieMenuUp.svg"
     iconDown = respath + "PieMenuDown.svg"
@@ -272,10 +271,8 @@ def pieMenuStart():
         button.setProperty("ButtonX", 0) # +, right
         button.setProperty("ButtonY", 32) # +, down
         button.setGeometry(0, 0, buttonSize, buttonSize)
-        button.setStyleSheet(styleCurrentTheme + radius)
         button.setIconSize(QtCore.QSize(icon, icon))
-        button.setIcon(QtGui.QIcon(iconMenu))
-        button.setAttribute(QtCore.Qt.WA_TranslucentBackground)
+        button.setStyleSheet(styleCurrentTheme + radius)
         button.setPopupMode(QtGui.QToolButton
                             .ToolButtonPopupMode.InstantPopup)
 
