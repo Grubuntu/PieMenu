@@ -916,7 +916,7 @@ def pieMenuStart():
                     elif shape == "LeftRight":
                         ### Table Left and Right  ###
                         num_per_row = math.ceil(commandNumber/2)
-                        Y = ((num -1) % num_per_row) * buttonSize
+                        Y = ((num -1) % num_per_row) * (buttonSize + icon_spacing)
                         if ((num-1) < (num_per_row)) :
                             offset = 0
                         else :
@@ -924,7 +924,7 @@ def pieMenuStart():
                         X = (self.radius - offset )
 
                         button.setProperty("ButtonX", -X)
-                        button.setProperty("ButtonY", Y - ((num_per_row - 1) * buttonSize) / 2)
+                        button.setProperty("ButtonY", Y - ((num_per_row - 1) * (buttonSize + icon_spacing)) / 2)
                     else :
                         ### Pie / RainbowUp / RainbowDown  ###
                         button.setProperty("ButtonX", self.radius *
@@ -2087,6 +2087,15 @@ def pieMenuStart():
 
     def onShape(shape):
         if shape in ["TableTop", "TableDown", "TableLeft", "TableRight"]:
+            spinNumColumn.setEnabled(True)
+            labelNumColumn.setVisible(True)
+            spinNumColumn.setVisible(True)
+        else:
+            spinNumColumn.setEnabled(False)
+            labelNumColumn.setVisible(False)
+            spinNumColumn.setVisible(False)
+            
+        if shape in ["UpDown", "LeftRight", "TableTop", "TableDown", "TableLeft", "TableRight"]:
             labelIconSpacing.setVisible(True)
             spinIconSpacing.setEnabled(True)
             spinIconSpacing.setVisible(True)
