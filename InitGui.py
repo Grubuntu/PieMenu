@@ -875,9 +875,25 @@ def pieMenuStart():
                         ### Table Down  ###
                         num_of_line = math.ceil(commandNumber/num_per_row)
                         X = ((num-1) % num_per_row) * buttonSize
-                        Y = - buttonSize -self.radius -((num-1) // num_per_row) * buttonSize
+                        Y = - buttonSize - self.radius -((num-1) // num_per_row) * buttonSize
                         button.setProperty("ButtonX", X - ((num_per_row-1) * buttonSize) / 2)
                         button.setProperty("ButtonY", -Y )
+
+                    elif shape == "TableLeft":
+                        ### Table Left  ###
+                        num_of_line = math.ceil(commandNumber/num_per_row)
+                        X = - buttonSize - self.radius -((num-1) // num_per_row) * buttonSize
+                        Y = ((num-1) % num_per_row) * buttonSize
+                        button.setProperty("ButtonX", X )
+                        button.setProperty("ButtonY", Y - ((num_per_row-1) * buttonSize) / 2)
+
+                    elif shape == "TableRight":
+                        ### Table Left  ###
+                        num_of_line = math.ceil(commandNumber/num_per_row)
+                        X = buttonSize + self.radius + ((num-1) // num_per_row) * buttonSize
+                        Y = ((num-1) % num_per_row) * buttonSize
+                        button.setProperty("ButtonX", X )
+                        button.setProperty("ButtonY", Y - ((num_per_row-1) * buttonSize) / 2)
 
                     elif shape == "UpDown":
                         ### Table Up and Down  ###
@@ -2062,7 +2078,7 @@ def pieMenuStart():
 
 
     def onShape(shape):
-        if shape in ["TableTop", "TableDown"]:
+        if shape in ["TableTop", "TableDown", "TableLeft", "TableRight"]:
             spinNumColumn.setEnabled(True)
             labelNumColumn.setVisible(True)
             spinNumColumn.setVisible(True)
