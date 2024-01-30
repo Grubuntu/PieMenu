@@ -886,18 +886,18 @@ def pieMenuStart():
                     elif shape == "TableLeft":
                         ### Table Left  ###
                         num_of_line = math.ceil(commandNumber/num_per_row)
-                        X = - buttonSize - self.radius -((num-1) // num_per_row) * buttonSize
-                        Y = ((num-1) % num_per_row) * buttonSize
+                        X = - buttonSize - self.radius -((num-1) // num_per_row) * (buttonSize + icon_spacing)
+                        Y = ((num-1) % num_per_row) * (buttonSize + icon_spacing)
                         button.setProperty("ButtonX", X )
-                        button.setProperty("ButtonY", Y - ((num_per_row-1) * buttonSize) / 2)
+                        button.setProperty("ButtonY", Y - ((num_per_row-1) * (buttonSize + icon_spacing)) / 2)
 
                     elif shape == "TableRight":
                         ### Table Left  ###
                         num_of_line = math.ceil(commandNumber/num_per_row)
-                        X = buttonSize + self.radius + ((num-1) // num_per_row) * buttonSize
-                        Y = ((num-1) % num_per_row) * buttonSize
+                        X = buttonSize + self.radius + ((num-1) // num_per_row) * (buttonSize + icon_spacing)
+                        Y = ((num-1) % num_per_row) * (buttonSize + icon_spacing)
                         button.setProperty("ButtonX", X )
-                        button.setProperty("ButtonY", Y - ((num_per_row-1) * buttonSize) / 2)
+                        button.setProperty("ButtonY", Y - ((num_per_row-1) * (buttonSize + icon_spacing)) / 2)
 
                     elif shape == "UpDown":
                         ### Table Up and Down  ###
@@ -914,7 +914,7 @@ def pieMenuStart():
 
 
                     elif shape == "LeftRight":
-                        ### Table Up and Down  ###
+                        ### Table Left and Right  ###
                         num_per_row = math.ceil(commandNumber/2)
                         Y = ((num -1) % num_per_row) * buttonSize
                         if ((num-1) < (num_per_row)) :
