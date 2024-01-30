@@ -2087,6 +2087,15 @@ def pieMenuStart():
 
     def onShape(shape):
         if shape in ["TableTop", "TableDown", "TableLeft", "TableRight"]:
+            spinNumColumn.setEnabled(True)
+            labelNumColumn.setVisible(True)
+            spinNumColumn.setVisible(True)
+        else:
+            spinNumColumn.setEnabled(False)
+            labelNumColumn.setVisible(False)
+            spinNumColumn.setVisible(False)
+            
+        if shape in ["UpDown", "LeftRight", "TableTop", "TableDown", "TableLeft", "TableRight"]:
             labelIconSpacing.setVisible(True)
             spinIconSpacing.setEnabled(True)
             spinIconSpacing.setVisible(True)
