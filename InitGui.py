@@ -883,6 +883,22 @@ def pieMenuStart():
                         button.setProperty("ButtonX", X - ((num_per_row-1) * (buttonSize + icon_spacing)) / 2)
                         button.setProperty("ButtonY", -Y )
 
+                    elif shape == "TableLeft":
+                        ### Table Left  ###
+                        num_of_line = math.ceil(commandNumber/num_per_row)
+                        X = - buttonSize - self.radius -((num-1) // num_per_row) * buttonSize
+                        Y = ((num-1) % num_per_row) * buttonSize
+                        button.setProperty("ButtonX", X )
+                        button.setProperty("ButtonY", Y - ((num_per_row-1) * buttonSize) / 2)
+
+                    elif shape == "TableRight":
+                        ### Table Left  ###
+                        num_of_line = math.ceil(commandNumber/num_per_row)
+                        X = buttonSize + self.radius + ((num-1) // num_per_row) * buttonSize
+                        Y = ((num-1) % num_per_row) * buttonSize
+                        button.setProperty("ButtonX", X )
+                        button.setProperty("ButtonY", Y - ((num_per_row-1) * buttonSize) / 2)
+
                     elif shape == "UpDown":
                         ### Table Up and Down  ###
                         num_per_row = math.ceil(commandNumber / 2)
@@ -2070,7 +2086,7 @@ def pieMenuStart():
 
 
     def onShape(shape):
-        if shape in ["UpDown", "TableTop", "TableDown", "LeftRight"]:
+        if shape in ["TableTop", "TableDown", "TableLeft", "TableRight"]:
             labelIconSpacing.setVisible(True)
             spinIconSpacing.setEnabled(True)
             spinIconSpacing.setVisible(True)
@@ -2078,15 +2094,11 @@ def pieMenuStart():
             labelIconSpacing.setVisible(False)
             spinIconSpacing.setEnabled(False)
             spinIconSpacing.setVisible(False)
-        
+            
         if shape in ["TableTop", "TableDown"]:
-            spinNumColumn.setEnabled(True)
-            labelNumColumn.setVisible(True)
-            spinNumColumn.setVisible(True)
+            labelNumColumn.setText("Number of columns:")
         else:
-            spinNumColumn.setEnabled(False)
-            labelNumColumn.setVisible(False)
-            spinNumColumn.setVisible(False)
+            labelNumColumn.setText("Number of rows:")
 
         if shape == "Pie":
             labeldisplayCommandName.setVisible(True)
@@ -2132,6 +2144,9 @@ def pieMenuStart():
         comboShape.model().item(comboShape.count()-1).setEnabled(False)  # Disable the separator item
         comboShape.addItem("TableTop")
         comboShape.addItem("TableDown")
+        comboShape.addItem("TableLeft")
+        comboShape.addItem("TableRight")
+
         index = comboShape.findText(shape)
         if index != -1:
             comboShape.setCurrentIndex(index)
