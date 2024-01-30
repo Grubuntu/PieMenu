@@ -1,6 +1,6 @@
 # PieMenu widget for FreeCAD
 
-# Copyright (C) 2024 Grubuntu, Pgilfernandez @ FreeCAD
+# Copyright (C) 2024 Grubuntu, Pgilfernandez, hasecilu @ FreeCAD
 # Copyright (C) 2022, 2023 mdkus @ FreeCAD
 # Copyright (C) 2016, 2017 triplus @ FreeCAD
 # Copyright (C) 2015,2016 looo @ FreeCAD
@@ -27,7 +27,7 @@
 
 
 global PIE_MENU_VERSION
-PIE_MENU_VERSION = "1.3.6"
+PIE_MENU_VERSION = "1.3.7"
 
 def pieMenuStart():
     """Main function that starts the Pie Menu."""
