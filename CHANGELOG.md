@@ -22,3 +22,11 @@
 - Added some styles for QLabel command name (Pgilfernandez)
 - Added "LeftRight" shape
 - Fix problem with ghosting when reload workbenches
+
+### 1.3.7
+
+- Add translation support, Spanish translation, Small cleanup.(hasecilu) 
+- Add Icon spacing, stylabe QuickMenu and many cosmetics improvements (Pgilfernandez)
+- Add new shapes Left and Right (Pgilfernandez)
+- Fix random bug with eventfilter
+  
