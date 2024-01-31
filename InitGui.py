@@ -711,7 +711,7 @@ def pieMenuStart():
                     self.double_spinbox.setSingleStep(step)
                 except:
                     None
-            return super(PieMenu, self).eventFilter(obj, event)
+            return False
 
 
         def add_commands(self, commands, context=False, keyValue=None):
@@ -1116,7 +1116,7 @@ def pieMenuStart():
             g = Gui.ActiveDocument.getInEdit()
             fonctionActive = g.Object
             featureName = g.Object.Name
-            self.double_spinbox.installEventFilter(self)
+            # self.double_spinbox.installEventFilter(self)
             size = self.double_spinbox.value()
             if (str(fonctionActive) == '<PartDesign::Fillet>'):
                 App.getDocument(docName).getObject(featureName).Radius = size
@@ -1134,7 +1134,7 @@ def pieMenuStart():
                 self.double_spinbox.setVisible(False)
             else:
                 self.double_spinbox.setVisible(False)
-            self.double_spinbox.removeEventFilter(self)
+            # self.double_spinbox.removeEventFilter(self)
             App.ActiveDocument.recompute()
 
     sign = {
