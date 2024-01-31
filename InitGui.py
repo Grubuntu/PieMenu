@@ -938,9 +938,9 @@ def pieMenuStart():
                 num = num + 1
 
             buttonQuickMenu = quickMenu()
-            buttonQuickMenu.setParent(self.menu)
             if checkboxQuickMenu.checkState():
                 if (module != 'SketcherGui'): # TO SOLVE : we hide setting menu in sketcher to prevent user to go in the preferences dialog : there is a bug with settings
+                    buttonQuickMenu.setParent(self.menu)
                     self.buttons.append(buttonQuickMenu)
             else:
                 buttonQuickMenu.hide()
