@@ -1,7 +1,7 @@
-# PieMenu Improved
+# PieMenu
 PieMenu widget for FreeCAD 
 
-PieMenu Improved is a fork of original PieMenu developped by mdkus, triplus, looo, microelly : https://github.com/triplus/PieMenu
+Quick customizable menus for FreeCAD.
 
 
 You can choose between many shapes :
@@ -27,15 +27,13 @@ Choose between many themes :
 
 
 
-
 Can change the global shortcut and can assign a shortcut for each PieMenu, remove shortcuts by assigning an empty shortcut.
 
 ![Capture d’écran (66)](https://github.com/Grubuntu/PieMenu-Improved/assets/56045316/3a2db868-8cc5-482d-a5bb-95edce97736c)
 
 
 ### Installation
-PieMenu (1.2.7) can be installed via the FreeCAD add-on manager. 
-You should replace originals files by this version in directory Mod/PieMenu.
+PieMenu can be installed via the FreeCAD add-on manager. 
 
 Or just add all files in a PieMenu directory in your FreeCAD Mod directory.
 ![Capture d’écran (21)](https://github.com/Grubuntu/PieMenu-Improved/assets/56045316/a0fbcb3e-a5c5-4687-93ed-5b734e1ef63a)
