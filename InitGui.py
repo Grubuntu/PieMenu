@@ -2140,22 +2140,9 @@ def pieMenuStart():
 
         comboShape.blockSignals(True)
         comboShape.clear()
-        comboShape.addItem("Pie")
-        comboShape.addItem(" ") # Add separator
-        comboShape.model().item(comboShape.count()-1).setEnabled(False)  # Disable the separator item
-        comboShape.addItem("RainbowUp")
-        comboShape.addItem("RainbowDown")
-        comboShape.addItem(" ") # Add separator
-        comboShape.model().item(comboShape.count()-1).setEnabled(False)  # Disable the separator item   
-        comboShape.addItem("UpDown")
-        comboShape.addItem("LeftRight")
-        comboShape.addItem(" ") # Add separator
-        comboShape.model().item(comboShape.count()-1).setEnabled(False)  # Disable the separator item
-        comboShape.addItem("TableTop")
-        comboShape.addItem("TableDown")
-        comboShape.addItem("TableLeft")
-        comboShape.addItem("TableRight")
-
+        available_shape = [ "Pie", "RainbowUp", "RainbowDown", "UpDown", "LeftRight", \
+                           "TableTop", "TableDown", "TableLeft", "TableRight" ]
+        comboShape.addItems(available_shape)
         index = comboShape.findText(shape)
         if index != -1:
             comboShape.setCurrentIndex(index)
