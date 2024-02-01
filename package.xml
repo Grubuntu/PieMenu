@@ -6,7 +6,7 @@
   <date>2024-02-01</date>
   <maintainer>Grubuntu</maintainer>
   <license file="LICENSE">LGPLv2.1</license>
-  <url type="repository" branch="main">https://github.com/Grubuntu/PieMenu</url>
+  <url type="repository" branch="master">https://github.com/Grubuntu/PieMenu</url>
   <url type="bugtracker">https://github.com/Grubuntu/PieMenu/issues</url>
 
   <icon>Resources/icons/PieMenu_Logo.svg</icon>
