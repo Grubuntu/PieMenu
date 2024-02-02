@@ -42,13 +42,18 @@ Or just add all files in a PieMenu directory in your FreeCAD Mod directory.
 
 ![Capture d’écran (20)](https://github.com/Grubuntu/PieMenu-Improved/assets/56045316/2acee710-2cee-42f3-ab3a-4e10c94d27af)
 
-Install path for FreeCAD modules depends on the operating system used.
+Install path for FreeCAD modules depends on the operating system used.  
+To find where is the user's application data directory enter next command on FreeCAD Python console.
+
+```python
+App.getUserAppDataDir()
+```
 
 ##### Examples:
 
 Linux:
 
-`/home/user/.FreeCAD/Mod/PieMenu/InitGui.py`
+`/home/user/.local/share/FreeCAD/Mod/PieMenu/InitGui.py`
 
 macOS:
 
