@@ -30,3 +30,11 @@
 - Add new shapes Left and Right (Pgilfernandez)
 - Fix random bug with eventfilter
   
+### 1.3.8       
+Added a checkbox for Pocket : Through all, Symmetric, Reversed
+Changing spinbox type to accept calculations
+Added units in spinbox
+Reactivation of the quickmenu in the sketcher, the problem seems resolved (def getGroup())
+Fix bug when create ToolBar via QucikMenu : options from the preferences window could be displayed (def onPieChange())  
+Remove some useless/duplicate code (def actualizeWorkbenchActions)  
+Rearrangement of menu priorities for Global shortcut: Sketcher, Context, ToolBar, Current Pie (def updateCommands)
