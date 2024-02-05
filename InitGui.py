@@ -1509,7 +1509,7 @@ def pieMenuStart():
                     Gui.activateWorkbench(cmdWb)
                     #return True ## return a bug in 0.21 in Sketcher edit
         return False
-        
+  
 
     def updateCommands(keyValue=None, context=False):
         indexList = getIndexList()
@@ -2347,12 +2347,12 @@ def pieMenuStart():
     comboShape.setMinimumWidth(160)
     comboShape.currentIndexChanged.connect(setShape)
 
-    labelNumColumn= QtGui.QLabel("Number of columns:")
+    labelNumColumn= QtGui.QLabel(translate("PieMenuTab", "Number of columns:"))
     labelNumColumn.setAlignment(QtCore.Qt.AlignRight)
     spinNumColumn.setMaximum(12)
     spinNumColumn.setMinimumWidth(120)
 
-    labelIconSpacing= QtGui.QLabel("Icon spacing:")
+    labelIconSpacing= QtGui.QLabel(translate("PieMenuTab", "Icon spacing:"))
     labelIconSpacing.setAlignment(QtCore.Qt.AlignRight)
     spinIconSpacing.setMaximum(200)
     spinIconSpacing.setMinimumWidth(0)
