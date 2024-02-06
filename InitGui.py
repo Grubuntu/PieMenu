@@ -683,27 +683,24 @@ def pieMenuStart():
             
         def checkboxThroughAll(self):
             checkboxThroughAll = QCheckBox(translate("Fast Spinbox", "Through all"))
-            checkboxThroughAll.setObjectName("styleCheckbox")
             checkboxThroughAll.setCheckable(True)
-            checkboxThroughAll.setProperty("ButtonX", 5)
+            checkboxThroughAll.setProperty("ButtonX", 50)
             checkboxThroughAll.setProperty("ButtonY", -95)
             checkboxThroughAll.setAttribute(QtCore.Qt.WA_TranslucentBackground)
             return checkboxThroughAll
             
         def checkboxReversed(self):
             checkboxReversed = QCheckBox(translate("Fast Spinbox", "Reversed"))
-            checkboxReversed.setObjectName("styleCheckbox")
             checkboxReversed.setCheckable(True)
-            checkboxReversed.setProperty("ButtonX", 5)
+            checkboxReversed.setProperty("ButtonX", 50)
             checkboxReversed.setProperty("ButtonY", -55)
             checkboxReversed.setAttribute(QtCore.Qt.WA_TranslucentBackground)
             return checkboxReversed
 
         def checkboxSymToPlane(self):
             checkboxSymToPlane = QCheckBox(translate("Fast Spinbox", "Symmetric to plane"))
-            checkboxSymToPlane.setObjectName("styleCheckbox")
             checkboxSymToPlane.setCheckable(True)
-            checkboxSymToPlane.setProperty("ButtonX", 5)
+            checkboxSymToPlane.setProperty("ButtonX", 50)
             checkboxSymToPlane.setProperty("ButtonY", -75)
             checkboxSymToPlane.setAttribute(QtCore.Qt.WA_TranslucentBackground)
             return checkboxSymToPlane 
@@ -1039,19 +1036,25 @@ def pieMenuStart():
                         except:
                             unit = ""
 
-                        def checkbox_layout(checkbox_func, ObjectAttribute="Type", ObjectType=True, Visibility=True):
+                        def checkbox_layout(checkbox_func, ObjectAttribute="Type", ObjectType=True):
                             checkbox = checkbox_func()
                             checkbox.setParent(self.menu)
+                            checkbox.setObjectName("styleCheckbox")
+                            checkbox.setStyleSheet(styleCurrentTheme)
                             self.buttons.append(checkbox)
-                            checkbox.setGeometry(20,20,110,20)
                             checkbox.stateChanged.connect(self.spin_interactif)
-                            checkbox.setVisible(Visibility)
+                            checkbox.setMinimumWidth(220)
                             if getattr(g.Object, ObjectAttribute) == ObjectType:
                                 checkbox.setChecked(True)
                             else: 
                                 checkbox.setChecked(False)
                             self.checkbox = checkbox
                             return self.checkbox
+                        
+                        layoutMidPlane = QHBoxLayout()
+                        layoutReversed = QHBoxLayout()
+                        layoutThroughAll = QHBoxLayout()
+                            
 
                         if (str(fonctionActive) == '<PartDesign::Fillet>'):
                             quantity = Units.Quantity("{} {}".format(float(float(g.Object.Radius)), unit))
@@ -1071,21 +1074,20 @@ def pieMenuStart():
                                 quantity = Units.Quantity("{} {}".format(float(g.Object.Angle) , unit))
                                 self.double_spinbox.setProperty('value', quantity)
                             
-                            layoutReversed = QHBoxLayout()
-                            self.checkbox_reversed = checkbox_layout(self.checkboxReversed, "Reversed", True, True)
+
+                            self.checkbox_midPlane = checkbox_layout(self.checkboxSymToPlane, "Midplane", True)
+                            
+                            layoutMidPlane.addWidget(self.checkbox_midPlane)
+                            layoutOptions.addLayout(layoutMidPlane)
+                            
+                            self.checkbox_reversed = checkbox_layout(self.checkboxReversed, "Reversed", True)
                             
                             layoutReversed.addWidget(self.checkbox_reversed)
                             layoutOptions.addLayout(layoutReversed)
                             
-                            layoutMidPlane = QHBoxLayout()
-                            self.checkbox_midPlane = checkbox_layout(self.checkboxSymToPlane, "Midplane", True, True)
-                            
-                            layoutMidPlane.addWidget(self.checkbox_midPlane)
-                            layoutOptions.addLayout(layoutMidPlane)
-                             
                             if (str(fonctionActive) == '<PartDesign::Pocket>'):
-                                layoutThroughAll = QHBoxLayout()
-                                self.checkbox_throughAll = checkbox_layout(self.checkboxThroughAll, "Type", "ThroughAll", False)
+
+                                self.checkbox_throughAll = checkbox_layout(self.checkboxThroughAll, "Type", "ThroughAll")
 
                                 layoutThroughAll.addWidget(self.checkbox_throughAll)
                                 layoutOptions.addLayout(layoutThroughAll)
