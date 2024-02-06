@@ -128,3 +128,11 @@ QFrame#separatorSettings {
 QLabel#iconLabel {
     background-color: transparent;
 }
+
+/* ====================================================== */
+/*                     CheckBox style                     */
+/* ====================================================== */
+
+QCheckBox#styleCheckbox {
+    margin-left: 10px;
+}
