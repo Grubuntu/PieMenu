@@ -1024,8 +1024,9 @@ def pieMenuStart():
                         self.double_spinbox = double_spinbox
 
                         try:
-                            """ get unit for length according user settings only in 0.22"""
-                            unit_schema = Gui.ActiveDocument.Document.UnitSystem
+                            """ get unit for length according user settings only"""
+                            unit_schema = FreeCAD.ParamGet("User parameter:BaseApp/Preferences/Units").GetInt("UserSchema")
+                            unit_schema = FreeCAD.Units.listSchemas(unit_schema)
                             start_index = unit_schema.find('(')
                             end_index = unit_schema.find(')')
                             if start_index != -1 and end_index != -1:
