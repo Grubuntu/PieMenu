@@ -1025,15 +1025,18 @@ def pieMenuStart():
                         self.buttons.append(double_spinbox)
                         double_spinbox.setVisible(True)
                         self.double_spinbox = double_spinbox
-                 
-                        """ get unit for length according user settings """
-                        unit_schema = Gui.ActiveDocument.Document.UnitSystem
-                        start_index = unit_schema.find('(')
-                        end_index = unit_schema.find(')')
-                        if start_index != -1 and end_index != -1:
-                            values_list = unit_schema[start_index + 1:end_index].split(',')
-                            unit = values_list[0].strip()
-                        else:
+
+                        try:
+                            """ get unit for length according user settings only in 0.22"""
+                            unit_schema = Gui.ActiveDocument.Document.UnitSystem
+                            start_index = unit_schema.find('(')
+                            end_index = unit_schema.find(')')
+                            if start_index != -1 and end_index != -1:
+                                values_list = unit_schema[start_index + 1:end_index].split(',')
+                                unit = values_list[0].strip()
+                            else:
+                                unit = ""
+                        except:
                             unit = ""
 
                         def checkbox_layout(checkbox_func, ObjectAttribute="Type", ObjectType=True, Visibility=True):
