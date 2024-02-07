@@ -1058,7 +1058,7 @@ def pieMenuStart():
                             
 
                         if (str(fonctionActive) == '<PartDesign::Fillet>'):
-                            quantity = Units.Quantity("{} {}".format(float(float(g.Object.Radius)), unit))
+                            quantity = Units.Quantity("{} {}".format(float(g.Object.Radius), unit))
                             self.double_spinbox.setProperty('value', quantity)
                         elif (str(fonctionActive) == '<PartDesign::Chamfer>'):
                             quantity = Units.Quantity("{} {}".format(float(g.Object.Size) , unit))
