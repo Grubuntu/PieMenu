@@ -1055,62 +1055,60 @@ def pieMenuStart():
                         layoutMidPlane = QHBoxLayout()
                         layoutReversed = QHBoxLayout()
                         layoutThroughAll = QHBoxLayout()
-                            
 
                         if (str(fonctionActive) == '<PartDesign::Fillet>'):
                             quantity = Units.Quantity("{} {}".format(float(g.Object.Radius), unit))
-                            self.double_spinbox.setProperty('value', quantity)
+                            print("Radius quantity :", quantity)
+                            # self.double_spinbox.setProperty('value', quantity)
                         elif (str(fonctionActive) == '<PartDesign::Chamfer>'):
-                            quantity = Units.Quantity("{} {}".format(float(g.Object.Size) , unit))
-                            self.double_spinbox.setProperty('value', quantity)
-                        elif (str(fonctionActive) == '<PartDesign::Pad>') or (str(fonctionActive) == '<PartDesign::Pocket>') \
-                        or (str(fonctionActive) == '<PartDesign::Revolution>') or (str(fonctionActive) == '<PartDesign::Groove>'):                        
-                            self.double_spinbox.setEnabled(True)
+                            quantity = Units.Quantity("{} {}".format(float(g.Object.Size), unit))
+                            print("Chamfer quantity :", quantity)
+                            # self.double_spinbox.setProperty('value', quantity)
+                        elif (str(fonctionActive) == '<PartDesign::Thickness>'):
+                            quantity = Units.Quantity("{} {}".format(float(g.Object.Value), unit))
+                            print("Thickness quantity :", quantity)
+                            # self.double_spinbox.setProperty('value', quantity)
+                        elif (str(fonctionActive) == '<PartDesign::Pad>') or (str(fonctionActive) == '<PartDesign::Pocket>'):
+                            quantity = Units.Quantity("{} {}".format(float(g.Object.Length), unit))
+                            print("Pocket or Pad quantity :", quantity)
+                            # self.double_spinbox.setProperty('value', quantity)
                             
-                            try:
-                                quantity = Units.Quantity("{} {}".format(float(g.Object.Length) , unit))
-                                self.double_spinbox.setProperty('value', quantity)
-                            except:
-                                unit = " °" # degres
-                                quantity = Units.Quantity("{} {}".format(float(g.Object.Angle) , unit))
-                                self.double_spinbox.setProperty('value', quantity)
-                            
-
                             self.checkbox_midPlane = checkbox_layout(self.checkboxSymToPlane, "Midplane", True)
-                            
                             layoutMidPlane.addWidget(self.checkbox_midPlane)
                             layoutOptions.addLayout(layoutMidPlane)
                             
                             self.checkbox_reversed = checkbox_layout(self.checkboxReversed, "Reversed", True)
-                            
                             layoutReversed.addWidget(self.checkbox_reversed)
                             layoutOptions.addLayout(layoutReversed)
                             
                             if (str(fonctionActive) == '<PartDesign::Pocket>'):
-
                                 self.checkbox_throughAll = checkbox_layout(self.checkboxThroughAll, "Type", "ThroughAll")
-
+                                
                                 layoutThroughAll.addWidget(self.checkbox_throughAll)
                                 layoutOptions.addLayout(layoutThroughAll)
-                                
-                            if (str(fonctionActive) == '<PartDesign::Pad>') or (str(fonctionActive) == '<PartDesign::Pocket>'):
-                                quantity = Units.Quantity("{} {}".format(float(g.Object.Length) , unit))
-                                self.double_spinbox.setProperty('value', quantity)
-                            else :
-                                unit = " °" # degres
-                                quantity = Units.Quantity("{} {}".format(float(g.Object.Angle) , unit))
-                                self.double_spinbox.setProperty('value', quantity)
-
-                        elif (str(fonctionActive) == '<PartDesign::Thickness>'):
-                            quantity = Units.Quantity("{} {}".format(float(g.Object.Value) , unit))
-                                                                                 
-                            self.double_spinbox.setProperty('value', quantity)
-                        
+                               
+                        elif (str(fonctionActive) == '<PartDesign::Revolution>') or (str(fonctionActive) == '<PartDesign::Groove>'):
+                            unit = " °" # degres
+                            quantity = Units.Quantity("{} {}".format(float(g.Object.Angle), unit))
+                            print("Revolution or Groove quantity :", quantity)
+                            # self.double_spinbox.setProperty('value', quantity)
+                            
+                            self.checkbox_midPlane = checkbox_layout(self.checkboxSymToPlane, "Midplane", True)
+                            layoutMidPlane.addWidget(self.checkbox_midPlane)
+                            layoutOptions.addLayout(layoutMidPlane)
+                            
+                            self.checkbox_reversed = checkbox_layout(self.checkboxReversed, "Reversed", True)
+                            layoutReversed.addWidget(self.checkbox_reversed)
+                            layoutOptions.addLayout(layoutReversed)
+                            
                         elif (str(fonctionActive) == '<PartDesign::Hole>'): # TODO :  à developper pour gérer la fonction Hole
                             self.buttons.remove(double_spinbox)
                         else:
                             self.buttons.remove(double_spinbox)
 
+                        self.double_spinbox.setProperty('value', quantity)
+                        
+                        
                         self.double_spinbox.setFocus()
                         self.double_spinbox.selectAll()
                         
