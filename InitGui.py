@@ -1023,20 +1023,6 @@ def pieMenuStart():
                         double_spinbox.setVisible(True)
                         self.double_spinbox = double_spinbox
 
-                        try:
-                            """ get unit for length according user settings only"""
-                            unit_schema = FreeCAD.ParamGet("User parameter:BaseApp/Preferences/Units").GetInt("UserSchema")
-                            unit_schema = FreeCAD.Units.listSchemas(unit_schema)
-                            start_index = unit_schema.find('(')
-                            end_index = unit_schema.find(')')
-                            if start_index != -1 and end_index != -1:
-                                values_list = unit_schema[start_index + 1:end_index].split(',')
-                                unit = values_list[0].strip()
-                            else:
-                                unit = ""
-                        except:
-                            unit = ""
-
                         def checkbox_layout(checkbox_func, ObjectAttribute="Type", ObjectType=True):
                             checkbox = checkbox_func()
                             checkbox.setParent(self.menu)
@@ -1057,21 +1043,17 @@ def pieMenuStart():
                         layoutThroughAll = QHBoxLayout()
 
                         if (str(fonctionActive) == '<PartDesign::Fillet>'):
-                            quantity = Units.Quantity("{} {}".format(float(g.Object.Radius), unit))
-                            print("Radius quantity :", quantity)
-                            # self.double_spinbox.setProperty('value', quantity)
+                            quantity = Units.Quantity(Units.Quantity(g.Object.Radius).getUserPreferred()[0])
+                            print("Fillet quantity :", quantity)
                         elif (str(fonctionActive) == '<PartDesign::Chamfer>'):
-                            quantity = Units.Quantity("{} {}".format(float(g.Object.Size), unit))
+                            quantity = Units.Quantity(Units.Quantity(g.Object.Size).getUserPreferred()[0])
                             print("Chamfer quantity :", quantity)
-                            # self.double_spinbox.setProperty('value', quantity)
                         elif (str(fonctionActive) == '<PartDesign::Thickness>'):
-                            quantity = Units.Quantity("{} {}".format(float(g.Object.Value), unit))
+                            quantity = Units.Quantity(Units.Quantity(g.Object.Value).getUserPreferred()[0])
                             print("Thickness quantity :", quantity)
-                            # self.double_spinbox.setProperty('value', quantity)
                         elif (str(fonctionActive) == '<PartDesign::Pad>') or (str(fonctionActive) == '<PartDesign::Pocket>'):
-                            quantity = Units.Quantity("{} {}".format(float(g.Object.Length), unit))
+                            quantity = Units.Quantity(Units.Quantity(g.Object.Length).getUserPreferred()[0])
                             print("Pocket or Pad quantity :", quantity)
-                            # self.double_spinbox.setProperty('value', quantity)
                             
                             self.checkbox_midPlane = checkbox_layout(self.checkboxSymToPlane, "Midplane", True)
                             layoutMidPlane.addWidget(self.checkbox_midPlane)
@@ -1089,9 +1071,8 @@ def pieMenuStart():
                                
                         elif (str(fonctionActive) == '<PartDesign::Revolution>') or (str(fonctionActive) == '<PartDesign::Groove>'):
                             unit = " °" # degres
-                            quantity = Units.Quantity("{} {}".format(float(g.Object.Angle), unit))
+                            quantity = Units.Quantity(Units.Quantity(g.Object.Angle).getUserPreferred()[0])
                             print("Revolution or Groove quantity :", quantity)
-                            # self.double_spinbox.setProperty('value', quantity)
                             
                             self.checkbox_midPlane = checkbox_layout(self.checkboxSymToPlane, "Midplane", True)
                             layoutMidPlane.addWidget(self.checkbox_midPlane)
@@ -1107,7 +1088,6 @@ def pieMenuStart():
                             self.buttons.remove(double_spinbox)
 
                         self.double_spinbox.setProperty('value', quantity)
-                        
                         
                         self.double_spinbox.setFocus()
                         self.double_spinbox.selectAll()
