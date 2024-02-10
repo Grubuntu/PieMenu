@@ -2367,7 +2367,9 @@ def pieMenuStart():
             if pieName == keyValue:
                 param = paramIndexGet.GetGroup(str(i))
                 displayCommandName = param.GetBool("DisplayCommand")
+                cboxDisplayCommandName.blockSignals(True)
                 cboxDisplayCommandName.setChecked(displayCommandName)
+                cboxDisplayCommandName.blockSignals(False)
         return displayCommandName
 
     def setdisplayCommandName(state):
