@@ -5,7 +5,7 @@
   <version>1.3.7</version>
   <date>2024-02-01</date>
   <maintainer>Grubuntu</maintainer>
-  <license file="LICENSE">LGPLv2.1</license>
+  <license file="LICENSE">LGPL-2.1-or-later</license>
   <url type="repository" branch="master">https://github.com/Grubuntu/PieMenu</url>
   <url type="bugtracker">https://github.com/Grubuntu/PieMenu/issues</url>
 
