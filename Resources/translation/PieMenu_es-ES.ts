@@ -81,6 +81,24 @@
     </message>
 </context>
 <context>
+    <name>Fast Spinbox</name>
+    <message>
+        <location filename="../../InitGui.py" line="685"/>
+        <source>Through all</source>
+        <translation>A través de todo</translation>
+    </message>
+    <message>
+        <location filename="../../InitGui.py" line="693"/>
+        <source>Reversed</source>
+        <translation>Invertido</translation>
+    </message>
+    <message>
+        <location filename="../../InitGui.py" line="701"/>
+        <source>Symmetric to plane</source>
+        <translation>Simétrico al plano</translation>
+    </message>
+</context>
+<context>
     <name>GlobalSettingsTab</name>
     <message>
         <location filename="../../InitGui.py" line="1704"/>
@@ -212,6 +230,21 @@
         <location filename="../../InitGui.py" line="2043"/>
         <source>Show command names:</source>
         <translation>Mostrar nombres de comandos:</translation>
+    </message>
+    <message>
+        <location filename="../../InitGui.py" line="2356"/>
+        <source>Number of columns:</source>
+        <translation>Número de columnas:</translation>
+    </message>
+    <message>
+        <location filename="../../InitGui.py" line="2280"/>
+        <source>Number of rows:</source>
+        <translation>Número de filas:</translation>
+    </message>
+    <message>
+        <location filename="../../InitGui.py" line="2361"/>
+        <source>Icon spacing:</source>
+        <translation>Espaciado entre iconos:</translation>
     </message>
     <message>
         <location filename="../../InitGui.py" line="2191"/>

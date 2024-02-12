@@ -25,9 +25,8 @@
 # http://forum.freecadweb.org/
 # http://www.freecadweb.org/wiki/index.php?title=Code_snippets
 
-
 global PIE_MENU_VERSION
-PIE_MENU_VERSION = "1.3.7"
+PIE_MENU_VERSION = "1.3.8"
 
 def pieMenuStart():
     """Main function that starts the Pie Menu."""
@@ -47,6 +46,7 @@ def pieMenuStart():
     from PySide2.QtGui import QKeySequence
     from PySide2.QtCore import Qt
     from TranslateUtils import translate
+    from FreeCAD import Units
 
     # global variables
 
@@ -197,7 +197,7 @@ def pieMenuStart():
                 mb = mw.menuBar()
                 action = QtGui.QAction(mw)
                 action.setObjectName("AccessoriesMenu")
-                action.setIconText("Accessories")
+                action.setIconText(translate("FreeCAD Menu", "Accessories"))
                 menu = QtGui.QMenu()
                 action.setMenu(menu)
                 menu.addAction(pref)
@@ -667,25 +667,43 @@ def pieMenuStart():
             return button
 
         def doubleSpinbox(self, buttonSize=32, step=1.0):
-            button = QtGui.QDoubleSpinBox()
-            button.setDecimals(3)
-            button.setFixedWidth(90)
-            button.setMaximum(1000000)
+            """ https://github.com/FreeCAD/FreeCAD/blob/main/src/Gui/QuantitySpinBox.h """
+            ui = FreeCADGui.UiLoader()
+            button = ui.createWidget("Gui::QuantitySpinBox")
+            button.setProperty("minimum", 0.0)
+            button.setFixedWidth(95)
             button.setAlignment(QtCore.Qt.AlignRight)
             button.setProperty("ButtonX", 0)
             button.setProperty("ButtonY", -30)
             button.setAttribute(QtCore.Qt.WA_TranslucentBackground)
             button.setStyleSheet(" QWidget { border-radius: 5px; }")
-            button.setSingleStep(step)
+            button.setProperty("setSingleStep" , step)
+            button.valueChanged.connect(self.spin_interactif)
             return button
+            
+        def checkboxThroughAll(self):
+            checkboxThroughAll = QCheckBox(translate("Fast Spinbox", "Through all"))
+            checkboxThroughAll.setCheckable(True)
+            checkboxThroughAll.setProperty("ButtonX", 50)
+            checkboxThroughAll.setProperty("ButtonY", -95)
+            checkboxThroughAll.setAttribute(QtCore.Qt.WA_TranslucentBackground)
+            return checkboxThroughAll
+            
+        def checkboxReversed(self):
+            checkboxReversed = QCheckBox(translate("Fast Spinbox", "Reversed"))
+            checkboxReversed.setCheckable(True)
+            checkboxReversed.setProperty("ButtonX", 50)
+            checkboxReversed.setProperty("ButtonY", -55)
+            checkboxReversed.setAttribute(QtCore.Qt.WA_TranslucentBackground)
+            return checkboxReversed
 
-        def setupSpinBox(self):
-            self.double_spinbox = self.doubleSpinbox(step=1.0)
-            self.double_spinbox.valueChanged.connect(self.spin_interactif)
-
-            self.double_spinbox.setVisible(True)
-            self.buttons.append(self.double_spinbox)
-
+        def checkboxSymToPlane(self):
+            checkboxSymToPlane = QCheckBox(translate("Fast Spinbox", "Symmetric to plane"))
+            checkboxSymToPlane.setCheckable(True)
+            checkboxSymToPlane.setProperty("ButtonX", 50)
+            checkboxSymToPlane.setProperty("ButtonY", -75)
+            checkboxSymToPlane.setAttribute(QtCore.Qt.WA_TranslucentBackground)
+            return checkboxSymToPlane 
 
         def eventFilter(self, obj, event):
             """ Handle key and wheel event """
@@ -708,7 +726,7 @@ def pieMenuStart():
                 else:
                     step = 1.0
                 try:
-                    self.double_spinbox.setSingleStep(step)
+                    self.double_spinbox.setProperty("singleStep", step)
                 except:
                     None
             return False
@@ -729,7 +747,22 @@ def pieMenuStart():
             for i in self.buttons:
                 i.deleteLater()
             self.buttons = []
-            if context:
+            group = ""
+            
+            if keyValue != None:
+                indexList = getIndexList()
+                for i in indexList:
+                    a = str(i)
+                    try:
+                        pie = paramIndexGet.GetString(a).decode("UTF-8")
+                    except AttributeError:
+                        pie = paramIndexGet.GetString(a)
+                        
+                    if pie == keyValue:
+                        group = paramIndexGet.GetGroup(a)
+                    else:
+                        pass
+            elif context:
                 group = getGroup(mode=2)
             else:
                 group = getGroup(mode=1)
@@ -749,7 +782,7 @@ def pieMenuStart():
             num_per_row = getNumColumn(keyValue)
             icon_spacing = getIconSpacing(keyValue)
 
-            if paramGet.GetBool("ToolBar"):
+            if paramGet.GetBool("ToolBar") and keyValue == None:
                 valueRadius = 100
                 valueButton = 32
                 shape = "Pie"
@@ -931,7 +964,7 @@ def pieMenuStart():
                         button.setProperty("ButtonY", Y - ((num_per_row-1) * (buttonSize + icon_spacing)) / 2)
 
                     elif shape == "TableRight":
-                        ### Table Left  ###
+                        ### Table Right  ###
                         num_of_line = math.ceil(commandNumber/num_per_row)
                         X = buttonSize + self.radius + ((num-1) // num_per_row) * (buttonSize + icon_spacing)
                         Y = ((num-1) % num_per_row) * (buttonSize + icon_spacing)
@@ -950,7 +983,6 @@ def pieMenuStart():
 
                         button.setProperty("ButtonX", X - ((num_per_row - 1) * (buttonSize + icon_spacing)) / 2)
                         button.setProperty("ButtonY", -Y)
-
 
                     elif shape == "LeftRight":
                         ### Left and Right with command names ###
@@ -994,9 +1026,9 @@ def pieMenuStart():
 
             buttonQuickMenu = quickMenu()
             if checkboxQuickMenu.checkState():
-                if (module != 'SketcherGui'): # TO SOLVE : we hide setting menu in sketcher to prevent user to go in the preferences dialog : there is a bug with settings
-                    buttonQuickMenu.setParent(self.menu)
-                    self.buttons.append(buttonQuickMenu)
+                # if (module != 'SketcherGui'): # TO SOLVE : we hide setting menu in sketcher to prevent user to go in the preferences dialog : there is a bug with settings
+                buttonQuickMenu.setParent(self.menu)
+                self.buttons.append(buttonQuickMenu)
             else:
                 buttonQuickMenu.hide()
 
@@ -1035,6 +1067,7 @@ def pieMenuStart():
                     self.offset_y = 0
                     if (module != None and module != 'SketcherGui' and wbName == 'PartDesignWorkbench'):
                         """ Show Spinbox in Edit Feature in Part Design WB only """
+                        layoutOptions = QtGui.QVBoxLayout()
                         fonctionActive = g.Object
                         featureName = g.Object.Name
 
@@ -1045,25 +1078,73 @@ def pieMenuStart():
                         double_spinbox.setVisible(True)
                         self.double_spinbox = double_spinbox
 
+                        def checkbox_layout(checkbox_func, ObjectAttribute="Type", ObjectType=True):
+                            checkbox = checkbox_func()
+                            checkbox.setParent(self.menu)
+                            checkbox.setObjectName("styleCheckbox")
+                            checkbox.setStyleSheet(styleCurrentTheme)
+                            self.buttons.append(checkbox)
+                            checkbox.stateChanged.connect(self.spin_interactif)
+                            checkbox.setMinimumWidth(220)
+                            if getattr(g.Object, ObjectAttribute) == ObjectType:
+                                checkbox.setChecked(True)
+                            else: 
+                                checkbox.setChecked(False)
+                            self.checkbox = checkbox
+                            return self.checkbox
+                        
+                        layoutMidPlane = QHBoxLayout()
+                        layoutReversed = QHBoxLayout()
+                        layoutThroughAll = QHBoxLayout()
+
                         if (str(fonctionActive) == '<PartDesign::Fillet>'):
-                            self.double_spinbox.setValue(g.Object.Radius)
+                            quantity = Units.Quantity(Units.Quantity(g.Object.Radius).getUserPreferred()[0])
+
                         elif (str(fonctionActive) == '<PartDesign::Chamfer>'):
-                            self.double_spinbox.setValue(g.Object.Size)
-                        elif (str(fonctionActive) == '<PartDesign::Pad>'):
-                            self.double_spinbox.setValue(g.Object.Length)
-                        elif (str(fonctionActive) == '<PartDesign::Pocket>'):
-                            self.double_spinbox.setValue(g.Object.Length)
+                            quantity = Units.Quantity(Units.Quantity(g.Object.Size).getUserPreferred()[0])
+
                         elif (str(fonctionActive) == '<PartDesign::Thickness>'):
-                            self.double_spinbox.setValue(g.Object.Value)
-                        elif (str(fonctionActive) == '<PartDesign::Revolution>'):
-                            self.double_spinbox.setValue(g.Object.Angle)
+                            quantity = Units.Quantity(Units.Quantity(g.Object.Value).getUserPreferred()[0])
+                            
+                        elif (str(fonctionActive) == '<PartDesign::Pad>') or (str(fonctionActive) == '<PartDesign::Pocket>'):
+                            quantity = Units.Quantity(Units.Quantity(g.Object.Length).getUserPreferred()[0])
+                            
+                            self.checkbox_midPlane = checkbox_layout(self.checkboxSymToPlane, "Midplane", True)
+                            layoutMidPlane.addWidget(self.checkbox_midPlane)
+                            layoutOptions.addLayout(layoutMidPlane)
+                            
+                            self.checkbox_reversed = checkbox_layout(self.checkboxReversed, "Reversed", True)
+                            layoutReversed.addWidget(self.checkbox_reversed)
+                            layoutOptions.addLayout(layoutReversed)
+                            
+                            if (str(fonctionActive) == '<PartDesign::Pocket>'):
+                                self.checkbox_throughAll = checkbox_layout(self.checkboxThroughAll, "Type", "ThroughAll")
+                                
+                                layoutThroughAll.addWidget(self.checkbox_throughAll)
+                                layoutOptions.addLayout(layoutThroughAll)
+                               
+                        elif (str(fonctionActive) == '<PartDesign::Revolution>') or (str(fonctionActive) == '<PartDesign::Groove>'):
+                            unit = " °" # degres
+                            quantity = Units.Quantity(Units.Quantity(g.Object.Angle).getUserPreferred()[0])
+                            
+                            self.checkbox_midPlane = checkbox_layout(self.checkboxSymToPlane, "Midplane", True)
+                            layoutMidPlane.addWidget(self.checkbox_midPlane)
+                            layoutOptions.addLayout(layoutMidPlane)
+                            
+                            self.checkbox_reversed = checkbox_layout(self.checkboxReversed, "Reversed", True)
+                            layoutReversed.addWidget(self.checkbox_reversed)
+                            layoutOptions.addLayout(layoutReversed)
+                            
                         elif (str(fonctionActive) == '<PartDesign::Hole>'): # TODO :  à developper pour gérer la fonction Hole
                             self.buttons.remove(double_spinbox)
                         else:
                             self.buttons.remove(double_spinbox)
 
+                        self.double_spinbox.setProperty('value', quantity)
+                        
                         self.double_spinbox.setFocus()
                         self.double_spinbox.selectAll()
+                        
                         self.offset_x = 10
                         self.offset_y = 28
             except :
@@ -1088,7 +1169,7 @@ def pieMenuStart():
 
             enableContext = paramGet.GetBool("EnableContext")
 
-            if contextPhase:
+            if contextPhase and keyValue==None:
                 sel = Gui.Selection.getSelectionEx()
                 if not sel:
                     self.hide()
@@ -1098,7 +1179,7 @@ def pieMenuStart():
                     self.hide()
                     updateCommands()
                 else:
-                    updateCommands(context=True)
+                    updateCommands(keyValue, context=True)
             else:
                 updateCommands(keyValue)
 
@@ -1172,19 +1253,65 @@ def pieMenuStart():
             fonctionActive = g.Object
             featureName = g.Object.Name
             # self.double_spinbox.installEventFilter(self)
-            size = self.double_spinbox.value()
+            size = self.double_spinbox.property('value')
+
+            featureThroughAll = 0
+            featureReversed = 0
+            featureSymToPlane = 0
+
+            try:
+                featureThroughAll = self.checkbox_throughAll.isChecked()
+            except:
+                None
+     
+            try:
+                featureReversed = self.checkbox_reversed.isChecked()
+            except:
+                None
+                
+            try:
+                featureSymToPlane = self.checkbox_midPlane.isChecked()
+            except:
+                None
+   
             if (str(fonctionActive) == '<PartDesign::Fillet>'):
                 App.getDocument(docName).getObject(featureName).Radius = size
             elif (str(fonctionActive) == '<PartDesign::Chamfer>'):
                 App.getDocument(docName).getObject(featureName).Size = size
-            elif (str(fonctionActive) == '<PartDesign::Pad>'):
-                App.getDocument(docName).getObject(featureName).Length = size
-            elif (str(fonctionActive) == '<PartDesign::Pocket>'):
-                App.getDocument(docName).getObject(featureName).Length = size
+                
+            elif (str(fonctionActive) == '<PartDesign::Pocket>') or (str(fonctionActive) == '<PartDesign::Pad>')\
+            or (str(fonctionActive) == '<PartDesign::Revolution>') or (str(fonctionActive) == '<PartDesign::Groove>'):
+                
+                # reversed
+                if featureReversed:
+                    App.getDocument(docName).getObject(featureName).Reversed = 1
+                else:
+                    App.getDocument(docName).getObject(featureName).Reversed = 0
+                    
+                # midplane
+                if featureSymToPlane:
+                    App.getDocument(docName).getObject(featureName).Midplane = 1
+                else:
+                    App.getDocument(docName).getObject(featureName).Midplane = 0
+                
+                if (str(fonctionActive) == '<PartDesign::Pocket>'):
+                    # through all
+                    if featureThroughAll:
+                        self.double_spinbox.setEnabled(False)
+                        App.getDocument(docName).getObject(featureName).Type = 1
+                    else :
+                        self.double_spinbox.setEnabled(True)
+                        App.getDocument(docName).getObject(featureName).Type = 0
+                        App.getDocument(docName).getObject(featureName).Length = size
+                        
+                elif (str(fonctionActive) == '<PartDesign::Revolution>') or (str(fonctionActive) == '<PartDesign::Groove>'):
+                    App.getDocument(docName).getObject(featureName).Angle = size
+                else:
+                    App.getDocument(docName).getObject(featureName).Length = size
+                
             elif (str(fonctionActive) == '<PartDesign::Thickness>'):
                 App.getDocument(docName).getObject(featureName).Value = size
-            elif (str(fonctionActive) == '<PartDesign::Revolution>'):
-                App.getDocument(docName).getObject(featureName).Angle = size
+                       
             elif (str(fonctionActive) == '<PartDesign::Hole>'):
                 self.double_spinbox.setVisible(False)
             else:
@@ -1389,7 +1516,7 @@ def pieMenuStart():
                 if widgets.windowTitle() == idToolBar:
                     getActionData(action, actions, commands, workbenches)
 
-
+    
     def actualizeWorkbenchActions(actions, toolList, actionMap):
         for i in toolList:
             # rule out special case: there has to be an entry
@@ -1419,75 +1546,88 @@ def pieMenuStart():
                     Gui.activateWorkbench(cmdWb)
                     #return True ## return a bug in 0.21 in Sketcher edit
         return False
-
+  
 
     def updateCommands(keyValue=None, context=False):
         indexList = getIndexList()
 
-        if paramGet.GetBool("ToolBar") and context is False:
-            toolbar = paramGet.GetString("ToolBar")
-            text = keyValue
-            if ": " in toolbar:
-                toolbar_desc = toolbar.split(": ")
-                toolbar = toolbar_desc[1]
-                workbenches = toolbar_desc[0]
-                workbenches = workbenches.split(", ")
-                lastWorkbench = Gui.activeWorkbench()
-                for i in workbenches:
-                    # rule out special cases
-                    if i == None or i == "Std":
-                        # wb = Gui.activeWorkbench()
-                        # workbenches = wb.name()
-                        pass
-                    else:
-                        # match special cases
-                        # Fem workbench
-                        if i == "FEM":
-                            i = "Fem"
-                        # Sheet Metal workbench
-                        if i[:2] == "SM":
-                            i = i[:2]
-                        # Assembly4 workbench
-                        if i == "Asm4":
-                            i = "Assembly4"
-                    if (i + "Workbench") not in loadedWorkbenches:
-                        try:
-                            Gui.activateWorkbench(i + "Workbench")
-                        except:
-                            None
-                        loadedWorkbenches.append(i + "Workbench")
-                Gui.activateWorkbench(lastWorkbench.__class__.__name__)
-
-            else:
-                pass
-            actions = []
-            getGuiToolButtonData(toolbar, actions, None, None)
-
-        else:
-            if keyValue == None:
+        """ keyValue == None > Global shortcut """
+        if keyValue == None:
+            # sketcher, NOTE : will be deprecated : in a next version we will be able to assign a WB for each PieMenu
+            try:
+                docName = App.ActiveDocument.Name
+                g = Gui.ActiveDocument.getInEdit()
+                module = g.Module
+            except:
+                module = None
+            if (module == "SketcherGui"):
+                """ In Sketcher WB we load the Sketcher PieMenu """
+                text = 'Sketcher'
+                
+            # context
+            elif context:
                 try:
-                    docName = App.ActiveDocument.Name
-                    g = Gui.ActiveDocument.getInEdit()
-                    module = g.Module
-                except:
-                    module = None
-                if (module == "SketcherGui"):
-                    """ In Sketcher WB we load the Sketcher PieMenu """
-                    text = 'Sketcher'
-                else :
-                    if context:
-                        try:
-                            text = paramGet.GetString("ContextPie").decode("UTF-8")
-                        except AttributeError:
-                            text = paramGet.GetString("ContextPie")
-                    else:
-                        try:
-                            text = paramGet.GetString("CurrentPie").decode("UTF-8")
-                        except AttributeError:
-                            text = paramGet.GetString("CurrentPie")
-            else:
-                text = keyValue
+                    text = paramGet.GetString("ContextPie").decode("UTF-8")
+                except AttributeError:
+                    text = paramGet.GetString("ContextPie")
+            
+            # current default Pie
+            elif not paramGet.GetBool("ToolBar"):
+                try:
+                    text = paramGet.GetString("CurrentPie").decode("UTF-8")
+                except AttributeError:
+                    text = paramGet.GetString("CurrentPie")
+                context = False
+                
+            # toolbar
+            elif paramGet.GetBool("ToolBar"):
+                toolbar = paramGet.GetString("ToolBar")
+                text = None
+                context = False
+                if ": " in toolbar:
+                    toolbar_desc = toolbar.split(": ")
+                    toolbar = toolbar_desc[1]
+                    workbenches = toolbar_desc[0]
+                    workbenches = workbenches.split(", ")
+                    lastWorkbench = Gui.activeWorkbench()
+                    for i in workbenches:
+                        # rule out special cases
+                        if i == None or i == "Std":
+                            # wb = Gui.activeWorkbench()
+                            # workbenches = wb.name()
+                            pass
+                        else:
+                            # match special cases
+                            # Fem workbench
+                            if i == "FEM":
+                                i = "Fem"
+                            # Sheet Metal workbench
+                            if i[:2] == "SM":
+                                i = i[:2]
+                            # Assembly4 workbench
+                            if i == "Asm4":
+                                i = "Assembly4"
+                        if (i + "Workbench") not in loadedWorkbenches:
+                            try:
+                                Gui.activateWorkbench(i + "Workbench")
+                            except:
+                                None
+                            loadedWorkbenches.append(i + "Workbench")
+                    Gui.activateWorkbench(lastWorkbench.__class__.__name__)
 
+                else:
+                    pass
+                context = False    
+                actions = []
+                getGuiToolButtonData(toolbar, actions, None, None)
+                
+        # keyValue != None > Custom shortcut 
+        else:
+            # custom shortcut
+            text = keyValue
+            context = False
+
+        if text:
             toolList = None
 
             for i in indexList:
@@ -1516,8 +1656,13 @@ def pieMenuStart():
             else:
                 pass
             Gui.activateWorkbench(lastWorkbench.__class__.__name__)
+        
+        else:
+            pass
+ 
 
         PieMenuInstance.add_commands(actions, context, text)
+
 
 
     def getGroup(mode=0):
@@ -1530,28 +1675,18 @@ def pieMenuStart():
         If it doesn't exists return default PieMenu group
         """
         indexList = getIndexList()
-        try:
-            docName = App.ActiveDocument.Name
-            g = Gui.ActiveDocument.getInEdit()
-            module = g.Module
-        except:
-            module = None
-
-        if (module != None and module == 'SketcherGui'):
-            text = 'Sketcher'
-        else :
-            if mode == 2:
-                try:
-                    text = paramGet.GetString("ContextPie").decode("UTF-8")
-                except AttributeError:
-                    text = paramGet.GetString("ContextPie")
-            elif mode == 1:
-                try:
-                    text = paramGet.GetString("CurrentPie").decode("UTF-8")
-                except AttributeError:
-                    text = paramGet.GetString("CurrentPie")
-            else:
-                text = cBox.currentText()
+        if mode == 2:
+            try:
+                text = paramGet.GetString("ContextPie").decode("UTF-8")
+            except AttributeError:
+                text = paramGet.GetString("ContextPie")
+        elif mode == 1:
+            try:
+                text = paramGet.GetString("CurrentPie").decode("UTF-8")
+            except AttributeError:
+                text = paramGet.GetString("CurrentPie")
+        else:
+            text = cBox.currentText()
         group = None
 
         # Iterate over the available groups on indexList
@@ -1817,7 +1952,13 @@ def pieMenuStart():
             + globalShortcutKey)
         getdisplayCommandName(cBox.currentText())
         shape = getShape(cBox.currentText())
-        onShape(shape)
+        
+        try:
+            if pieMenuDialog.isVisible():
+                onShape(shape)
+        except:
+            None
+        
         spinNumColumn.setValue(getNumColumn(cBox.currentText()))
         spinIconSpacing.setValue(getIconSpacing(cBox.currentText()))
 
@@ -1895,6 +2036,11 @@ def pieMenuStart():
                 except TypeError:
                     paramIndexGet.SetString(indexNumber, text)
             cBoxUpdate()
+            # select the new piemenu in the cBox
+            index = cBox.findText(text)
+            if index != -1:
+                cBox.setCurrentIndex(index)
+            
         return paramIndexGet.GetGroup(indexNumber)
 
 
@@ -2128,8 +2274,8 @@ def pieMenuStart():
     labeldisplayCommandName.setAlignment(QtCore.Qt.AlignRight)
 
     spinNumColumn = QtGui.QSpinBox()
-    
     spinIconSpacing = QtGui.QSpinBox()
+
 
     def setShape():
         group = getGroup(mode=0)
@@ -2160,9 +2306,9 @@ def pieMenuStart():
             spinIconSpacing.setVisible(False)
             
         if shape in ["TableTop", "TableDown"]:
-            labelNumColumn.setText("Number of columns:")
+            labelNumColumn.setText(translate("PieMenuTab", "Number of columns:"))
         else:
-            labelNumColumn.setText("Number of rows:")
+            labelNumColumn.setText(translate("PieMenuTab", "Number of rows:"))
 
         if shape in ["Pie", "LeftRight"]:
             labeldisplayCommandName.setVisible(True)
@@ -2172,6 +2318,7 @@ def pieMenuStart():
             labeldisplayCommandName.setVisible(False)
             cboxDisplayCommandName.setVisible(False)
             cboxDisplayCommandName.setEnabled(False)
+
 
 
     def getShape(keyValue=None):
@@ -2239,12 +2386,12 @@ def pieMenuStart():
     comboShape.setMinimumWidth(160)
     comboShape.currentIndexChanged.connect(setShape)
 
-    labelNumColumn= QtGui.QLabel("Number of columns:")
+    labelNumColumn= QtGui.QLabel(translate("PieMenuTab", "Number of columns:"))
     labelNumColumn.setAlignment(QtCore.Qt.AlignRight)
     spinNumColumn.setMaximum(12)
     spinNumColumn.setMinimumWidth(120)
 
-    labelIconSpacing= QtGui.QLabel("Icon spacing:")
+    labelIconSpacing= QtGui.QLabel(translate("PieMenuTab", "Icon spacing:"))
     labelIconSpacing.setAlignment(QtCore.Qt.AlignRight)
     spinIconSpacing.setMaximum(200)
     spinIconSpacing.setMinimumWidth(0)
@@ -2981,8 +3128,6 @@ def pieMenuStart():
 
     def onControl():
         """Initializes the preferences dialog."""
-        # getTheme()
-
         shape = getShape(cBox.currentText())
         onShape(shape)
 
@@ -3179,7 +3324,6 @@ def pieMenuStart():
         layoutHoverDelay.addLayout(layoutHoverDelayRight, 1)
 
 
-
         def close_dialog():
             pieMenuDialog.accept()
 
@@ -3329,7 +3473,7 @@ def pieMenuStart():
                 <p style='font-weight:normal;'>This macro adds pie menu to FreeCAD GUI</p>
                 <hr>
                 <h2>Licence</h2>
-                <p style='font-weight:normal;'>Copyright (C) 2024 Grubuntu, Pgilfernandez @ FreeCAD</p>
+                <p style='font-weight:normal;'>Copyright (C) 2024 Grubuntu, Pgilfernandez, Hasecilu @ FreeCAD</p>
                 <p style='font-weight:normal;'>Copyright (C) 2022, 2023 mdkus @ FreeCAD</p>
                 <p style='font-weight:normal;'>Copyright (C) 2016, 2017 triplus @ FreeCAD</p>
                 <p style='font-weight:normal;'>Copyright (C) 2015,2016 looo @ FreeCAD</p>
