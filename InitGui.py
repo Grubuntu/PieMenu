@@ -26,7 +26,7 @@
 # http://www.freecadweb.org/wiki/index.php?title=Code_snippets
 
 global PIE_MENU_VERSION
-PIE_MENU_VERSION = "1.3.8"
+PIE_MENU_VERSION = "1.3.9"
 
 def pieMenuStart():
     """Main function that starts the Pie Menu."""
@@ -860,12 +860,27 @@ def pieMenuStart():
                     displayCommandName = getdisplayCommandName(keyValue)
                 except:
                     None
-
-            num = 1
-            for i in commands:
+            
+           
+            showPie = False
+            # handle case when not in edit mode or if  Sketcher is open
+            try:
                 if (Gui.ActiveDocument.getInEdit() is None) or (module == 'SketcherGui'):
-                    """ show PieMenu in Edit Feature and in Sketcher """
+                    showPie = True
+            except:
+                None
+            
+            # handle case when there is any document open
+            try:
+                # if there is any open document we throw exception, to set showPie to True to show PieMenu
+                App.ActiveDocument.Name
+            except:
+                showPie = True
 
+            if showPie:   
+                num = 1
+                for i in commands:
+                    """ show PieMenu in Edit Feature and in Sketcher """
                     button = HoverButton()
                     button.setParent(self.menu)
                     button.setObjectName("pieMenu")
@@ -1020,9 +1035,8 @@ def pieMenuStart():
                                            (math.sin(angle * num + angleStart)))
 
                     self.buttons.append(button)
-                else:
-                    None
-                num = num + 1
+
+                    num = num + 1
 
             buttonQuickMenu = quickMenu()
             if checkboxQuickMenu.checkState():
@@ -1032,21 +1046,14 @@ def pieMenuStart():
             else:
                 buttonQuickMenu.hide()
 
-            if (Gui.ActiveDocument.getInEdit() == None):
-                buttonClose = closeButton()
-                buttonClose.setParent(self.menu)
-                self.buttons.append(buttonClose)
+            try:
+                if (Gui.ActiveDocument.getInEdit() == None):
+                    buttonClose = closeButton()
+                    buttonClose.setParent(self.menu)
+                    self.buttons.append(buttonClose)
+            except:
+                None
 
-            """ show Valid and Cancel buttons always """
-            # buttonValid = self.validButton()
-            # buttonValid.setParent(self.menu)
-            # buttonValid.clicked.connect(self.validation)
-            # self.buttons.append(buttonValid)
-
-            # buttonCancel = self.cancelButton()
-            # buttonCancel.setParent(self.menu)
-            # buttonCancel.clicked.connect(self.cancel)
-            # self.buttons.append(buttonCancel)
 
             try:
                 if (Gui.ActiveDocument.getInEdit() != None):
