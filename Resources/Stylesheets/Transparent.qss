@@ -111,7 +111,7 @@ QToolButton#styleButtonMenu::menu-indicator {
 
 
 /* ====================================================== */
-/*                     Quick menu style                   */
+/*                     Other styles                       */
 /* ====================================================== */
 QMenu#styleContainer {
     background-color: transparent; /* Important, do not change */
