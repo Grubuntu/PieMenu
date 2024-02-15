@@ -968,18 +968,18 @@ def pieMenuStart():
                             if num == 1:
                                 X = 0
                             else:
-                                X = self.radius - abs(Y) + (text_length)/2
+                                X = self.radius * (math.cos(angle * num + angleStart)) + (2 * buttonSize + text_length) / 2
                             padding = "QToolButton#pieMenu {padding-left: " + str(icon) \
                             + "px; font-size: " + str(font_size) + "px;}"
                             
                         # handle bottom right 
                         elif (commandNumber % 2) == 1 and (num) == ((commandNumber+1)/2):
-                            X = (text_length) + ecart/2
+                            X = self.radius * (math.cos(angle * num + angleStart)) + (2 * buttonSize + text_length) / 2
                             Y = self.radius - ecart/2
                             
                         # handle left cases for odd commandNumber 
                         elif (commandNumber % 2) == 1 and (num) == (((commandNumber+1)/2)+1):
-                            X = -(text_length) - ecart/2
+                            X = self.radius * (math.cos(angle * num + angleStart)) - (2 * buttonSize + text_length) / 2
                             Y = self.radius - ecart/2
                             layout.addStretch(1)
                             padding = "QToolButton#pieMenu {padding-right: " + str(icon) \
@@ -996,7 +996,7 @@ def pieMenuStart():
                             Y -= ecart
                             if Y < -self.radius:
                                 Y = -self.radius
-                            X = -(self.radius - abs(Y)) - (text_length)/2
+                            X = self.radius * (math.cos(angle * num + angleStart)) - (2 * buttonSize + text_length) / 2
                             layout.addStretch(1)
                             padding = "QToolButton#pieMenu {padding-right: " + str(icon) \
                             + "px; font-size: " + str(font_size) + "px;}"
