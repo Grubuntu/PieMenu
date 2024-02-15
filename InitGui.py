@@ -1009,50 +1009,6 @@ def pieMenuStart():
                         button.setStyleSheet(styleCurrentTheme + radius + padding)
                         layout.addWidget(iconLabel)
 
-                    # modify style for display command name (only with LeftRight shape)
-                    elif displayCommandName and shape == "LeftRight":
-                        num_per_row = math.ceil(commandNumber/2)
-                        button.setIcon(QtGui.QIcon())
-                        # set padding and font size dependind on icon size
-                        font_size = round(icon/2)
-                        if ((num-1) < (num_per_row)):
-                            # Left side icons
-                            padding = "QToolButton#pieMenu {padding-right: " + str(icon) \
-                            + "px; font-size: " + str(font_size) + "px;}"
-                        else:
-                            # Right side icons
-                            padding = "QToolButton#pieMenu {padding-left: " + str(icon) \
-                            + "px; font-size: " + str(font_size) + "px;}"
-                        button.setStyleSheet(styleCurrentTheme + radius + padding)
-                        # get length of the string
-                        text_length = QFontMetrics(button.font()).horizontalAdvance(
-                            commands[commands.index(i)].text())
-                    
-                        button.setGeometry(buttonSize, 0,  2 * buttonSize + text_length, buttonSize)
-                        # layout for icon and command string
-                        layout = QtGui.QHBoxLayout(button)
-                        layout.setContentsMargins((icon/4), 0, 0, 0)
-                        if ((num-1) < (num_per_row)):
-                            # Left side icons: align icon to the right and add some margin  
-                            layout.addStretch(1)
-                            iconMarging = "#iconLabel {margin-right: " + str(icon/4) + "px;}"
-                        iconButton = QtGui.QIcon(commands[commands.index(i)].icon())
-                        iconLabel = QtGui.QLabel()
-                        iconLabel.setObjectName("iconLabel")
-                        iconLabel.setPixmap(iconButton.pixmap(QtCore.QSize(icon, icon)))
-                        if ((num-1) < (num_per_row)):
-                            # Left side icons
-                            iconLabel.setStyleSheet(styleCurrentTheme + iconMarging)
-                        else:
-                            # Right side icons
-                            iconLabel.setStyleSheet(styleCurrentTheme)
-                        layout.addWidget(iconLabel)
-                        
-                        button.setProperty("ButtonX", self.radius *
-                                           (math.cos(angle * num + angleStart)))
-                        button.setProperty("ButtonY", self.radius *
-                                           (math.sin(angle * num + angleStart)))
-
                     elif shape == "TableTop":
                         ### Table  Top ###
                         num_of_line = math.ceil(commandNumber/num_per_row)
@@ -1103,6 +1059,42 @@ def pieMenuStart():
                         ### Left and Right without command names ###
                         if displayCommandName:
                             num_per_row = math.ceil(commandNumber/2)
+                            button.setIcon(QtGui.QIcon())
+                            # set padding and font size dependind on icon size
+                            font_size = round(icon/2)
+                            if ((num-1) < (num_per_row)):
+                                # Left side icons
+                                padding = "QToolButton#pieMenu {padding-right: " + str(icon) \
+                                + "px; font-size: " + str(font_size) + "px;}"
+                            else:
+                                # Right side icons
+                                padding = "QToolButton#pieMenu {padding-left: " + str(icon) \
+                                + "px; font-size: " + str(font_size) + "px;}"
+                            button.setStyleSheet(styleCurrentTheme + radius + padding)
+                            # get length of the string
+                            text_length = QFontMetrics(button.font()).horizontalAdvance(
+                                commands[commands.index(i)].text())
+                        
+                            button.setGeometry(buttonSize, 0,  2 * buttonSize + text_length, buttonSize)
+                            # layout for icon and command string
+                            layout = QtGui.QHBoxLayout(button)
+                            layout.setContentsMargins((icon/4), 0, 0, 0)
+                            if ((num-1) < (num_per_row)):
+                                # Left side icons: align icon to the right and add some margin  
+                                layout.addStretch(1)
+                                iconMarging = "#iconLabel {margin-right: " + str(icon/4) + "px;}"
+                            iconButton = QtGui.QIcon(commands[commands.index(i)].icon())
+                            iconLabel = QtGui.QLabel()
+                            iconLabel.setObjectName("iconLabel")
+                            iconLabel.setPixmap(iconButton.pixmap(QtCore.QSize(icon, icon)))
+                            if ((num-1) < (num_per_row)):
+                                # Left side icons
+                                iconLabel.setStyleSheet(styleCurrentTheme + iconMarging)
+                            else:
+                                # Right side icons
+                                iconLabel.setStyleSheet(styleCurrentTheme)
+                            layout.addWidget(iconLabel)
+                        
                             Y = ((num -1) % num_per_row) * (buttonSize + icon_spacing)  
                             if ((num-1) < (num_per_row)) :
                                 # Left side icons
@@ -1128,7 +1120,7 @@ def pieMenuStart():
                             button.setProperty("ButtonX", -X)
                             button.setProperty("ButtonY", Y - ((num_per_row - 1) * (buttonSize + icon_spacing)  ) / 2)
                     else :
-                        ### Pie / RainbowUp / RainbowDown  without commands names ###
+                        ### Pie without commands names / RainbowUp / RainbowDown   ###
                         button.setProperty("ButtonX", self.radius *
                                            (math.cos(angle * num + angleStart)))
                         button.setProperty("ButtonY", self.radius *
@@ -1153,8 +1145,7 @@ def pieMenuStart():
                     self.buttons.append(buttonClose)
             except:
                 None
-
-
+                
             try:
                 if (Gui.ActiveDocument.getInEdit() != None):
                     """ or show Valid and Cancel buttons in Edit Feature Only """
