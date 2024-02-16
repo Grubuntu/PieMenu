@@ -119,7 +119,6 @@ The QuickMenu allows for quickly adjusting certain settings. If the QuickMenu is
 Create a new PieMenu by clicking on the '+' button, name it, and validate. It will now be visible in the dropdown list of PieMenus.
 Modify and adjust available settings (settings may vary depending on the PieMenu configuration):
 
-    • Associated Workbench
     
     • Menu size: adjusts the size of the menu
     
@@ -180,6 +179,7 @@ Here, you can:
 
 ![Capture d’écran (114)](https://github.com/Grubuntu/PieMenu/assets/56045316/0a8f21b7-74c9-4923-b008-9ec6a739e65b)
 
+![Capture d’écran (113)](https://github.com/Grubuntu/PieMenu/assets/56045316/8a06e5c2-c67b-4d89-aea3-55f22d472195)
 
 Hover Activation Delay: For example, in the case of the "TableTop" PieMenu shape, to reach the "Fillet" tool, one must hover over the "Pad" or "New Sketch" tool. 
 To avoid triggering these tools when hovering over them with the mouse, a hover activation delay is set (e.g., 200ms). 
@@ -228,15 +228,15 @@ For example, if you assign the single-key shortcut 'F' to one PieMenu and the mu
 PieMenus will be activated in order of priority when the global shortcut is pressed. The priority order is as follows: 
 
 1 - Active Context 
+
 2 - Active ToolBar 
-3 - Associated Workbench 
-4 - Default PieMenu
+
+3 - Default PieMenu
+
 
 If the "Context" mode is active and the selection conditions are met, then the PieMenu corresponding to the "Context" will be displayed. 
 
 Otherwise, if a ToolBar is active (via the QuickMenu), then that ToolBar is displayed. 
-
-Otherwise, if the active Workbench is associated with a PieMenu via preferences, then that PieMenu will be displayed. 
 
 Otherwise, the default PieMenu (checked in the QuickMenu) will be displayed.
 
