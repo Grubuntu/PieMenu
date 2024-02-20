@@ -26,7 +26,7 @@
 # http://www.freecadweb.org/wiki/index.php?title=Code_snippets
 
 global PIE_MENU_VERSION
-PIE_MENU_VERSION = "1.3.8.1"
+PIE_MENU_VERSION = "1.3.8.2"
 
 def pieMenuStart():
     """Main function that starts the Pie Menu."""
