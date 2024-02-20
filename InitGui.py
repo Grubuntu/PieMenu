@@ -26,7 +26,7 @@
 # http://www.freecadweb.org/wiki/index.php?title=Code_snippets
 
 global PIE_MENU_VERSION
-PIE_MENU_VERSION = "1.3.8"
+PIE_MENU_VERSION = "1.3.8.1"
 
 def pieMenuStart():
     """Main function that starts the Pie Menu."""
@@ -243,6 +243,7 @@ def pieMenuStart():
         button.setGeometry(0, 0, buttonSize, buttonSize)
         button.setIconSize(QtCore.QSize(icon, icon))
         # button.setIcon(QtGui.QIcon(iconClose))
+        styleCurrentTheme = getStyle()
         button.setStyleSheet(styleCurrentTheme + radius)
         button.setAttribute(QtCore.Qt.WA_TranslucentBackground)
 
@@ -257,6 +258,7 @@ def pieMenuStart():
     def quickMenu(buttonSize=20):
         """Build and style the QuickMenu button."""
         mw = Gui.getMainWindow()
+        styleCurrentTheme = getStyle()
 
         icon = iconSize(buttonSize)
         radius = radiusSize(buttonSize)
@@ -606,6 +608,7 @@ def pieMenuStart():
         def __init__(self, parent=mw):
             super().__init__()
             self.double_spinbox = None
+            styleCurrentTheme = getStyle()
 
             if not PieMenu.event_filter_installed:
                 app = QtGui.QGuiApplication.instance() or QtGui.QApplication([])
@@ -2796,6 +2799,7 @@ def pieMenuStart():
         comboBoxSign = QtGui.QComboBox()
         comboBoxSign.setObjectName("styleCombo")
         comboBoxSign.setModel(model)
+        styleCurrentTheme = getStyle()
         comboBoxSign.setStyleSheet(styleCurrentTheme)
 
 
