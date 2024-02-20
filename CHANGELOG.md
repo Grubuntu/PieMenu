@@ -40,3 +40,11 @@
 - Rearrangement of menu priorities for Global shortcut: Sketcher, Context, ToolBar, Current Pie (def updateCommands)
 - Added command name for LeftRight shape (Pgilfernandez)
 - Added French Support
+
+### 1.3.8.1
+- Fix issue with stylesheet
+
+### 1.3.8.2
+- Added support for theme accent color (FreeCad>Preferences>Display>Theme>Accent Color)
+- Fix default stylesheet to Legacy.qss if no existing stylesheet is set
+- Added stylesheet Accents.qss
