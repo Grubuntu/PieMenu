@@ -90,6 +90,9 @@ def pieMenuStart():
         if theme == "":
             theme = "Legacy" # default theme if new installation
         stylesheet_path = f"{stylepath}{theme}.qss"
+        if not os.path.exists(stylesheet_path):
+            stylesheet_path = f"{stylepath}Legacy.qss"
+            paramGet.SetString("Theme", "Legacy")
         with open(stylesheet_path, "r") as f:
             styleCurrentTheme = f.read()
         styleCurrentTheme = styleCurrentTheme.replace("pieMenuQss:", stylepath)
