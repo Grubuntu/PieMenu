@@ -1,0 +1,147 @@
+/* PieMenu widget stylesheet for FreeCAD */
+/* Copyright (C) 2024 Pgilfernandez @ FreeCAD */
+
+
+/* ====================================================== */
+/*                 Normal pie button style                */
+/* ====================================================== */
+/* Default style applied to buttons */
+QToolButton#pieMenu::menu-indicator {
+    subcontrol-origin: padding;
+    subcontrol-position: center center;
+}
+
+QToolButton#pieMenu {
+    color: @ThemeAccentColor1; /* command names text color */
+    background-color: @ThemeAccentColor3;
+    border: 1px solid @ThemeAccentColor3;
+}
+
+QToolButton#pieMenu:disabled {
+    background-color: @ThemeAccentColor2;
+}
+
+QToolButton#pieMenu:hover {
+    color: @ThemeAccentColor3; /* command names text color */
+    background-color: @ThemeAccentColor1;
+    border-color: @ThemeAccentColor1;
+}
+
+/* When the button is checkeable and it's in "checked" state */
+QToolButton#pieMenu:checked {
+    background-color: @ThemeAccentColor3;
+    border: 3px solid @ThemeAccentColor1;
+}
+
+QToolButton#pieMenu:checked:hover {
+    background-color: @ThemeAccentColor1;
+    border-color: @ThemeAccentColor1;
+}
+
+
+/* ====================================================== */
+/*                 Close pie button style                 */
+/* ====================================================== */
+/* It is the ring that helps to visually locate the middle of the pie */
+QToolButton#styleMenuClose {
+    background-color: transparent;
+    border: 4px solid @ThemeAccentColor3;
+    image: none;
+}
+
+QToolButton#styleMenuClose:hover {
+    background-color: transparent;
+    image: none;
+}
+
+QToolButton#styleMenuClose::menu-indicator {
+    image: none;
+}
+
+
+/* ====================================================== */
+/*                      comboBox style                    */
+/* ====================================================== */
+/* Used for fillet/chamfer fast radius setting (and probably others) */
+
+QComboBox#styleCombo {
+    background-color: transparent;
+    border: 1px solid transparent;
+}
+
+QToolButton#styleComboValid,
+QToolButton#styleComboCancel {
+    background-color: transparent;
+    border-radius: 4px;
+}
+
+QToolButton#styleComboValid:hover,
+QToolButton#styleComboCancel:hover {
+    background-color: @ThemeAccentColor3;
+    border: 1px solid @ThemeAccentColor1;
+}
+
+QToolButton#styleComboValid {
+    image: url(pieMenuQss:images_dark-light/edit_OK.svg);
+}
+
+QToolButton#styleComboCancel {
+    image: url(pieMenuQss:images_dark-light/edit_Cancel.svg);
+}
+
+
+/* ====================================================== */
+/*                      Quick Menu                        */
+/* ====================================================== */
+QMenu#styleQuickMenu {
+    padding: 5px 10px 5px 10px;
+}
+
+QMenu#styleQuickMenuItem::item {
+    padding: 5px 20px 5px 20px;
+    text-align: left;
+}
+
+QToolButton#styleButtonMenu {
+    image: url(pieMenuQss:images_dark-light/PieMenuQuickMenuDark.svg);
+    background-color: transparent;
+}
+
+QToolButton#styleButtonMenu:hover {
+    image: url(pieMenuQss:images_dark-light/PieMenuQuickMenuLightHover.svg);
+    background-color: @ThemeAccentColor1; /* necessary for overriding QToolButton stylesheets */
+}
+
+QToolButton#styleButtonMenu::menu-indicator {
+    image: none;
+}
+
+
+/* ====================================================== */
+/*                     Other styles                       */
+/* ====================================================== */
+QMenu#styleContainer {
+    background-color: transparent; /* Important, do not change */
+}
+
+QFrame#separatorPieMenu,
+QFrame#separatorSettings {
+    background-color: rgba(0, 0, 0, 0.2);
+    border: 1px solid transparent;
+    border-bottom-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Important fix to override QLabel styling from FreeCAD stylesheets, do not remove */
+QLabel#iconLabel {
+    background-color: transparent;
+}
+
+
+/* ====================================================== */
+/*                     CheckBox style                     */
+/* ====================================================== */
+
+QCheckBox#styleCheckbox {
+    margin-left: 10px;
+}
+
