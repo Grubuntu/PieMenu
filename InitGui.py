@@ -72,9 +72,11 @@ def pieMenuStart():
     shortcutList =[]
 
     paramPath = "User parameter:BaseApp/PieMenu"
-    paramIndexPath= "User parameter:BaseApp/PieMenu/Index"
+    paramIndexPath = "User parameter:BaseApp/PieMenu/Index"
+    paramAccents = "User parameter:BaseApp/Preferences/Themes"
     paramGet = App.ParamGet(paramPath)
     paramIndexGet = App.ParamGet(paramIndexPath)
+    paramAccentsGet = App.ParamGet(paramAccents)
 
     ## HACK: workaround to avoid ghosting : we find wbs already loaded,
     ## so as not to reload them again in the function 'updateCommands'
@@ -91,6 +93,19 @@ def pieMenuStart():
         with open(stylesheet_path, "r") as f:
             styleCurrentTheme = f.read()
         styleCurrentTheme = styleCurrentTheme.replace("pieMenuQss:", stylepath)
+        # Get FreeCAD ThemeAccentColors
+        ThemeAccentColor1 = paramAccentsGet.GetUnsigned("ThemeAccentColor1")
+        ThemeAccentColor2 = paramAccentsGet.GetUnsigned("ThemeAccentColor2")
+        ThemeAccentColor3 = paramAccentsGet.GetUnsigned("ThemeAccentColor3")
+        ThemeAccentColor1_hex_full = format(ThemeAccentColor1, '06x')
+        ThemeAccentColor2_hex_full = format(ThemeAccentColor2, '06x')
+        ThemeAccentColor3_hex_full = format(ThemeAccentColor3, '06x')
+        ThemeAccentColor1_hex = ThemeAccentColor1_hex_full[:-2]
+        ThemeAccentColor2_hex = ThemeAccentColor2_hex_full[:-2]
+        ThemeAccentColor3_hex = ThemeAccentColor3_hex_full[:-2]
+        styleCurrentTheme = styleCurrentTheme.replace("@ThemeAccentColor1", "#" + str(ThemeAccentColor1_hex))
+        styleCurrentTheme = styleCurrentTheme.replace("@ThemeAccentColor2", "#" + str(ThemeAccentColor2_hex))
+        styleCurrentTheme = styleCurrentTheme.replace("@ThemeAccentColor3", "#" + str(ThemeAccentColor3_hex))
         return styleCurrentTheme
 
     styleCurrentTheme = getStyle()
