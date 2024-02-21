@@ -961,7 +961,7 @@ def pieMenuStart():
                     elif shape == "TableLeft":
                         ### Table Left  ###
                         num_of_line = math.ceil(commandNumber/num_per_row)
-                        X = - buttonSize - self.radius -((num-1) // num_per_row) * (buttonSize + icon_spacing)
+                        X = - buttonSize - self.radius / 2 -((num-1) // num_per_row) * (buttonSize + icon_spacing)
                         Y = ((num-1) % num_per_row) * (buttonSize + icon_spacing)
                         button.setProperty("ButtonX", X )
                         button.setProperty("ButtonY", Y - ((num_per_row-1) * (buttonSize + icon_spacing)) / 2)
@@ -969,7 +969,7 @@ def pieMenuStart():
                     elif shape == "TableRight":
                         ### Table Right  ###
                         num_of_line = math.ceil(commandNumber/num_per_row)
-                        X = buttonSize + self.radius + ((num-1) // num_per_row) * (buttonSize + icon_spacing)
+                        X = buttonSize + self.radius / 2 + ((num-1) // num_per_row) * (buttonSize + icon_spacing)
                         Y = ((num-1) % num_per_row) * (buttonSize + icon_spacing)
                         button.setProperty("ButtonX", X )
                         button.setProperty("ButtonY", Y - ((num_per_row-1) * (buttonSize + icon_spacing)) / 2)
