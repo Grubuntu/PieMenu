@@ -25,8 +25,14 @@
 # http://forum.freecadweb.org/
 # http://www.freecadweb.org/wiki/index.php?title=Code_snippets
 
+# global shortcut toggle
+# workbench dependant
+# piemenu without opened file
+# modify Pie shape with command name
+# shapes "concentric" and "star"
+
 global PIE_MENU_VERSION
-PIE_MENU_VERSION = "1.3.9"
+PIE_MENU_VERSION = "1.4"
 
 def pieMenuStart():
     """Main function that starts the Pie Menu."""
@@ -70,6 +76,9 @@ def pieMenuStart():
     shortcutKey = ""
     globalShortcutKey = "TAB"
     shortcutList =[]
+    
+    global flagVisi
+    flagVisi = False 
 
     paramPath = "User parameter:BaseApp/PieMenu"
     paramIndexPath = "User parameter:BaseApp/PieMenu/Index"
@@ -85,6 +94,8 @@ def pieMenuStart():
     paramWb = App.ParamGet(paramLoadedWb)
     loadedWorkbenches = paramWb.GetString("BackgroundAutoloadModules")
     loadedWorkbenches = loadedWorkbenches.split(",")
+
+    
     def getStyle():
         theme = paramGet.GetString("Theme")
         if theme == "":
@@ -110,6 +121,7 @@ def pieMenuStart():
         styleCurrentTheme = styleCurrentTheme.replace("@ThemeAccentColor2", "#" + str(ThemeAccentColor2_hex))
         styleCurrentTheme = styleCurrentTheme.replace("@ThemeAccentColor3", "#" + str(ThemeAccentColor3_hex))
         return styleCurrentTheme
+
 
     styleCurrentTheme = getStyle()
 
@@ -193,6 +205,23 @@ def pieMenuStart():
                 param = paramIndexGet.GetGroup(str(i))
                 param.SetString("ShortcutKey", shortcutKey)
 
+    def setGlobalKeyToggle():
+        """ Set globlal key toggle mode in parameters """
+        globalKeyToggle = checkboxGlobalKeyToggle.isChecked()
+        paramGet.SetBool("GlobalKeyToggle", globalKeyToggle)
+        flagVisi = False
+        actionKey.setEnabled(True)
+        
+        
+    def getGlobalKeyToggle():
+        """ Get globlal key toggle mode in parameters """
+        globalKeyToggle = paramGet.GetBool("GlobalKeyToggle")
+        return globalKeyToggle
+        
+    checkboxGlobalKeyToggle = QCheckBox()
+    checkboxGlobalKeyToggle.setCheckable(True)
+    checkboxGlobalKeyToggle.setChecked(getGlobalKeyToggle())    
+    checkboxGlobalKeyToggle.stateChanged.connect(setGlobalKeyToggle)    
 
     def remObsoleteParams():
         """Remove obsolete parameters from older versions."""
@@ -264,6 +293,7 @@ def pieMenuStart():
         styleCurrentTheme = getStyle()
         button.setStyleSheet(styleCurrentTheme + radius)
         button.setAttribute(QtCore.Qt.WA_TranslucentBackground)
+        
 
         def onButton():
             PieMenuInstance.hide()
@@ -292,6 +322,7 @@ def pieMenuStart():
         button.setProperty("ButtonY", 32) # +, down
         button.setGeometry(0, 0, buttonSize, buttonSize)
         button.setIconSize(QtCore.QSize(icon, icon))
+        
         button.setStyleSheet(styleCurrentTheme + radius)
         button.setPopupMode(QtGui.QToolButton
                             .ToolButtonPopupMode.InstantPopup)
@@ -555,7 +586,7 @@ def pieMenuStart():
 
         return button
     ### END QuickMenu   Def ###
-
+ 
 
     class HoverButton(QtGui.QToolButton):
         """ Custom class : hover timer to avoid too fast triggering on hover mode """
@@ -728,6 +759,20 @@ def pieMenuStart():
 
         def eventFilter(self, obj, event):
             """ Handle key and wheel event """
+            """ Handle toggle mode for global shortcut """
+            if event.type() == QtCore.QEvent.ShortcutOverride:
+                global flagVisi
+                if checkboxGlobalKeyToggle.isChecked():
+                    if event.key() == QtGui.QKeySequence(globalShortcutKey):
+                        if self.menu.isVisible():
+                            self.menu.hide()
+                            flagVisi = True
+                            return True
+                        else:
+                            flagVisi = False
+                            return False
+                        
+            """ Handle keys Return and Enter for spinbox """  
             if event.type() == QtCore.QEvent.KeyPress:
                 key = event.key()
                 if key == QtCore.Qt.Key_Enter or key == QtCore.Qt.Key_Return:
@@ -915,7 +960,6 @@ def pieMenuStart():
 
                 for i in commands:
                     """ show PieMenu in Edit Feature and in Sketcher """
-
                     button = HoverButton()
                     button.setParent(self.menu)
                     button.setObjectName("pieMenu")
@@ -924,7 +968,6 @@ def pieMenuStart():
                     button.setDefaultAction(commands[commands.index(i)])
                     button.setIconSize(QtCore.QSize(icon, icon))
                     button.setGeometry(0, 0, buttonSize, buttonSize)
-
 
                     # modify style for display command name (only with Pie shape)
                     if displayCommandName and shape == "Pie":
@@ -943,7 +986,7 @@ def pieMenuStart():
                         text_length = QFontMetrics(button.font()).horizontalAdvance(
                             commands[commands.index(i)].text())
 
-                        button.setGeometry(buttonSize, 0,  2* buttonSize + text_length, buttonSize)
+                        button.setGeometry(buttonSize, 0,  2 * buttonSize + text_length, buttonSize)
                         # layout for icon and command string
                         layout = QtGui.QHBoxLayout(button)
                         layout.setContentsMargins((icon/4), 0, 0, 0)
@@ -1109,6 +1152,7 @@ def pieMenuStart():
                                 # Right side icons
                                 iconLabel.setStyleSheet(styleCurrentTheme)
                             layout.addWidget(iconLabel)
+                        
                             Y = ((num -1) % num_per_row) * (buttonSize + icon_spacing)  
                             if ((num-1) < (num_per_row)) :
                                 # Left side icons
@@ -1134,13 +1178,14 @@ def pieMenuStart():
                             button.setProperty("ButtonX", -X)
                             button.setProperty("ButtonY", Y - ((num_per_row - 1) * (buttonSize + icon_spacing)  ) / 2)
                     else :
-                        ### Pie without commands names / RainbowUp / RainbowDown  ###
+                        ### Pie without commands names / RainbowUp / RainbowDown   ###
                         button.setProperty("ButtonX", self.radius *
                                            (math.cos(angle * num + angleStart)))
                         button.setProperty("ButtonY", self.radius *
                                            (math.sin(angle * num + angleStart)))
 
                     self.buttons.append(button)
+
                     num = num + 1
 
             buttonQuickMenu = quickMenu()
@@ -1158,6 +1203,7 @@ def pieMenuStart():
                     self.buttons.append(buttonClose)
             except:
                 None
+                
             try:
                 if (Gui.ActiveDocument.getInEdit() != None):
                     """ or show Valid and Cancel buttons in Edit Feature Only """
@@ -1270,8 +1316,9 @@ def pieMenuStart():
             for i in self.buttons:
                 i.hide()
             self.menu.hide()
-
-        def showAtMouse(self, keyValue=None, notKeyTriggered=False):
+            
+        def showAtMouseInstance(self, keyValue=None, notKeyTriggered=False):
+        # def showAtMouse(self, keyValue=None, notKeyTriggered=False):
             nonlocal selectionTriggered
             nonlocal contextPhase
             global lastPosX
@@ -1293,6 +1340,9 @@ def pieMenuStart():
             else:
                 updateCommands(keyValue)
 
+        # if self.menu.isVisible():
+            # self.hide()
+        # else:
             if windowShadow:
                 pos = mw.mapFromGlobal(QtGui.QCursor.pos())
                 if notKeyTriggered:
@@ -1351,7 +1401,16 @@ def pieMenuStart():
                     i.setVisible(True)
 
                 self.menu.popup(QtCore.QPoint(pos.x() - self.menuSize / 2, pos.y() - self.menuSize / 2))
+        
+        def showAtMouse(self, keyValue=None, notKeyTriggered=False):
+            global flagVisi
 
+            if not flagVisi:
+                self.showAtMouseInstance(keyValue, notKeyTriggered)
+                flagVisi = False
+            else:
+                self.menu.hide()
+                flagVisi = False
 
         def spin_interactif(self):
             docName = App.ActiveDocument.Name
@@ -1536,7 +1595,7 @@ def pieMenuStart():
             except TypeError:
                 paramGet.SetString("ContextPie", pieName)
             contextPhase = True
-
+            
             # updateCommands(keyValue=None, context=True)
             PieMenuInstance.hide()
             # selectionTriggered = True
@@ -1658,35 +1717,33 @@ def pieMenuStart():
         # keyValue = None > Global shortcut
         # keyValue != None > Custom shortcut
 
-        """ keyValue == None > Global shortcut """
         if keyValue == None:
-            # sketcher, NOTE : will be deprecated : in a next version we will be able to assign a WB for each PieMenu
-            try:
-                docName = App.ActiveDocument.Name
-                g = Gui.ActiveDocument.getInEdit()
-                module = g.Module
-            except:
-                module = None
-            if (module == "SketcherGui"):
-                """ In Sketcher WB we load the Sketcher PieMenu """
-                text = 'Sketcher'
-                
             # context
-            elif context:
+            if context:
                 try:
                     text = paramGet.GetString("ContextPie").decode("UTF-8")
                 except AttributeError:
                     text = paramGet.GetString("ContextPie")
-            
-            # current default Pie
+        
+            # workbench
             elif not paramGet.GetBool("ToolBar"):
-                try:
-                    text = paramGet.GetString("CurrentPie").decode("UTF-8")
-                except AttributeError:
-                    text = paramGet.GetString("CurrentPie")
+                wb = Gui.activeWorkbench()
+                wbName = wb.name()
+                wbName = wbName.replace("Workbench", "")
+                # workbench
+                text =  getPieName(wbName)
+                
+                # current Pie
+                if text == None:
+                    try:
+                        text = paramGet.GetString("CurrentPie").decode("UTF-8")
+                    except AttributeError:
+                        text = paramGet.GetString("CurrentPie")
+            # else:
+                # text = keyValue
                 context = False
                 
-            # toolbar
+             # toolbar
             elif paramGet.GetBool("ToolBar"):
                 toolbar = paramGet.GetString("ToolBar")
                 text = None
@@ -1727,8 +1784,7 @@ def pieMenuStart():
                 context = False    
                 actions = []
                 getGuiToolButtonData(toolbar, actions, None, None)
-                
-        # keyValue != None > Custom shortcut 
+        
         else:
             # custom shortcut
             text = keyValue
@@ -1769,7 +1825,6 @@ def pieMenuStart():
  
 
         PieMenuInstance.add_commands(actions, context, text)
-
 
 
     def getGroup(mode=0):
@@ -1942,6 +1997,7 @@ def pieMenuStart():
 
     infoShortcut = QLabel()
 
+
     def getAssignedShortcut():
         shortcutsAssigned = [f"{act.whatsThis()} => {act.shortcut().toString()}" \
             for act in Gui.getMainWindow().findChildren(QtGui.QAction) \
@@ -2018,7 +2074,7 @@ def pieMenuStart():
             modifier_text = '+'.join([modifier_names[modifier] \
                 for modifier in modifier_names if modifiers & modifier])
             return modifier_text
-
+            
 
     shortcutLineEdit = CustomLineEdit()
     shortcutLineEdit.setText(shortcutKey)
@@ -2026,6 +2082,7 @@ def pieMenuStart():
     globalShortcutLineEdit = CustomLineEdit()
     globalShortcutLineEdit.setText(globalShortcutKey)
     globalShortcutLineEdit.setToolTip(translate("GlobalSettingsTab", "For TAB press CTRL+TAB"))
+    labelGlobalKeyToggle = QLabel(translate("GlobalSettingsTab","Global shortcut behavior: Toggle show/hide PieMenu"))
 
     labelShortcut = QLabel()
     labelShortcut.setAlignment(QtCore.Qt.AlignRight)
@@ -2068,6 +2125,8 @@ def pieMenuStart():
         
         spinNumColumn.setValue(getNumColumn(cBox.currentText()))
         spinIconSpacing.setValue(getIconSpacing(cBox.currentText()))
+        setWbForPieMenu()
+        checkboxGlobalKeyToggle.setChecked(getGlobalKeyToggle())
         spinCommandPerCircle.setValue(getCommandPerCircle(cBox.currentText()))
 
 
@@ -2078,7 +2137,6 @@ def pieMenuStart():
     buttonAddPieMenu.setToolTip(translate("PieMenuTab", "Add new pie menu"))
     buttonAddPieMenu.setMinimumHeight(30)
     buttonAddPieMenu.setMinimumWidth(30)
-
 
     def inputTextDialog(title):
         info1 = "Please insert menu name"
@@ -2361,7 +2419,95 @@ def pieMenuStart():
         cBoxUpdate()
 
     buttonCopyPieMenu.clicked.connect(onButtonCopyPieMenu)
+   
+    labelWbForPieMenu = QtGui.QLabel(translate("PieMenuTab", "Default workbench associated to this PieMenu:"))
+    labelWbForPieMenu.setAlignment(QtCore.Qt.AlignRight)
+ 
+    def getListWorkbenches():
+        workenchList = Gui.listWorkbenches()
+        wbList = []
+        for i in workenchList:
+            wbName = i.replace("Workbench", "")
+            wbList.append(wbName)
+        wbList.sort()
+        if 'None' in wbList:
+            wbList.remove('None')
+            wbList.insert(0, 'None')
+        
+        return wbList
+ 
+    def getWbAlreadySet():
+        indexList = getIndexList()
+        wbAlreadySet = []
+        for i in indexList:
+            a = str(i)
+            try:
+                pie = paramIndexGet.GetString(a).decode("UTF-8")
+            except AttributeError:
+                pie = paramIndexGet.GetString(a)
+                
+            group = paramIndexGet.GetGroup(a)
+            defWb  = group.GetString("DefaultWorkbench")
+            if defWb != 'None':
+                wbAlreadySet.append(defWb)
 
+        return wbAlreadySet
+ 
+ 
+    def setWbForPieMenu():
+        group = getGroup()
+        
+        comboWbForPieMenu.blockSignals(True)
+        wbList = getListWorkbenches()
+        wbAlreadySet = getWbAlreadySet()
+
+        for item in wbList[:]:
+            if item in wbAlreadySet:
+                wbList.remove(item)
+                wbAlreadySet.remove(item)
+
+        defWorkbench = getWbForPieMenu()
+        wbList.append(defWorkbench)
+        if 'None' not in wbList:
+            wbList.insert(0, 'None')
+
+        comboWbForPieMenu.clear()
+        comboWbForPieMenu.addItems(wbList)
+        index = comboWbForPieMenu.findText(defWorkbench)
+        if index != -1:
+            comboWbForPieMenu.setCurrentIndex(index)
+        comboWbForPieMenu.blockSignals(False)
+
+ 
+    def getWbForPieMenu():
+        group = getGroup(mode=0)
+        defWorkbench = group.GetString("DefaultWorkbench")
+        return defWorkbench
+    
+    def onWbForPieMenu():
+        group = getGroup()
+        defWorkbench = comboWbForPieMenu.currentText()
+        group.SetString("DefaultWorkbench", defWorkbench)
+        
+    def getPieName(wbName):
+        text = None
+        indexList = getIndexList()
+        for i in indexList:
+            a = str(i)
+            try:
+                pie = paramIndexGet.GetString(a).decode("UTF-8")
+            except AttributeError:
+                pie = paramIndexGet.GetString(a)
+            group = paramIndexGet.GetGroup(a)
+            defWb  = group.GetString("DefaultWorkbench")
+            if defWb == wbName:
+                text = pie
+        return text
+
+    comboWbForPieMenu = QComboBox()
+    comboWbForPieMenu.setMinimumWidth(160)
+    
+    comboWbForPieMenu.currentIndexChanged.connect(onWbForPieMenu)
     labelRadius = QtGui.QLabel(translate("PieMenuTab", "Pie size:"))
     labelRadius.setAlignment(QtCore.Qt.AlignRight)
     spinRadius = QtGui.QSpinBox()
@@ -2420,8 +2566,8 @@ def pieMenuStart():
             labelNumColumn.setText(translate("PieMenuTab", "Number of rows:"))
 
         if shape in ["Pie", "LeftRight"]:
-            labeldisplayCommandName.setVisible(True) #### Bug : Ghost window
-            cboxDisplayCommandName.setVisible(True) ####
+            labeldisplayCommandName.setVisible(True)
+            cboxDisplayCommandName.setVisible(True)
             cboxDisplayCommandName.setEnabled(True)
         else:
             labeldisplayCommandName.setVisible(False)
@@ -2513,6 +2659,7 @@ def pieMenuStart():
     labelIconSpacing.setAlignment(QtCore.Qt.AlignRight)
     spinIconSpacing.setMaximum(200)
     spinIconSpacing.setMinimumWidth(0)
+    
     labelCommandPerCircle = QtGui.QLabel(translate("PieMenuTab", "Command per circle:"))
     labelCommandPerCircle.setAlignment(QtCore.Qt.AlignRight)
     spinCommandPerCircle.setMaximum(20)
@@ -2607,7 +2754,8 @@ def pieMenuStart():
             if command_per_circle < 2:
                 command_per_circle = 2
         return command_per_circle
-        
+
+
     def onSpinHoverDelay():
         value = spinHoverDelay.value()
         paramGet.SetInt("HoverDelay", value)
@@ -3263,6 +3411,8 @@ def pieMenuStart():
             group.SetInt("Radius", 80)
             group.SetInt("Button", 32)
             group.SetString("Shape", "Pie")
+            group.SetString("DefaultWorkbench", "Sketcher")
+            
 
         paramGet.SetBool("ToolBar", False)
         paramGet.RemString("ToolBar")
@@ -3273,6 +3423,7 @@ def pieMenuStart():
         paramGet.SetString("TriggerMode", "Press")
         paramGet.SetInt("HoverDelay", 100)
         paramGet.SetBool("EnableContext", False)
+        paramGet.SetBool("GlobalKeyToggle", True)
 
         # group = getGroup(mode=1)
 
@@ -3307,6 +3458,15 @@ def pieMenuStart():
         layoutAddRemove.addWidget(buttonRenamePieMenu)
         layoutAddRemove.addWidget(buttonCopyPieMenu)
 
+        layoutWbForPieMenuLeft = QtGui.QHBoxLayout()
+        layoutWbForPieMenuLeft.addStretch(1)
+        layoutWbForPieMenuLeft.addWidget(labelWbForPieMenu)
+        layoutWbForPieMenuRight = QtGui.QHBoxLayout()
+        layoutWbForPieMenuRight.addWidget(comboWbForPieMenu)
+        layoutWbForPieMenuRight.addStretch(1)
+        layoutWbForPieMenu = QtGui.QHBoxLayout()
+        layoutWbForPieMenu.addLayout(layoutWbForPieMenuLeft, 1)
+        layoutWbForPieMenu.addLayout(layoutWbForPieMenuRight, 1)
         layoutRadiusLeft = QtGui.QHBoxLayout()
         layoutRadiusLeft.addStretch(1)
         layoutRadiusLeft.addWidget(labelRadius)
@@ -3402,6 +3562,7 @@ def pieMenuStart():
         layoutCommandPerCircle.addLayout(layoutCommandPerCircleLeft, 1)
         layoutCommandPerCircle.addLayout(layoutCommandPerCircleRight, 1)
         
+
         layoutDisplayCommandNameLeft = QtGui.QHBoxLayout()
         layoutDisplayCommandNameLeft.addStretch(1)
         layoutDisplayCommandNameLeft.addWidget(labeldisplayCommandName)
@@ -3517,6 +3678,7 @@ def pieMenuStart():
             actionKey.setShortcut(QtGui.QKeySequence(globalShortcutKey))
 
         getGlobalShortcutKey()
+        
 
         labelGlobalShortcut.setText(translate("GlobalSettingsTab",\
             "Global shortcut : ") + globalShortcutKey)
@@ -3524,6 +3686,10 @@ def pieMenuStart():
         layoutGlobalShortcut.addWidget(labelGlobalShortcut)
         layoutGlobalShortcut.addStretch(1)
         layoutGlobalShortcut.addWidget(globalShortcutLineEdit)
+        layoutGlobalToggle = QtGui.QHBoxLayout()
+        layoutGlobalToggle.addWidget(labelGlobalKeyToggle)
+        layoutGlobalToggle.addStretch(1)
+        layoutGlobalToggle.addWidget(checkboxGlobalKeyToggle)
 
         assignGlobalShortcutButton = QtGui.QPushButton(translate("PieMenuTab", \
                                                                  "Assign"))
@@ -3532,7 +3698,7 @@ def pieMenuStart():
 
         pieMenuTabLayout.insertLayout(0, layoutAddRemove)
         pieMenuTabLayout.insertSpacing(1, 12)
-        # pieMenuTabLayout.insertLayout(2, layoutWbForPieMenu)
+        pieMenuTabLayout.insertLayout(2, layoutWbForPieMenu)
         pieMenuTabLayout.insertLayout(3, layoutRadius)
         pieMenuTabLayout.insertLayout(4, layoutButton)
         pieMenuTabLayout.insertLayout(5, layoutShape)
@@ -3585,6 +3751,7 @@ def pieMenuStart():
         settingsTabLayout.insertSpacing(6, 42)
         settingsTabLayout.insertWidget(7, separatorSettings)
         settingsTabLayout.insertLayout(8, layoutGlobalShortcut)
+        settingsTabLayout.insertLayout(9, layoutGlobalToggle)
 
         resetLayout = QtGui.QHBoxLayout()
         resetLayout.addStretch(1)
