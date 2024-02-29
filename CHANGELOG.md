@@ -48,3 +48,9 @@
 - Added support for theme accent color (FreeCad>Preferences>Display>Theme>Accent Color)
 - Fix default stylesheet to Legacy.qss if no existing stylesheet is set
 - Added stylesheet Accents.qss
+
+### 1.3.9
+- Fix spacing with command names for Pie shape
+- Fix style for command name LeftRight shape
+- Added shapes:"Concentric" and "Star"
+- Added ability to open PieMenu without file opened
