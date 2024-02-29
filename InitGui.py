@@ -26,7 +26,7 @@
 # http://www.freecadweb.org/wiki/index.php?title=Code_snippets
 
 global PIE_MENU_VERSION
-PIE_MENU_VERSION = "1.3.8.2"
+PIE_MENU_VERSION = "1.3.9"
 
 def pieMenuStart():
     """Main function that starts the Pie Menu."""
@@ -798,10 +798,12 @@ def pieMenuStart():
             buttonSize = valueButton
             self.offset_x = 0
             self.offset_y = 0
-            # "Pie", "RainbowUp", "RainbowDown", "UpDown", "TableTop", "TableDown", "LeftRight"
+            # "Pie", "RainbowUp", "RainbowDown", "UpDown", "TableTop", "TableDown", "LeftRight", "Concentric", "Star"
             shape = getShape(keyValue)
             num_per_row = getNumColumn(keyValue)
             icon_spacing = getIconSpacing(keyValue)
+            command_per_circle = getCommandPerCircle(keyValue)
+            number_of_circle = 1
 
             if paramGet.GetBool("ToolBar") and keyValue == None:
                 valueRadius = 100
@@ -852,6 +854,12 @@ def pieMenuStart():
                 buttonRadius = math.sin(angle / 2) * self.radius
                 buttonSize = math.trunc(2 * buttonRadius / math.sqrt(2))
                 angleStart =  math.pi / 2 - (angle*(commandNumber+1))/2
+                
+            elif shape == "Concentric" or shape == "Star" :
+                angle = 2 * math.pi / (command_per_circle)
+                buttonRadius = math.sin(angle / 2) * self.radius
+                buttonSize = math.trunc(2 * buttonRadius / math.sqrt(2))
+                angleStart = 3 * math.pi / 2 - angle
 
             else:
                 angle = 2 * math.pi / commandNumber
@@ -882,9 +890,30 @@ def pieMenuStart():
                 except:
                     None
 
-            num = 1
-            for i in commands:
+            showPie = False
+            # handle case when not in edit mode or if  Sketcher is open
+            try:
                 if (Gui.ActiveDocument.getInEdit() is None) or (module == 'SketcherGui'):
+                    showPie = True
+            except:
+                None
+            
+            # handle case when there is any document open
+            try:
+                # if there is any open document we throw exception, to set showPie to True to show PieMenu
+                App.ActiveDocument.Name
+            except:
+                showPie = True
+
+            if showPie:   
+                num = 1
+                
+                ### for Pie shape with commands names ###
+                ecart = (2 * self.radius) / ((commandNumber)/2)
+                Y = -self.radius - ecart
+                X = 0
+
+                for i in commands:
                     """ show PieMenu in Edit Feature and in Sketcher """
 
                     button = HoverButton()
@@ -899,13 +928,18 @@ def pieMenuStart():
 
                     # modify style for display command name (only with Pie shape)
                     if displayCommandName and shape == "Pie":
+                        # set minimum Y spacing at 1.2 * buttonSize
+                        if ecart < (1.2 * buttonSize):
+                            buttonSize = (ecart / 1.2)
+                            radius = radiusSize(buttonSize)
+                            icon = iconSize(buttonSize)
+                        
+                        angle = (2 * math.pi) / (commandNumber)
                         button.setIcon(QtGui.QIcon())
                         # set padding and font size dependind on icon size
                         font_size = round(icon/2)
-                        padding = "QToolButton#pieMenu {padding-left: " + str(icon) \
-                            + "px; font-size: " + str(font_size) + "px;}"
-                        button.setStyleSheet(styleCurrentTheme + radius + padding)
-                        # get lenght of the string
+                        
+                        # get length of the string
                         text_length = QFontMetrics(button.font()).horizontalAdvance(
                             commands[commands.index(i)].text())
 
@@ -917,49 +951,57 @@ def pieMenuStart():
                         iconLabel = QtGui.QLabel()
                         iconLabel.setObjectName("iconLabel")
                         iconLabel.setPixmap(iconButton.pixmap(QtCore.QSize(icon, icon)))
-                        iconLabel.setStyleSheet(styleCurrentTheme)
-                        layout.addWidget(iconLabel)
-
-                    # modify style for display command name (only with LeftRight shape)
-                    if displayCommandName and shape == "LeftRight":
-                        num_per_row = math.ceil(commandNumber/2)
-                        button.setIcon(QtGui.QIcon())
-                        # set padding and font size dependind on icon size
-                        font_size = round(icon/2)
-                        if ((num-1) < (num_per_row)):
-                            # Left side icons
-                            padding = "QToolButton#pieMenu {padding-right: " + str(icon) \
-                            + "px; font-size: " + str(font_size) + "px;}"
-                        else:
-                            # Right side icons
+                        iconMarging = ""
+                        # right side
+                        if (num) <= (commandNumber/2):
+                            Y += ecart
+                            if Y > self.radius:
+                                Y = self.radius
+                            if num == 1:
+                                X = 0
+                            else:
+                                X = self.radius * (math.cos(angle * num + angleStart)) + (2 * buttonSize + text_length) / 2
                             padding = "QToolButton#pieMenu {padding-left: " + str(icon) \
                             + "px; font-size: " + str(font_size) + "px;}"
-                        button.setStyleSheet(styleCurrentTheme + radius + padding)
-                        # get length of the string
-                        text_length = QFontMetrics(button.font()).horizontalAdvance(
-                            commands[commands.index(i)].text())
-                    
-                        button.setGeometry(buttonSize, 0,  2 * buttonSize + text_length, buttonSize)
-                        # layout for icon and command string
-                        layout = QtGui.QHBoxLayout(button)
-                        layout.setContentsMargins((icon/4), 0, 0, 0)
-                        if ((num-1) < (num_per_row)):
-                            # Left side icons: align icon to the right and add some margin  
+                            
+                        # handle bottom right for odd commandNumber 
+                        elif (commandNumber % 2) == 1 and (num) == ((commandNumber+1)/2):
+                            X = self.radius * (math.cos(angle * num + angleStart)) + (2 * buttonSize + text_length) / 2
+                            Y = self.radius - ecart/2
+                            
+                        # handle bottom left for odd commandNumber 
+                        elif (commandNumber % 2) == 1 and (num) == (((commandNumber+1)/2)+1):
+                            X = self.radius * (math.cos(angle * num + angleStart)) - (2 * buttonSize + text_length) / 2
+                            Y = self.radius - ecart/2
                             layout.addStretch(1)
+                            padding = "QToolButton#pieMenu {padding-right: " + str(icon) \
+                            + "px; font-size: " + str(font_size) + "px;}"
                             iconMarging = "#iconLabel {margin-right: " + str(icon/4) + "px;}"
-                        iconButton = QtGui.QIcon(commands[commands.index(i)].icon())
-                        iconLabel = QtGui.QLabel()
-                        iconLabel.setObjectName("iconLabel")
-                        iconLabel.setPixmap(iconButton.pixmap(QtCore.QSize(icon, icon)))
-                        if ((num-1) < (num_per_row)):
-                            # Left side icons
-                            iconLabel.setStyleSheet(styleCurrentTheme + iconMarging)
+                            
+                        # even commandNumber case, set the button on the middle bottom
+                        elif (commandNumber % 2) == 0 and (num) == ((commandNumber/2)+1):
+                            X = 0
+                            Y = self.radius
+                            
+                        # left side
                         else:
-                            # Right side icons
-                            iconLabel.setStyleSheet(styleCurrentTheme)
+                            Y -= ecart
+                            if Y < -self.radius:
+                                Y = -self.radius
+                            X = self.radius * (math.cos(angle * num + angleStart)) - (2 * buttonSize + text_length) / 2
+                            layout.addStretch(1)
+                            padding = "QToolButton#pieMenu {padding-right: " + str(icon) \
+                            + "px; font-size: " + str(font_size) + "px;}"
+                            iconMarging = "#iconLabel {margin-right: " + str(icon/4) + "px;}"
+
+                        button.setProperty("ButtonX", X)
+                        button.setProperty("ButtonY", Y)
+                        
+                        iconLabel.setStyleSheet(styleCurrentTheme + iconMarging)
+                        button.setStyleSheet(styleCurrentTheme + radius + padding)
                         layout.addWidget(iconLabel)
 
-                    if shape == "TableTop":
+                    elif shape == "TableTop":
                         ### Table  Top ###
                         num_of_line = math.ceil(commandNumber/num_per_row)
                         offset = num_of_line * (buttonSize + icon_spacing)
@@ -1004,11 +1046,69 @@ def pieMenuStart():
 
                         button.setProperty("ButtonX", X - ((num_per_row - 1) * (buttonSize + icon_spacing)) / 2)
                         button.setProperty("ButtonY", -Y)
+                        
+                    elif shape == "Concentric":
+                        ### Concentric ###
+                        button.setProperty("ButtonX", self.radius *
+                                           (math.cos(angle * num + angleStart)))
+                        button.setProperty("ButtonY", self.radius *
+                                           (math.sin(angle * num + angleStart)))
+                        if ((num % command_per_circle) == 0) :
+                            num = 0
+                            self.radius = self.radius + buttonSize + icon_spacing
+                            number_of_circle = number_of_circle + 1
+                            command_per_circle = command_per_circle + command_per_circle 
+                            angle = 2 * math.pi / command_per_circle
+                            angleStart = angleStart + angle
+                            
+                    elif shape == "Star":
+                        ### Star ###
+                        button.setProperty("ButtonX", self.radius *
+                                           (math.cos(angle * num + angleStart)))
+                        button.setProperty("ButtonY", self.radius *
+                                           (math.sin(angle * num + angleStart)))
+                        if ((num % command_per_circle) == 0) :
+                            self.radius = self.radius + buttonSize + icon_spacing
 
                     elif shape == "LeftRight":
                         ### Left and Right with command names ###
                         if displayCommandName:
                             num_per_row = math.ceil(commandNumber/2)
+                            button.setIcon(QtGui.QIcon())
+                            # set padding and font size dependind on icon size
+                            font_size = round(icon/2)
+                            if ((num-1) < (num_per_row)):
+                                # Left side icons
+                                padding = "QToolButton#pieMenu {padding-right: " + str(icon) \
+                                + "px; font-size: " + str(font_size) + "px;}"
+                            else:
+                                # Right side icons
+                                padding = "QToolButton#pieMenu {padding-left: " + str(icon) \
+                                + "px; font-size: " + str(font_size) + "px;}"
+                            button.setStyleSheet(styleCurrentTheme + radius + padding)
+                            # get length of the string
+                            text_length = QFontMetrics(button.font()).horizontalAdvance(
+                                commands[commands.index(i)].text())
+                        
+                            button.setGeometry(buttonSize, 0,  2 * buttonSize + text_length, buttonSize)
+                            # layout for icon and command string
+                            layout = QtGui.QHBoxLayout(button)
+                            layout.setContentsMargins((icon/4), 0, 0, 0)
+                            if ((num-1) < (num_per_row)):
+                                # Left side icons: align icon to the right and add some margin  
+                                layout.addStretch(1)
+                                iconMarging = "#iconLabel {margin-right: " + str(icon/4) + "px;}"
+                            iconButton = QtGui.QIcon(commands[commands.index(i)].icon())
+                            iconLabel = QtGui.QLabel()
+                            iconLabel.setObjectName("iconLabel")
+                            iconLabel.setPixmap(iconButton.pixmap(QtCore.QSize(icon, icon)))
+                            if ((num-1) < (num_per_row)):
+                                # Left side icons
+                                iconLabel.setStyleSheet(styleCurrentTheme + iconMarging)
+                            else:
+                                # Right side icons
+                                iconLabel.setStyleSheet(styleCurrentTheme)
+                            layout.addWidget(iconLabel)
                             Y = ((num -1) % num_per_row) * (buttonSize + icon_spacing)  
                             if ((num-1) < (num_per_row)) :
                                 # Left side icons
@@ -1034,16 +1134,14 @@ def pieMenuStart():
                             button.setProperty("ButtonX", -X)
                             button.setProperty("ButtonY", Y - ((num_per_row - 1) * (buttonSize + icon_spacing)  ) / 2)
                     else :
-                        ### Pie / RainbowUp / RainbowDown  ###
+                        ### Pie without commands names / RainbowUp / RainbowDown  ###
                         button.setProperty("ButtonX", self.radius *
                                            (math.cos(angle * num + angleStart)))
                         button.setProperty("ButtonY", self.radius *
                                            (math.sin(angle * num + angleStart)))
 
                     self.buttons.append(button)
-                else:
-                    None
-                num = num + 1
+                    num = num + 1
 
             buttonQuickMenu = quickMenu()
             if checkboxQuickMenu.checkState():
@@ -1053,22 +1151,13 @@ def pieMenuStart():
             else:
                 buttonQuickMenu.hide()
 
-            if (Gui.ActiveDocument.getInEdit() == None):
-                buttonClose = closeButton()
-                buttonClose.setParent(self.menu)
-                self.buttons.append(buttonClose)
-
-            """ show Valid and Cancel buttons always """
-            # buttonValid = self.validButton()
-            # buttonValid.setParent(self.menu)
-            # buttonValid.clicked.connect(self.validation)
-            # self.buttons.append(buttonValid)
-
-            # buttonCancel = self.cancelButton()
-            # buttonCancel.setParent(self.menu)
-            # buttonCancel.clicked.connect(self.cancel)
-            # self.buttons.append(buttonCancel)
-
+            try:
+                if (Gui.ActiveDocument.getInEdit() == None):
+                    buttonClose = closeButton()
+                    buttonClose.setParent(self.menu)
+                    self.buttons.append(buttonClose)
+            except:
+                None
             try:
                 if (Gui.ActiveDocument.getInEdit() != None):
                     """ or show Valid and Cancel buttons in Edit Feature Only """
@@ -1204,68 +1293,64 @@ def pieMenuStart():
             else:
                 updateCommands(keyValue)
 
-            if self.menu.isVisible():
-                self.hide()
-            else:
-                if windowShadow:
-                    pos = mw.mapFromGlobal(QtGui.QCursor.pos())
-                    if notKeyTriggered:
-                        if contextPhase:
-                            # special case treatment
-                            if selectionTriggered:
-                                selectionTriggered = False
-                            else:
-                                pos.setX(lastPosX)
-                                pos.setY(lastPosY)
-                            lastPosX = pos.x()
-                            lastPosY = pos.y()
+            if windowShadow:
+                pos = mw.mapFromGlobal(QtGui.QCursor.pos())
+                if notKeyTriggered:
+                    if contextPhase:
+                        # special case treatment
+                        if selectionTriggered:
+                            selectionTriggered = False
                         else:
                             pos.setX(lastPosX)
                             pos.setY(lastPosY)
-                    else:
                         lastPosX = pos.x()
                         lastPosY = pos.y()
-
-                    self.menu.popup(QtCore.QPoint(mw.pos()))
-                    self.menu.setGeometry(mw.geometry())
-
-                    for i in self.buttons:
-                        i.move(i.property("ButtonX") + pos.x() - i.width() / 2 + self.offset_x ,
-                               i.property("ButtonY") + pos.y() - i.height() / 2 + self.offset_y)
-
-                        i.setVisible(True)
-
-                    for i in self.buttons:
-                        i.repaint()
+                    else:
+                        pos.setX(lastPosX)
+                        pos.setY(lastPosY)
                 else:
-                    pos = QtGui.QCursor.pos()
-                    if notKeyTriggered:
-                        if contextPhase:
-                            # special case treatment
-                            if selectionTriggered:
-                                selectionTriggered = False
-                            else:
-                                pos.setX(lastPosX)
-                                pos.setY(lastPosY)
-                            lastPosX = pos.x()
-                            lastPosY = pos.y()
+                    lastPosX = pos.x()
+                    lastPosY = pos.y()
+
+                self.menu.popup(QtCore.QPoint(mw.pos()))
+                self.menu.setGeometry(mw.geometry())
+
+                for i in self.buttons:
+                    i.move(i.property("ButtonX") + pos.x() - i.width() / 2 + self.offset_x ,
+                           i.property("ButtonY") + pos.y() - i.height() / 2 + self.offset_y)
+
+                    i.setVisible(True)
+
+                for i in self.buttons:
+                    i.repaint()
+            else:
+                pos = QtGui.QCursor.pos()
+                if notKeyTriggered:
+                    if contextPhase:
+                        # special case treatment
+                        if selectionTriggered:
+                            selectionTriggered = False
                         else:
                             pos.setX(lastPosX)
                             pos.setY(lastPosY)
-                    else:
                         lastPosX = pos.x()
                         lastPosY = pos.y()
+                    else:
+                        pos.setX(lastPosX)
+                        pos.setY(lastPosY)
+                else:
+                    lastPosX = pos.x()
+                    lastPosY = pos.y()
 
-                    for i in self.buttons:
-                        i.move(i.property("ButtonX")
-                              + (self.menuSize - i.size().width()) / 2 + self.offset_x,
-                              i.property("ButtonY")
-                              + (self.menuSize - i.size().height()) / 2 + self.offset_y)
+                for i in self.buttons:
+                    i.move(i.property("ButtonX")
+                          + (self.menuSize - i.size().width()) / 2 + self.offset_x,
+                          i.property("ButtonY")
+                          + (self.menuSize - i.size().height()) / 2 + self.offset_y)
 
-                        i.setVisible(True)
+                    i.setVisible(True)
 
-                    self.menu.popup(QtCore.QPoint(pos.x() - self.menuSize / 2, pos.y()
-                        - self.menuSize / 2))
+                self.menu.popup(QtCore.QPoint(pos.x() - self.menuSize / 2, pos.y() - self.menuSize / 2))
 
 
         def spin_interactif(self):
@@ -1452,9 +1537,9 @@ def pieMenuStart():
                 paramGet.SetString("ContextPie", pieName)
             contextPhase = True
 
-            updateCommands(context=True)
+            # updateCommands(keyValue=None, context=True)
             PieMenuInstance.hide()
-            selectionTriggered = True
+            # selectionTriggered = True
             #PieMenuInstance.showAtMouse(notKeyTriggered=True)
         else:
             pass
@@ -1567,10 +1652,11 @@ def pieMenuStart():
                     Gui.activateWorkbench(cmdWb)
                     #return True ## return a bug in 0.21 in Sketcher edit
         return False
-  
 
     def updateCommands(keyValue=None, context=False):
         indexList = getIndexList()
+        # keyValue = None > Global shortcut
+        # keyValue != None > Custom shortcut
 
         """ keyValue == None > Global shortcut """
         if keyValue == None:
@@ -1982,6 +2068,7 @@ def pieMenuStart():
         
         spinNumColumn.setValue(getNumColumn(cBox.currentText()))
         spinIconSpacing.setValue(getIconSpacing(cBox.currentText()))
+        spinCommandPerCircle.setValue(getCommandPerCircle(cBox.currentText()))
 
 
     cBox.currentIndexChanged.connect(onPieChange)
@@ -2296,6 +2383,7 @@ def pieMenuStart():
 
     spinNumColumn = QtGui.QSpinBox()
     spinIconSpacing = QtGui.QSpinBox()
+    spinCommandPerCircle = QtGui.QSpinBox()
 
 
     def setShape():
@@ -2317,7 +2405,7 @@ def pieMenuStart():
             labelNumColumn.setVisible(False)
             spinNumColumn.setVisible(False)
             
-        if shape in ["UpDown", "LeftRight", "TableTop", "TableDown", "TableLeft", "TableRight"]:
+        if shape in ["UpDown", "LeftRight", "TableTop", "TableDown", "TableLeft", "TableRight", "Concentric", "Star"]:
             labelIconSpacing.setVisible(True)
             spinIconSpacing.setEnabled(True)
             spinIconSpacing.setVisible(True)
@@ -2332,13 +2420,22 @@ def pieMenuStart():
             labelNumColumn.setText(translate("PieMenuTab", "Number of rows:"))
 
         if shape in ["Pie", "LeftRight"]:
-            labeldisplayCommandName.setVisible(True)
-            cboxDisplayCommandName.setVisible(True)
+            labeldisplayCommandName.setVisible(True) #### Bug : Ghost window
+            cboxDisplayCommandName.setVisible(True) ####
             cboxDisplayCommandName.setEnabled(True)
         else:
             labeldisplayCommandName.setVisible(False)
             cboxDisplayCommandName.setVisible(False)
             cboxDisplayCommandName.setEnabled(False)
+            
+        if shape in ["Concentric", "Star"]:
+            labelCommandPerCircle.setVisible(True)
+            spinCommandPerCircle.setEnabled(True)
+            spinCommandPerCircle.setVisible(True)
+        else:
+            labelCommandPerCircle.setVisible(False)
+            spinCommandPerCircle.setEnabled(False)
+            spinCommandPerCircle.setVisible(False)
 
 
 
@@ -2363,7 +2460,7 @@ def pieMenuStart():
 
         comboShape.blockSignals(True)
         comboShape.clear()
-        available_shape = [ "Pie", "RainbowUp", "RainbowDown", "UpDown", "LeftRight", \
+        available_shape = [ "Pie", "Concentric", "Star", "RainbowUp", "RainbowDown", "UpDown", "LeftRight", \
                            "TableTop", "TableDown", "TableLeft", "TableRight" ]
         comboShape.addItems(available_shape)
         index = comboShape.findText(shape)
@@ -2407,15 +2504,20 @@ def pieMenuStart():
     comboShape.setMinimumWidth(160)
     comboShape.currentIndexChanged.connect(setShape)
 
-    labelNumColumn= QtGui.QLabel(translate("PieMenuTab", "Number of columns:"))
+    labelNumColumn = QtGui.QLabel(translate("PieMenuTab", "Number of columns:"))
     labelNumColumn.setAlignment(QtCore.Qt.AlignRight)
     spinNumColumn.setMaximum(12)
     spinNumColumn.setMinimumWidth(120)
 
-    labelIconSpacing= QtGui.QLabel(translate("PieMenuTab", "Icon spacing:"))
+    labelIconSpacing = QtGui.QLabel(translate("PieMenuTab", "Icon spacing:"))
     labelIconSpacing.setAlignment(QtCore.Qt.AlignRight)
     spinIconSpacing.setMaximum(200)
     spinIconSpacing.setMinimumWidth(0)
+    labelCommandPerCircle = QtGui.QLabel(translate("PieMenuTab", "Command per circle:"))
+    labelCommandPerCircle.setAlignment(QtCore.Qt.AlignRight)
+    spinCommandPerCircle.setMaximum(20)
+    spinCommandPerCircle.setMinimum(2)
+    spinCommandPerCircle.setMinimumWidth(0)
 
     cboxDisplayCommandName = QCheckBox()
     cboxDisplayCommandName.setCheckable(True)
@@ -2475,8 +2577,37 @@ def pieMenuStart():
                 param = paramIndexGet.GetGroup(str(i))
                 icon_spacing = param.GetInt("IconSpacing")
         return icon_spacing
+        
+    def onCommandPerCircle():
+        group = getGroup()
+        value = spinCommandPerCircle.value()
+        group.SetInt("CommandPerCircle", value)
 
+    spinCommandPerCircle.valueChanged.connect(onCommandPerCircle)
+        
+        
+    def getCommandPerCircle(keyValue=None):
+        group = getGroup()
+        command_per_circle = 5 # Default value 
+        if keyValue == None:
+            try:
+                keyValue = paramGet.GetString("CurrentPie").decode("UTF-8")
+            except AttributeError:
+                keyValue = paramGet.GetString("CurrentPie")
 
+        indexList = getIndexList()
+        for i in indexList:
+            try:
+                pieName = paramIndexGet.GetString(str(i)).decode("UTF-8")
+            except AttributeError:
+                pieName = paramIndexGet.GetString(str(i))
+            if pieName == keyValue:
+                param = paramIndexGet.GetGroup(str(i))
+                command_per_circle = param.GetInt("CommandPerCircle")
+            if command_per_circle < 2:
+                command_per_circle = 2
+        return command_per_circle
+        
     def onSpinHoverDelay():
         value = spinHoverDelay.value()
         paramGet.SetInt("HoverDelay", value)
@@ -3260,7 +3391,17 @@ def pieMenuStart():
         layoutIconSpacing = QtGui.QHBoxLayout()
         layoutIconSpacing.addLayout(layoutIconSpacingLeft, 1)
         layoutIconSpacing.addLayout(layoutIconSpacingRight, 1)
-
+        
+        layoutCommandPerCircleLeft = QtGui.QHBoxLayout()
+        layoutCommandPerCircleLeft.addStretch(1)
+        layoutCommandPerCircleLeft.addWidget(labelCommandPerCircle)
+        layoutCommandPerCircleRight = QtGui.QHBoxLayout()
+        layoutCommandPerCircleRight.addWidget(spinCommandPerCircle)
+        layoutCommandPerCircleRight.addStretch(1)
+        layoutCommandPerCircle = QtGui.QHBoxLayout()
+        layoutCommandPerCircle.addLayout(layoutCommandPerCircleLeft, 1)
+        layoutCommandPerCircle.addLayout(layoutCommandPerCircleRight, 1)
+        
         layoutDisplayCommandNameLeft = QtGui.QHBoxLayout()
         layoutDisplayCommandNameLeft.addStretch(1)
         layoutDisplayCommandNameLeft.addWidget(labeldisplayCommandName)
@@ -3391,15 +3532,17 @@ def pieMenuStart():
 
         pieMenuTabLayout.insertLayout(0, layoutAddRemove)
         pieMenuTabLayout.insertSpacing(1, 12)
-        pieMenuTabLayout.insertLayout(2, layoutRadius)
-        pieMenuTabLayout.insertLayout(3, layoutButton)
-        pieMenuTabLayout.insertLayout(4, layoutShape)
-        pieMenuTabLayout.insertLayout(5, layoutColumn)
-        pieMenuTabLayout.insertLayout(6, layoutIconSpacing)
-        pieMenuTabLayout.insertLayout(7, layoutDisplayCommandName)
-        pieMenuTabLayout.insertSpacing(8, 42)
-        pieMenuTabLayout.insertWidget(9, separatorPieMenu)
-        pieMenuTabLayout.insertLayout(10, layoutShortcut)
+        # pieMenuTabLayout.insertLayout(2, layoutWbForPieMenu)
+        pieMenuTabLayout.insertLayout(3, layoutRadius)
+        pieMenuTabLayout.insertLayout(4, layoutButton)
+        pieMenuTabLayout.insertLayout(5, layoutShape)
+        pieMenuTabLayout.insertLayout(6, layoutColumn)
+        pieMenuTabLayout.insertLayout(7, layoutIconSpacing)
+        pieMenuTabLayout.insertLayout(8, layoutCommandPerCircle)
+        pieMenuTabLayout.insertLayout(9, layoutDisplayCommandName)
+        pieMenuTabLayout.insertSpacing(10, 42)
+        pieMenuTabLayout.insertWidget(11, separatorPieMenu)
+        pieMenuTabLayout.insertLayout(12, layoutShortcut)
 
         pieMenuTabLayout.addStretch(0)
 
