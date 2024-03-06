@@ -2417,7 +2417,7 @@ def pieMenuStart():
     buttonCopyPieMenu.clicked.connect(onButtonCopyPieMenu)
    
     labelWbForPieMenu = QtGui.QLabel(translate("PieMenuTab", "Workbench associated to this PieMenu:"))
-    labelWbForPieMenu.setAlignment(QtCore.Qt.AlignRight)
+    labelWbForPieMenu.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
  
     def getListWorkbenches():
         workenchList = Gui.listWorkbenches()
