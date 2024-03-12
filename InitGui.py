@@ -32,7 +32,7 @@
 # shapes "concentric" and "star
 # triggermode for each PieMenu
 # clean some code
-# 
+# add ability to add separators in PieMenus
 
 global PIE_MENU_VERSION
 PIE_MENU_VERSION = "1.4"
@@ -301,6 +301,8 @@ def pieMenuStart():
     iconRemoveCommand = respath + "PieMenuRemoveCommand.svg"
     iconBackspace =  respath + "PieMenuBackspace.svg"
     iconInfo =  respath + "PieMenuInfo.svg"
+    iconAddSeparator =  respath + "PieMenuAddSeparator.svg"
+    iconSeparator =  respath + "PieMenuSeparator.svg"
 
     def radiusSize(buttonSize):
         """Calculates border radius for QToolButton based on the given buttonSize."""
@@ -977,7 +979,12 @@ def pieMenuStart():
                         # layout for icon and command string
                         layout = QtGui.QHBoxLayout(button)
                         layout.setContentsMargins((icon/4), 0, 0, 0)
-                        iconButton = QtGui.QIcon(commands[commands.index(i)].icon())
+                        
+                        if (commands[commands.index(i)].text()) == "Separator":
+                            iconButton =  QtGui.QIcon(iconSeparator)
+                        else:
+                            iconButton = QtGui.QIcon(commands[commands.index(i)].icon())
+                    
                         iconLabel = QtGui.QLabel()
                         iconLabel.setObjectName("iconLabel")
                         iconLabel.setPixmap(iconButton.pixmap(QtCore.QSize(icon, icon)))
@@ -1128,7 +1135,12 @@ def pieMenuStart():
                                 # Left side icons: align icon to the right and add some margin  
                                 layout.addStretch(1)
                                 iconMarging = "#iconLabel {margin-right: " + str(icon/4) + "px;}"
-                            iconButton = QtGui.QIcon(commands[commands.index(i)].icon())
+
+                            if (commands[commands.index(i)].text()) == "Separator":
+                                iconButton =  QtGui.QIcon(iconSeparator)
+                            else:
+                                iconButton = QtGui.QIcon(commands[commands.index(i)].icon())
+
                             iconLabel = QtGui.QLabel()
                             iconLabel.setObjectName("iconLabel")
                             iconLabel.setPixmap(iconButton.pixmap(QtCore.QSize(icon, icon)))
@@ -1139,7 +1151,6 @@ def pieMenuStart():
                                 # Right side icons
                                 iconLabel.setStyleSheet(styleCurrentTheme)
                             layout.addWidget(iconLabel)
-                        
                             Y = ((num -1) % num_per_row) * (buttonSize + icon_spacing)  
                             if ((num-1) < (num_per_row)) :
                                 # Left side icons
@@ -1151,7 +1162,7 @@ def pieMenuStart():
 
                             button.setProperty("ButtonX", -X )
                             button.setProperty("ButtonY", Y - ((num_per_row - 1) * (buttonSize + icon_spacing)  ) / 2)
-                            
+
                         else:
                             ### Left and Right  ###
                             num_per_row = math.ceil(commandNumber/2)
@@ -1170,7 +1181,11 @@ def pieMenuStart():
                                            (math.cos(angle * num + angleStart)))
                         button.setProperty("ButtonY", self.radius *
                                            (math.sin(angle * num + angleStart)))
-
+                                           
+                    if (commands[commands.index(i)].text()) == "Separator":
+                        button.setObjectName("styleSeparator")
+                        button.setIcon(QtGui.QIcon(iconSeparator))
+                    
                     self.buttons.append(button)
 
                     num = num + 1
@@ -1671,8 +1686,8 @@ def pieMenuStart():
             if i == "":
                 pass
             elif i in actionMap:
-                if actionMap[i] not in actions:
-                    actions.append(actionMap[i])
+                # if actionMap[i] not in actions:
+                actions.append(actionMap[i])
             else:
                 cmd_parts = i.split("_")
                 # rule out special case: unknown Std action
@@ -1807,7 +1822,6 @@ def pieMenuStart():
  
         triggerMode = getTriggerMode(text)
         hoverDelay = getHoverDelay(text)
-
         PieMenuInstance.add_commands(actions, context, text)
 
 
@@ -2972,7 +2986,6 @@ def pieMenuStart():
                 toolList.remove(i)
             else:
                 pass
-
         for i in indexList:
             a = str(i)
             try:
@@ -3073,6 +3086,56 @@ def pieMenuStart():
     buttonDown.setMinimumHeight(30)
     buttonDown.setMinimumWidth(30)
 
+    buttonAddSeparator = QtGui.QToolButton()
+    buttonAddSeparator.setIcon(QtGui.QIcon(iconAddSeparator))
+    buttonAddSeparator.setToolTip(translate("Commands", "Add separator"))
+    buttonAddSeparator.setMinimumHeight(30)
+    buttonAddSeparator.setMinimumWidth(30)
+    
+    
+    def onButtonAddSeparator():
+        text = cBox.currentText()
+
+        items = []
+        for index in range(toolListWidget.count()):
+            items.append(toolListWidget.item(index))
+
+        toolList = None
+        indexList = getIndexList()
+        for i in indexList:
+            a = str(i)
+            try:
+                pie = paramIndexGet.GetString(a).decode("UTF-8")
+            except AttributeError:
+                pie = paramIndexGet.GetString(a)
+            if pie == text:
+                group = paramIndexGet.GetGroup(a)
+                toolList = group.GetString("ToolList")
+            else:
+                pass
+  
+        if toolList:
+            toolList = toolList.split(".,.")
+        else:
+            toolList = []
+            
+        i = "Std_PieMenuSeparator"
+        toolList.append(i)
+        
+        for i in indexList:
+            a = str(i)
+            try:
+                pie = paramIndexGet.GetString(a).decode("UTF-8")
+            except AttributeError:
+                pie = paramIndexGet.GetString(a)
+            if pie == text:
+                group = paramIndexGet.GetGroup(a)
+                toolList = group.SetString("ToolList", ".,.".join(toolList))
+            else:
+                pass
+        buttonList()
+
+    buttonAddSeparator.clicked.connect(onButtonAddSeparator)
 
     def onButtonDown():
         currentIndex = buttonListWidget.currentRow()
@@ -3837,6 +3900,8 @@ def pieMenuStart():
 
         buttonsLayout = QtGui.QHBoxLayout()
         buttonsLayout.addStretch(1)
+        
+        buttonsLayout.addWidget(buttonAddSeparator)
         buttonsLayout.addWidget(buttonRemoveCommand)
         buttonsLayout.addWidget(buttonDown)
         buttonsLayout.addWidget(buttonUp)
@@ -3908,6 +3973,26 @@ def pieMenuStart():
         cBoxUpdate()
 
 
+    class PieMenuSeparator:
+        """Class PieMenuSeparator"""
+
+        def __init__(self):
+            pass
+
+        def GetResources(self):
+            """Return a dictionary with data that will be used by the button or menu item."""
+            return {'Pixmap' : iconAddSeparator, 'MenuText': 'Separator', 'ToolTip': 'Separator for PieMenu '}
+
+        def Activated(self):
+            """Run the following code when the command is activated (button press)."""
+            # print("PieMenu Separator Test")
+            pass
+
+        def IsActive(self):
+            """Return True when the command should be active or False when it should be disabled (greyed)."""
+            return False
+
+
     def addAccessoriesMenu():
         if mw.property("eventLoop"):
             startAM = False
@@ -3922,7 +4007,9 @@ def pieMenuStart():
                 t.deleteLater()
                 accessoriesMenu()
 
-
+    # Create a fake command in FreeCAD to handle the PieMenu Separator
+    FreeCADGui.addCommand('Std_PieMenuSeparator', PieMenuSeparator())
+    
     mw = Gui.getMainWindow()
     start = True
     for action in mw.findChildren(QtGui.QAction):
@@ -3952,6 +4039,7 @@ def pieMenuStart():
             windowShadow = True
         else:
             pass
+        
         contextAll = {}
         contextList()
         selObserver = SelObserver()
@@ -3966,7 +4054,6 @@ def pieMenuStart():
         actionKey.triggered.connect(PieMenuInstance.showAtMouse)
         mw.addAction(actionKey)
         getShortcutList()
-
         # let the addition of the accessoriesMenu wait until FC is ready for it
         t = QtCore.QTimer()
         t.timeout.connect(addAccessoriesMenu)

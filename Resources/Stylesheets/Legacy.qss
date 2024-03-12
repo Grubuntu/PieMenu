@@ -140,3 +140,11 @@ QCheckBox#styleCheckbox {
     margin-left: 10px;
 }
 
+/* ====================================================== */
+/*                     Separator                          */
+/* ====================================================== */
+
+QToolButton#styleSeparator {
+    background-color: transparent;
+    color: transparent;
+}
