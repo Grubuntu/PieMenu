@@ -33,6 +33,7 @@
 # triggermode for each PieMenu
 # clean some code
 # add ability to add separators in PieMenus
+# in progress : save settings to disk when you close the preferences window
 
 global PIE_MENU_VERSION
 PIE_MENU_VERSION = "1.4"
@@ -1871,7 +1872,10 @@ def pieMenuStart():
                 group = paramIndexGet.GetGroup("0")
             else:
                 setDefaultPie()
-                updateCommands()
+                try:
+                    updateCommands()
+                except:
+                    None
                 group = paramIndexGet.GetGroup("0")
 
         return group
@@ -3094,6 +3098,27 @@ def pieMenuStart():
     
     
     def onButtonAddSeparator():
+        """ Handle separator for PieMenus """
+        
+        # we must create a custom toolbar "PieMenuTB" to 'activate' the command 'Std_PieMenuSeparator' otherwise the separators are not correctly handled
+        globaltoolbar = FreeCAD.ParamGet('User parameter:BaseApp/Workbench/Global/Toolbar/Custom_PieMenu')
+        piemenuSeparator = globaltoolbar.GetString('Name')
+        if piemenuSeparator == "PieMenuTB":
+            pass
+        else:
+            globaltoolbar.SetString('Name','PieMenuTB')
+            globaltoolbar.SetString('Std_PieMenuSeparator','FreeCAD')
+            globaltoolbar.SetString('Value','1')
+            App.saveParameter()
+            wb = Gui.activeWorkbench()
+            wb.reloadActive()
+            
+            # we hide the custom toolbar
+            mw = FreeCADGui.getMainWindow()
+            for i in mw.findChildren(QtGui.QToolBar):
+                if i.windowTitle() == 'PieMenuTB':
+                    i.setVisible(False)
+    
         text = cBox.currentText()
 
         items = []
@@ -3561,6 +3586,7 @@ def pieMenuStart():
         paramGet.SetBool("ShowQuickMenu", True)
         paramGet.SetBool("EnableContext", False)
         paramGet.SetBool("GlobalKeyToggle", True)
+        App.saveParameter()
 
 
     def onControl():
@@ -3694,7 +3720,7 @@ def pieMenuStart():
         layoutCommandPerCircle = QtGui.QHBoxLayout()
         layoutCommandPerCircle.addLayout(layoutCommandPerCircleLeft, 1)
         layoutCommandPerCircle.addLayout(layoutCommandPerCircleRight, 1)
-        
+
 
         layoutDisplayCommandNameLeft = QtGui.QHBoxLayout()
         layoutDisplayCommandNameLeft.addStretch(1)
@@ -3772,10 +3798,11 @@ def pieMenuStart():
         layoutHoverDelay.addLayout(layoutHoverDelayLeft, 1)
         layoutHoverDelay.addLayout(layoutHoverDelayRight, 1)
 
-
+                           
         def close_dialog():
+            App.saveParameter()
             pieMenuDialog.accept()
-
+                                                 
         def updateGlobalShortcutKey(newShortcut):
             global globalShortcutKey
             touches_speciales = {'CTRL', 'ALT', 'SHIFT', 'META', 'TAB'}
