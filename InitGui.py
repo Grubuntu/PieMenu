@@ -25,15 +25,6 @@
 # http://forum.freecadweb.org/
 # http://www.freecadweb.org/wiki/index.php?title=Code_snippets
 
-# global shortcut toggle
-# workbench dependant
-# piemenu without opened file
-# modify Pie shape with command name
-# shapes "concentric" and "star
-# triggermode for each PieMenu
-# clean some code
-# add ability to add separators in PieMenus
-# in progress : save settings to disk when you close the preferences window
 
 global PIE_MENU_VERSION
 PIE_MENU_VERSION = "1.4"
@@ -52,7 +43,7 @@ def pieMenuStart():
     from PySide2.QtGui import QKeyEvent, QFontMetrics
     from PySide.QtWidgets import QApplication, QLineEdit, QWidget, QAction, \
         QPushButton, QLabel, QVBoxLayout, QHBoxLayout, QDoubleSpinBox, QCheckBox, \
-        QMessageBox, QShortcut, QListWidgetItem, QListWidget, QComboBox
+        QMessageBox, QShortcut, QListWidgetItem, QListWidget, QComboBox, QDialog
     from PySide2.QtGui import QKeySequence
     from PySide2.QtCore import Qt
     from TranslateUtils import translate
@@ -980,8 +971,8 @@ def pieMenuStart():
                         # layout for icon and command string
                         layout = QtGui.QHBoxLayout(button)
                         layout.setContentsMargins((icon/4), 0, 0, 0)
-                        
-                        if (commands[commands.index(i)].text()) == "Separator":
+
+                        if (commands[commands.index(i)].text()) == translate('PieMenuTab', 'Separator'):
                             iconButton =  QtGui.QIcon(iconSeparator)
                         else:
                             iconButton = QtGui.QIcon(commands[commands.index(i)].icon())
@@ -1137,7 +1128,7 @@ def pieMenuStart():
                                 layout.addStretch(1)
                                 iconMarging = "#iconLabel {margin-right: " + str(icon/4) + "px;}"
 
-                            if (commands[commands.index(i)].text()) == "Separator":
+                            if (commands[commands.index(i)].text()) == translate('PieMenuTab', 'Separator'):
                                 iconButton =  QtGui.QIcon(iconSeparator)
                             else:
                                 iconButton = QtGui.QIcon(commands[commands.index(i)].icon())
@@ -1182,8 +1173,8 @@ def pieMenuStart():
                                            (math.cos(angle * num + angleStart)))
                         button.setProperty("ButtonY", self.radius *
                                            (math.sin(angle * num + angleStart)))
-                                           
-                    if (commands[commands.index(i)].text()) == "Separator":
+                                         
+                    if (commands[commands.index(i)].text()) == translate('PieMenuTab', 'Separator'):
                         button.setObjectName("styleSeparator")
                         button.setIcon(QtGui.QIcon(iconSeparator))
                     
@@ -3589,6 +3580,25 @@ def pieMenuStart():
         App.saveParameter()
 
 
+    class PieMenuDialog(QDialog):
+        mw = Gui.getMainWindow()
+        """ Class to handle PieMenuDialog events """
+        def __init__(self, parent=None):
+            
+            super(PieMenuDialog, self).__init__(parent)
+            # Connect close event 
+            
+            self.resize(800, 450)
+            self.setObjectName("PieMenuPreferences")
+            self.setWindowTitle("PieMenu " + PIE_MENU_VERSION)
+            self.closeEvent = self.customCloseEvent
+
+        def customCloseEvent(self, event):
+            # Caught close event to save parameters on disk
+            App.saveParameter()
+            super(PieMenuDialog, self).closeEvent(event)
+            
+
     def onControl():
         """Initializes the preferences dialog."""
         shape = getShape(cBox.currentText())
@@ -3798,11 +3808,6 @@ def pieMenuStart():
         layoutHoverDelay.addLayout(layoutHoverDelayLeft, 1)
         layoutHoverDelay.addLayout(layoutHoverDelayRight, 1)
 
-                           
-        def close_dialog():
-            App.saveParameter()
-            pieMenuDialog.accept()
-                                                 
         def updateGlobalShortcutKey(newShortcut):
             global globalShortcutKey
             touches_speciales = {'CTRL', 'ALT', 'SHIFT', 'META', 'TAB'}
@@ -3831,7 +3836,6 @@ def pieMenuStart():
 
         getGlobalShortcutKey()
         
-
         labelGlobalShortcut.setText(translate("GlobalSettingsTab",\
             "Global shortcut : ") + globalShortcutKey)
         layoutGlobalShortcut = QtGui.QHBoxLayout()
@@ -3945,13 +3949,12 @@ def pieMenuStart():
         preferencesWidget.setLayout(preferencesLayout)
         preferencesLayout.addWidget(vSplitter)
 
-        pieMenuDialog = QtGui.QDialog(mw)
-        pieMenuDialog.resize(800, 450)
-        pieMenuDialog.setObjectName("PieMenuPreferences")
-        pieMenuDialog.setWindowTitle("PieMenu " + PIE_MENU_VERSION)
+        pieMenuDialog = PieMenuDialog()
+        
         pieMenuDialogLayout = QtGui.QVBoxLayout()
         pieMenuDialog.setLayout(pieMenuDialogLayout)
         pieMenuDialog.show()
+        
         def infoPopup():
             msg = """
                 <h2>Pie menu</h2>
@@ -3979,7 +3982,7 @@ def pieMenuStart():
         close_button = QtGui.QPushButton(translate("MainWindow", "Close"), \
                                          pieMenuDialog)
         close_button.setMaximumWidth(120)
-        close_button.clicked.connect(close_dialog)
+        close_button.clicked.connect(pieMenuDialog.close)
 
         # Create a horizontal layout for the buttons
         button_row_layout = QtGui.QHBoxLayout()
@@ -3993,7 +3996,6 @@ def pieMenuStart():
 
         button_layout.addLayout(button_row_layout)
 
-
         pieMenuDialogLayout.addWidget(preferencesWidget)
         pieMenuDialogLayout.addLayout(button_layout)
 
@@ -4002,13 +4004,12 @@ def pieMenuStart():
 
     class PieMenuSeparator:
         """Class PieMenuSeparator"""
-
         def __init__(self):
             pass
 
         def GetResources(self):
             """Return a dictionary with data that will be used by the button or menu item."""
-            return {'Pixmap' : iconAddSeparator, 'MenuText': 'Separator', 'ToolTip': 'Separator for PieMenu '}
+            return {'Pixmap' : iconAddSeparator, 'MenuText': translate('PieMenuTab', 'Separator'), 'ToolTip': translate('PieMenuTab', 'Separator for PieMenu ')}
 
         def Activated(self):
             """Run the following code when the command is activated (button press)."""
