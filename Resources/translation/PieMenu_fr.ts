@@ -4,7 +4,7 @@
 <context>
     <name>AccesoriesMenu</name>
     <message>
-        <location filename="../../InitGui.py" line="266"/>
+        <location filename="../../InitGui.py" line="258"/>
         <source>Pie menu settings</source>
         <translation>Préférences de PieMenu</translation>
     </message>
@@ -12,17 +12,22 @@
 <context>
     <name>Commands</name>
     <message>
-        <location filename="../../InitGui.py" line="3054"/>
+        <location filename="../../InitGui.py" line="3062"/>
         <source>Move selected command up</source>
         <translation>Déplacer vers le haut</translation>
     </message>
     <message>
-        <location filename="../../InitGui.py" line="3072"/>
+        <location filename="../../InitGui.py" line="3080"/>
         <source>Move selected command down</source>
         <translation>Déplacer vers le bas</translation>
     </message>
     <message>
-        <location filename="../../InitGui.py" line="3090"/>
+        <location filename="../../InitGui.py" line="3086"/>
+        <source>Add separator</source>
+        <translation>Ajouter un séparateur</translation>
+    </message>
+    <message>
+        <location filename="../../InitGui.py" line="3169"/>
         <source>Remove selected command</source>
         <translation>Supprimer</translation>
     </message>
@@ -30,57 +35,57 @@
 <context>
     <name>ContextTab</name>
     <message>
-        <location filename="../../InitGui.py" line="3108"/>
+        <location filename="../../InitGui.py" line="3187"/>
         <source>Vertex</source>
         <translation>Sommet</translation>
     </message>
     <message>
-        <location filename="../../InitGui.py" line="3109"/>
+        <location filename="../../InitGui.py" line="3188"/>
         <source>Set desired operator and vertex number</source>
         <translation>Sélectionner l&apos;opérateur et le nombre de sommet</translation>
     </message>
     <message>
-        <location filename="../../InitGui.py" line="3113"/>
+        <location filename="../../InitGui.py" line="3192"/>
         <source>Edge</source>
         <translation>Arête</translation>
     </message>
     <message>
-        <location filename="../../InitGui.py" line="3114"/>
+        <location filename="../../InitGui.py" line="3193"/>
         <source>Set desired operator and edge number</source>
         <translation>Sélectionner l&apos;opérateur et le nombre d&apos;arête</translation>
     </message>
     <message>
-        <location filename="../../InitGui.py" line="3118"/>
+        <location filename="../../InitGui.py" line="3197"/>
         <source>Face</source>
         <translation>Face</translation>
     </message>
     <message>
-        <location filename="../../InitGui.py" line="3119"/>
+        <location filename="../../InitGui.py" line="3198"/>
         <source>Set desired operator and face number</source>
         <translation>Sélectionner l&apos;opérateur et le nombre de face</translation>
     </message>
     <message>
-        <location filename="../../InitGui.py" line="3123"/>
+        <location filename="../../InitGui.py" line="3202"/>
         <source>Object</source>
         <translation>Objet</translation>
     </message>
     <message>
-        <location filename="../../InitGui.py" line="3124"/>
+        <location filename="../../InitGui.py" line="3203"/>
         <source>Set desired operator and object number</source>
         <translation>Sélectionner l&apos;opérateur et le nombre d&apos;objet</translation>
     </message>
     <message>
-        <location filename="../../InitGui.py" line="3181"/>
+        <location filename="../../InitGui.py" line="3260"/>
         <source>Enable</source>
         <translation>Actif</translation>
     </message>
     <message>
-        <location filename="../../InitGui.py" line="3246"/>
+        <location filename="../../InitGui.py" line="3325"/>
         <source>Reset to defaults</source>
         <translation>Réglages par défaut</translation>
     </message>
     <message>
-        <location filename="../../InitGui.py" line="3829"/>
+        <location filename="../../InitGui.py" line="3923"/>
         <source>Context</source>
         <translation>Contexte</translation>
     </message>
@@ -88,17 +93,17 @@
 <context>
     <name>Fast Spinbox</name>
     <message>
-        <location filename="../../InitGui.py" line="723"/>
+        <location filename="../../InitGui.py" line="717"/>
         <source>Through all</source>
         <translation>A travers tout</translation>
     </message>
     <message>
-        <location filename="../../InitGui.py" line="731"/>
+        <location filename="../../InitGui.py" line="725"/>
         <source>Reversed</source>
         <translation>Inversé</translation>
     </message>
     <message>
-        <location filename="../../InitGui.py" line="739"/>
+        <location filename="../../InitGui.py" line="733"/>
         <source>Symmetric to plane</source>
         <translation>Symétrique au plan</translation>
     </message>
@@ -106,7 +111,7 @@
 <context>
     <name>FreeCAD Menu</name>
     <message>
-        <location filename="../../InitGui.py" line="280"/>
+        <location filename="../../InitGui.py" line="272"/>
         <source>Accessories</source>
         <translation>Accessoires</translation>
     </message>
@@ -114,82 +119,82 @@
 <context>
     <name>GlobalSettingsTab</name>
     <message>
-        <location filename="../../InitGui.py" line="2069"/>
+        <location filename="../../InitGui.py" line="2078"/>
         <source>For TAB press CTRL+TAB</source>
         <translation>Pour TAB appuyer CTRL+TAB</translation>
     </message>
     <message>
-        <location filename="../../InitGui.py" line="2103"/>
+        <location filename="../../InitGui.py" line="2112"/>
         <source>Global shortcut: </source>
         <translation>Raccourci global : </translation>
     </message>
     <message>
-        <location filename="../../InitGui.py" line="2513"/>
+        <location filename="../../InitGui.py" line="2522"/>
         <source>Hover delay (ms):</source>
         <translation>Retard au survol (ms) :</translation>
     </message>
     <message>
-        <location filename="../../InitGui.py" line="3591"/>
+        <location filename="../../InitGui.py" line="3690"/>
         <source>Assign</source>
         <translation>Assigner</translation>
     </message>
     <message>
-        <location filename="../../InitGui.py" line="3651"/>
+        <location filename="../../InitGui.py" line="3750"/>
         <source>Show QuickMenu:</source>
         <translation>Afficher le menu rapide :</translation>
     </message>
     <message>
-        <location filename="../../InitGui.py" line="3666"/>
+        <location filename="../../InitGui.py" line="3765"/>
         <source>Theme style:</source>
         <translation>Thème :</translation>
     </message>
     <message>
-        <location filename="../../InitGui.py" line="3681"/>
+        <location filename="../../InitGui.py" line="3780"/>
         <source>Trigger mode:</source>
         <translation>Mode de déclenchement :</translation>
     </message>
     <message>
-        <location filename="../../InitGui.py" line="2529"/>
+        <location filename="../../InitGui.py" line="2538"/>
         <source>Press</source>
         <translation>A l&apos;appui</translation>
     </message>
     <message>
-        <location filename="../../InitGui.py" line="2070"/>
+        <location filename="../../InitGui.py" line="2079"/>
         <source>Global shortcut behavior: Toggle show/hide PieMenu</source>
         <translation>Comportement du raccourci global : Bascule l&apos;affichage du PieMenu</translation>
     </message>
     <message>
-        <location filename="../../InitGui.py" line="2530"/>
+        <location filename="../../InitGui.py" line="2539"/>
         <source>Hover</source>
         <translation>Au survol</translation>
     </message>
     <message>
-        <location filename="../../InitGui.py" line="3725"/>
+        <location filename="../../InitGui.py" line="3820"/>
         <source>Shortcut deleted ! No shortcut assigned </source>
         <translation>Raccourci supprimé ! Aucu raccourci assigné </translation>
     </message>
     <message>
-        <location filename="../../InitGui.py" line="3733"/>
+        <location filename="../../InitGui.py" line="3828"/>
         <source>Invalid shortcut ! Current global shortcut : </source>
         <translation>Raccourci invalide ! Raccourci global actuel : </translation>
     </message>
     <message>
-        <location filename="../../InitGui.py" line="3739"/>
+        <location filename="../../InitGui.py" line="3834"/>
         <source>New global shortcut assigned: </source>
         <translation>Nouveau raccourci global assigné : </translation>
     </message>
     <message>
-        <location filename="../../InitGui.py" line="3746"/>
+        <location filename="../../InitGui.py" line="3840"/>
         <source>Global shortcut : </source>
         <translation>Raccourci global : </translation>
     </message>
     <message>
-        <location filename="../../InitGui.py" line="3787"/>
+        <location filename="../../InitGui.py" line="3881"/>
         <source>Global context:</source>
         <translation>Activer le contexte :</translation>
     </message>
     <message>
-        <location filename="../../InitGui.py" line="3830"/>
+        <location filename="../../InitGui.py" line="3924"/>
         <source>Global settings</source>
         <translation>Préférences générales</translation>
     </message>
@@ -197,12 +202,12 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../../InitGui.py" line="3882"/>
+        <location filename="../../InitGui.py" line="3977"/>
         <source>About</source>
         <translation>A propos</translation>
     </message>
     <message>
-        <location filename="../../InitGui.py" line="3887"/>
+        <location filename="../../InitGui.py" line="3982"/>
         <source>Close</source>
         <translation>Fermer</translation>
     </message>
@@ -210,48 +215,48 @@
 <context>
     <name>PieMenuTab</name>
     <message>
-        <location filename="../../InitGui.py" line="2101"/>
-        <location filename="../../InitGui.py" line="3584"/>
+        <location filename="../../InitGui.py" line="2110"/>
+        <location filename="../../InitGui.py" line="3683"/>
         <source>Current shortcut: </source>
         <translation>Raccourci actuel : </translation>
     </message>
     <message>
-        <location filename="../../InitGui.py" line="2128"/>
+        <location filename="../../InitGui.py" line="2137"/>
         <source>Add new pie menu</source>
         <translation>Ajouter un nouveau menu Pie</translation>
     </message>
     <message>
-        <location filename="../../InitGui.py" line="2134"/>
+        <location filename="../../InitGui.py" line="2143"/>
         <source>Please insert menu name</source>
         <translation>Entrez le nom du menu</translation>
     </message>
     <message>
-        <location filename="../../InitGui.py" line="2135"/>
+        <location filename="../../InitGui.py" line="2144"/>
         <source>Menu already exists</source>
         <translation>Ce menu existe déjà</translation>
     </message>
     <message>
-        <location filename="../../InitGui.py" line="2205"/>
+        <location filename="../../InitGui.py" line="2214"/>
         <source>New menu</source>
         <translation>Nouveau menu</translation>
     </message>
     <message>
-        <location filename="../../InitGui.py" line="2219"/>
+        <location filename="../../InitGui.py" line="2228"/>
         <source>Remove current pie menu</source>
         <translation>Supprimer le menu Pie courant</translation>
     </message>
     <message>
-        <location filename="../../InitGui.py" line="2279"/>
+        <location filename="../../InitGui.py" line="2288"/>
         <source>Rename current pie menu</source>
         <translation>Renommer le menu Pie courant</translation>
     </message>
     <message>
-        <location filename="../../InitGui.py" line="2286"/>
+        <location filename="../../InitGui.py" line="2295"/>
         <source>Rename menu</source>
         <translation>Renommer le menu</translation>
     </message>
     <message>
-        <location filename="../../InitGui.py" line="2319"/>
+        <location filename="../../InitGui.py" line="2328"/>
         <source>Copy current pie menu</source>
         <translation>Copier le menu Pie courant</translation>
     </message>
@@ -264,80 +269,93 @@
         <translation type="vanished">Associé ce PieMenu à l&apos;atelier :</translation>
     </message>
     <message>
-        <location filename="../../InitGui.py" line="2368"/>
+        <location filename="../../InitGui.py" line="2377"/>
         <source>Copy menu</source>
         <translation>Copier le menu</translation>
     </message>
     <message>
-        <location filename="../../InitGui.py" line="2419"/>
+        <location filename="../../InitGui.py" line="2428"/>
         <source>Workbench associated to this PieMenu:</source>
         <translation>Atelier associé à ce PieMenu :</translation>
     </message>
     <message>
-        <location filename="../../InitGui.py" line="2507"/>
+        <location filename="../../InitGui.py" line="2516"/>
         <source>Pie size:</source>
         <translation>Taille  du menu :</translation>
     </message>
     <message>
-        <location filename="../../InitGui.py" line="2519"/>
+        <location filename="../../InitGui.py" line="2528"/>
         <source>Shape:</source>
         <translation>Forme :</translation>
     </message>
     <message>
-        <location filename="../../InitGui.py" line="2522"/>
+        <location filename="../../InitGui.py" line="2531"/>
         <source>Show command names:</source>
         <translation>Afficher le nom des commandes :</translation>
     </message>
     <message>
-        <location filename="../../InitGui.py" line="2567"/>
-        <location filename="../../InitGui.py" line="2657"/>
+        <location filename="../../InitGui.py" line="2576"/>
+        <location filename="../../InitGui.py" line="2666"/>
         <source>Number of columns:</source>
         <translation>Nombre de colonnes :</translation>
     </message>
     <message>
-        <location filename="../../InitGui.py" line="2569"/>
+        <location filename="../../InitGui.py" line="2578"/>
         <source>Number of rows:</source>
         <translation>Nombre de lignes :</translation>
     </message>
     <message>
-        <location filename="../../InitGui.py" line="2662"/>
+        <location filename="../../InitGui.py" line="2671"/>
         <source>Icon spacing:</source>
         <translation>Espacement (px) :</translation>
     </message>
     <message>
-        <location filename="../../InitGui.py" line="2667"/>
+        <location filename="../../InitGui.py" line="2676"/>
         <source>Command per circle:</source>
         <translation>Nombre de commandes par cercle :</translation>
     </message>
     <message>
-        <location filename="../../InitGui.py" line="2813"/>
+        <location filename="../../InitGui.py" line="2822"/>
         <source>Button size:</source>
         <translation>Taille des boutons :</translation>
     </message>
     <message>
-        <location filename="../../InitGui.py" line="3567"/>
+        <location filename="../../InitGui.py" line="3666"/>
         <source>Shortcut deleted! No shortcut assigned </source>
         <translation>Raccourci effacé ! Aucun raccourci assigné </translation>
     </message>
     <message>
-        <location filename="../../InitGui.py" line="3574"/>
+        <location filename="../../InitGui.py" line="3673"/>
         <source>Invalid shortcut! Current shortcut: </source>
         <translation>Raccourci invalide ! Raccourci actuel : </translation>
     </message>
     <message>
-        <location filename="../../InitGui.py" line="3578"/>
+        <location filename="../../InitGui.py" line="3677"/>
         <source>New shortcut assigned: </source>
         <translation>Nouveau raccourci  assigné : </translation>
     </message>
     <message>
-        <location filename="../../InitGui.py" line="3757"/>
+        <location filename="../../InitGui.py" line="3851"/>
         <source>Assign</source>
         <translation>Assigner</translation>
     </message>
     <message>
-        <location filename="../../InitGui.py" line="3827"/>
+        <location filename="../../InitGui.py" line="3921"/>
         <source>PieMenu</source>
         <translation>PieMenu</translation>
+    </message>
+    <message>
+        <location filename="../../InitGui.py" line="976"/>
+        <location filename="../../InitGui.py" line="1132"/>
+        <location filename="../../InitGui.py" line="1178"/>
+        <location filename="../../InitGui.py" line="4012"/>
+        <source>Separator</source>
+        <translation>Séparateur</translation>
+    </message>
+    <message>
+        <location filename="../../InitGui.py" line="4014"/>
+        <source>Separator for PieMenu </source>
+        <translation>Séparateur pour menu Pie </translation>
     </message>
 </context>
 <context>
@@ -355,22 +373,22 @@
         <translation type="vanished">Au survol</translation>
     </message>
     <message>
-        <location filename="../../InitGui.py" line="363"/>
+        <location filename="../../InitGui.py" line="357"/>
         <source>Context</source>
         <translation>Contexte</translation>
     </message>
     <message>
-        <location filename="../../InitGui.py" line="367"/>
+        <location filename="../../InitGui.py" line="361"/>
         <source>PieMenu</source>
         <translation>PieMenu par défaut</translation>
     </message>
     <message>
-        <location filename="../../InitGui.py" line="374"/>
+        <location filename="../../InitGui.py" line="368"/>
         <source>ToolBar</source>
         <translation>Barre de menu</translation>
     </message>
     <message>
-        <location filename="../../InitGui.py" line="383"/>
+        <location filename="../../InitGui.py" line="377"/>
         <source>Preferences</source>
         <translation>Préférences</translation>
     </message>
@@ -378,17 +396,17 @@
 <context>
     <name>ToolsTab</name>
     <message>
-        <location filename="../../InitGui.py" line="2840"/>
+        <location filename="../../InitGui.py" line="2849"/>
         <source>Search</source>
         <translation>Recherche</translation>
     </message>
     <message>
-        <location filename="../../InitGui.py" line="2844"/>
+        <location filename="../../InitGui.py" line="2853"/>
         <source>Clear search</source>
         <translation>Effacer la recherche</translation>
     </message>
     <message>
-        <location filename="../../InitGui.py" line="3828"/>
+        <location filename="../../InitGui.py" line="3922"/>
         <source>Tools</source>
         <translation>Outils</translation>
     </message>
