@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="fr_FR" sourcelanguage="en_US">
+<TS version="2.1" language="fr" sourcelanguage="en_US">
 <context>
     <name>AccesoriesMenu</name>
     <message>
@@ -82,7 +82,7 @@
     <message>
         <location filename="../../InitGui.py" line="3325"/>
         <source>Reset to defaults</source>
-        <translation>Réglages par défaut</translation>
+        <translation>Réinitialiser</translation>
     </message>
     <message>
         <location filename="../../InitGui.py" line="3923"/>
@@ -161,7 +161,7 @@
     <message>
         <location filename="../../InitGui.py" line="2079"/>
         <source>Global shortcut behavior: Toggle show/hide PieMenu</source>
-        <translation>Comportement du raccourci global : Bascule l&apos;affichage du PieMenu</translation>
+        <translation>Comportement du raccourci global : Bascule la visibilité de PieMenu</translation>
     </message>
     <message>
         <location filename="../../InitGui.py" line="2539"/>
@@ -171,7 +171,7 @@
     <message>
         <location filename="../../InitGui.py" line="3820"/>
         <source>Shortcut deleted ! No shortcut assigned </source>
-        <translation>Raccourci supprimé ! Aucu raccourci assigné </translation>
+        <translation>Raccourci supprimé ! Aucun raccourci assigné </translation>
     </message>
     <message>
         <location filename="../../InitGui.py" line="3828"/>
@@ -215,6 +215,14 @@
 <context>
     <name>PieMenuTab</name>
     <message>
+        <location filename="../../InitGui.py" line="976"/>
+        <location filename="../../InitGui.py" line="1132"/>
+        <location filename="../../InitGui.py" line="1178"/>
+        <location filename="../../InitGui.py" line="4012"/>
+        <source>Separator</source>
+        <translation>Séparateur</translation>
+    </message>
+    <message>
         <location filename="../../InitGui.py" line="2110"/>
         <location filename="../../InitGui.py" line="3683"/>
         <source>Current shortcut: </source>
@@ -228,7 +236,7 @@
     <message>
         <location filename="../../InitGui.py" line="2143"/>
         <source>Please insert menu name</source>
-        <translation>Entrez le nom du menu</translation>
+        <translation>Veuillez entrer un nom de menu</translation>
     </message>
     <message>
         <location filename="../../InitGui.py" line="2144"/>
@@ -259,14 +267,6 @@
         <location filename="../../InitGui.py" line="2328"/>
         <source>Copy current pie menu</source>
         <translation>Copier le menu Pie courant</translation>
-    </message>
-    <message>
-        <source>Default PieMenu Associated Workshop:</source>
-        <translation type="vanished">Atelier associé au PieMenu :</translation>
-    </message>
-    <message>
-        <source>Default PieMenu associated workbench:</source>
-        <translation type="vanished">Associé ce PieMenu à l&apos;atelier :</translation>
     </message>
     <message>
         <location filename="../../InitGui.py" line="2377"/>
@@ -322,7 +322,7 @@
     <message>
         <location filename="../../InitGui.py" line="3666"/>
         <source>Shortcut deleted! No shortcut assigned </source>
-        <translation>Raccourci effacé ! Aucun raccourci assigné </translation>
+        <translation>Raccourci supprimé ! Aucun raccourci assigné </translation>
     </message>
     <message>
         <location filename="../../InitGui.py" line="3673"/>
@@ -332,7 +332,7 @@
     <message>
         <location filename="../../InitGui.py" line="3677"/>
         <source>New shortcut assigned: </source>
-        <translation>Nouveau raccourci  assigné : </translation>
+        <translation>Nouveau raccourci assigné : </translation>
     </message>
     <message>
         <location filename="../../InitGui.py" line="3851"/>
@@ -345,17 +345,9 @@
         <translation>PieMenu</translation>
     </message>
     <message>
-        <location filename="../../InitGui.py" line="976"/>
-        <location filename="../../InitGui.py" line="1132"/>
-        <location filename="../../InitGui.py" line="1178"/>
-        <location filename="../../InitGui.py" line="4012"/>
-        <source>Separator</source>
-        <translation>Séparateur</translation>
-    </message>
-    <message>
         <location filename="../../InitGui.py" line="4014"/>
         <source>Separator for PieMenu </source>
-        <translation>Séparateur pour menu Pie </translation>
+        <translation>Séparateur pour PieMenu </translation>
     </message>
 </context>
 <context>
