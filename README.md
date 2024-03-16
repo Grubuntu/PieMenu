@@ -3,7 +3,33 @@ PieMenu widget for FreeCAD
 
 Quick customizable menus for FreeCAD.
 
-Presentation: PieMenu is a customizable menu, providing quick access to FreeCAD tools via keyboard shortcuts. You can choose from multiple shapes, themes, customize tools and shortcuts, and much more... 
+## Attention ! Version 1.4 : IMPORTANT NEW FEATURE !
+### With this new version, you need to link the Sketcher workbench to your "Sketcher" PieMenu to keep your sketching PieMenu opening automatically, see below.
+
+### We can associate a workbench for each PieMenu :
+
+When you associate a workbench with a menu, it will be opened when you press the global shortcut.
+
+In the example below, the Draft workbench is associated with the "Snapping Tools" PieMenu: when the "Draft" workbench is active, the "Snapping Tools" PieMenu will open when the global shortcut key is pressed.
+![Capture d’écran (136)](https://github.com/Grubuntu/PieMenu/assets/56045316/dee7db17-bbb0-42ae-aaa4-c79fc8e1c773)
+
+In this way, you can associate a specific PieMenu for each Workbench. This is very useful, for example, for the Sketcher workbench, where you can associate a PieMenu with the tools specific to the Sketcher : 
+
+![Capture d’écran (135)](https://github.com/Grubuntu/PieMenu/assets/56045316/7f6d2367-007d-4893-a792-4337efd9ff9a)
+
+
+### We can now set the trigger mode (Hover/Press) individually for each PieMenu.
+
+![Capture d’écran (134)](https://github.com/Grubuntu/PieMenu/assets/56045316/82652799-db00-4f10-9f9c-6c370599d51f)
+
+### Toggle mode for global shortcut :
+Pressing the global shortcut can toggle the PieMenu display.
+
+![Capture d’écran (137)](https://github.com/Grubuntu/PieMenu/assets/56045316/1f2254ae-c2df-45af-8b95-32f2acf4470b)
+
+
+
+# Presentation: PieMenu is a customizable menu, providing quick access to FreeCAD tools via keyboard shortcuts. You can choose from multiple shapes, themes, customize tools and shortcuts, and much more... 
 
 Warning: PieMenu is in development, bugs may still exist. It is necessary to backup your configuration files before any PieMenu installation or update to be able to restore them in case of issues. 
 
@@ -112,7 +138,8 @@ The *QuickMenu* is the contextual menu displayed when clicking on the integrated
 
 The QuickMenu allows for quickly adjusting certain settings. If the QuickMenu is not visible, it must be enabled in the "Preferences" by activating the "Show QuickMenu" option.
 
-![image](https://github.com/Grubuntu/PieMenu/assets/56045316/3b73a649-2369-45c2-b1bd-e80c4fedc054)
+![Capture d’écran (138)](https://github.com/Grubuntu/PieMenu/assets/56045316/87613479-377d-4d47-b401-d13c45df3dd8)
+
 
 ### 1) PieMenu Tab:
 
@@ -125,6 +152,10 @@ Modify and adjust available settings (settings may vary depending on the PieMenu
     • Button size: adjusts the size of the buttons (Note: maximum size depends on the menu size)
     
     • Shape: multiple shapes are available
+
+    • Trigger Mode : Choose the activation mode: 'On press' or 'On hover' of the mouse for this PieMenu
+    
+    • Set the hover activation delay: to avoid triggering too quickly when passing over multiple commands, it is necessary to set a sufficient delay.
     
     • Show command names: some shapes allow displaying command names
     
@@ -158,7 +189,8 @@ You can enable/disable the context mode in the global preferences or via the Qui
 Important note: The "Context" mode takes priority over all other modes. Therefore, when the selection conditions are met, this PieMenu will be activated by the global shortcut even if another PieMenu is set as default via the QuickMenu  or via the association of a Workbench. Therefore, it is important to activate the context mode judiciously. 
 
 ![image](https://github.com/Grubuntu/PieMenu/assets/56045316/c5c1c77d-d4de-4369-a6ec-9ed45cfc1371)
-![image](https://github.com/Grubuntu/PieMenu/assets/56045316/81ea27c4-a3a2-4c2c-9327-431c1d9c67d5)
+![Capture d’écran (139)](https://github.com/Grubuntu/PieMenu/assets/56045316/6d07936d-3ebd-4bdf-a4fa-3740bb9ba3e1)
+
 
 
 ### 4) Global settings tab :
@@ -169,15 +201,14 @@ Here, you can:
     
     • Enable or disable the QuickMenu (context menu)
     
-    • Choose the activation mode: 'On press' or 'On hover' of the mouse.
-    
-    • Set the hover activation delay: to avoid triggering too quickly when passing over multiple commands, it is necessary to set a sufficient delay.
-    
     • Enable or disable the Context mode (also available in the QuickMenu).
     
     • Assign the global shortcut.
 
-![Capture d’écran (114)](https://github.com/Grubuntu/PieMenu/assets/56045316/0a8f21b7-74c9-4923-b008-9ec6a739e65b)
+    • Enable or disable the toggle mode for the global shortcut.
+
+![Capture d’écran (138)](https://github.com/Grubuntu/PieMenu/assets/56045316/7f1bfe73-feef-41ce-a1d7-0a85707cb189)
+
 
 ![Capture d’écran (113)](https://github.com/Grubuntu/PieMenu/assets/56045316/8a06e5c2-c67b-4d89-aea3-55f22d472195)
 
@@ -208,8 +239,11 @@ Open the QuickMenu
 
 Click on "PieMenu" to expand the menu and select the desired PieMenu: this will now be activated by default by the global shortcut (a checkmark is visible in front of the default PieMenu, if no checkmark is visible, it means that a ToolBar is currently active by default.
 
+3) Workbench associated:
 
-3) Individual Shortcut:
+You can associate a workbench with a menu, it will be opened when the workbench is active and when you press the global shortcut 
+
+4) Individual Shortcut:
 
 You can assign an individual shortcut to each PieMenu:
 
@@ -231,12 +265,16 @@ PieMenus will be activated in order of priority when the global shortcut is pres
 
 2 - Active ToolBar 
 
-3 - Default PieMenu
+3 - Associated Workbench
+
+4 - Default PieMenu
 
 
 If the "Context" mode is active and the selection conditions are met, then the PieMenu corresponding to the "Context" will be displayed. 
 
 Otherwise, if a ToolBar is active (via the QuickMenu), then that ToolBar is displayed. 
+
+OtherWise, if a Workbench is associated to the PieMenu, then the associated PieMenu is displayed.
 
 Otherwise, the default PieMenu (checked in the QuickMenu) will be displayed.
 
