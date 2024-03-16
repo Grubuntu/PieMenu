@@ -1,5 +1,8 @@
 # CHANGELOG
 
+### 1.4.1
+- Fix bug with workbench associated
+
 ### 1.4
 - Added workbench associated setting
 - Added triggermode setting for each PieMenu
