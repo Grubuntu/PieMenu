@@ -25,9 +25,11 @@
 # http://forum.freecadweb.org/
 # http://www.freecadweb.org/wiki/index.php?title=Code_snippets
 
+# expression binding in spinbox
+
 
 global PIE_MENU_VERSION
-PIE_MENU_VERSION = "1.4"
+PIE_MENU_VERSION = "1.5"
 
 def pieMenuStart():
     """Main function that starts the Pie Menu."""
@@ -1247,15 +1249,27 @@ def pieMenuStart():
                         layoutThroughAll = QHBoxLayout()
 
                         if (str(fonctionActive) == '<PartDesign::Fillet>'):
+                            
+                            FreeCADGui.ExpressionBinding(self.double_spinbox).bind(g.Object,"Radius")
+                            
                             quantity = Units.Quantity(Units.Quantity(g.Object.Radius).getUserPreferred()[0])
 
                         elif (str(fonctionActive) == '<PartDesign::Chamfer>'):
+                        
+                            FreeCADGui.ExpressionBinding(self.double_spinbox).bind(g.Object,"Size")
+                            
                             quantity = Units.Quantity(Units.Quantity(g.Object.Size).getUserPreferred()[0])
 
                         elif (str(fonctionActive) == '<PartDesign::Thickness>'):
+                        
+                            FreeCADGui.ExpressionBinding(self.double_spinbox).bind(g.Object,"Value")
+                            
                             quantity = Units.Quantity(Units.Quantity(g.Object.Value).getUserPreferred()[0])
                             
                         elif (str(fonctionActive) == '<PartDesign::Pad>') or (str(fonctionActive) == '<PartDesign::Pocket>'):
+                        
+                            FreeCADGui.ExpressionBinding(self.double_spinbox).bind(g.Object,"Length")
+                            
                             quantity = Units.Quantity(Units.Quantity(g.Object.Length).getUserPreferred()[0])
                             
                             self.checkbox_midPlane = checkbox_layout(self.checkboxSymToPlane, "Midplane", True)
@@ -1273,6 +1287,8 @@ def pieMenuStart():
                                 layoutOptions.addLayout(layoutThroughAll)
                                
                         elif (str(fonctionActive) == '<PartDesign::Revolution>') or (str(fonctionActive) == '<PartDesign::Groove>'):
+                            
+                            FreeCADGui.ExpressionBinding(self.double_spinbox).bind(g.Object,"Angle")
                             unit = " °" # degres
                             quantity = Units.Quantity(Units.Quantity(g.Object.Angle).getUserPreferred()[0])
                             
