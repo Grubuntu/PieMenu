@@ -1,5 +1,8 @@
 # CHANGELOG
 
+### 1.5
+- Added expressions in fast spinbox
+
 ### 1.4
 - Added workbench associated setting
 - Added triggermode setting for each PieMenu
