@@ -8,6 +8,7 @@
 - Fix vertical alignment for labels in Preferences
 - Added ability to add separators in PieMenu
 - Added save settings to disk when you close the preferences window
+- Update script for update translation
 - Added Polish translation
 
 ### 1.3.9
