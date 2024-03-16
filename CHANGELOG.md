@@ -5,6 +5,10 @@
 - Added triggermode setting for each PieMenu
 - Added global shortcut toggle mode setting
 - Clean some code
+- Fix vertical alignment for labels in Preferences
+- Added ability to add separators in PieMenu
+- Added save settings to disk when you close the preferences window
+- Added Polish translation
 
 ### 1.3.9
 - Fix spacing with command names for Pie shape
