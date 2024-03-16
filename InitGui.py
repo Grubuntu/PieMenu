@@ -3444,7 +3444,7 @@ def pieMenuStart():
         objectSpin.setValue(objectValue)
         
         
-        defaultWorkbench = group.GetInt("DefaultWorkbench")
+        defaultWorkbench = group.GetString("DefaultWorkbench")
         if defaultWorkbench:
             pass
         else:
