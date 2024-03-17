@@ -27,7 +27,7 @@
 
 
 global PIE_MENU_VERSION
-PIE_MENU_VERSION = "1.4.1"
+PIE_MENU_VERSION = "1.4.2"
 
 def pieMenuStart():
     """Main function that starts the Pie Menu."""
@@ -1696,7 +1696,10 @@ def pieMenuStart():
                     # Assembly4 workbench
                     if cmd_parts[0][:4] == "Asm4":
                         cmd_parts[0] = "Assembly4"
-                    Gui.activateWorkbench(cmd_parts[0] + "Workbench")
+                    try:
+                        Gui.activateWorkbench(cmd_parts[0] + "Workbench")
+                    except:
+                        None
 
         return False
 
@@ -1936,8 +1939,11 @@ def pieMenuStart():
                             # Assembly4 workbench
                             if cmd_parts[0][:4] == "Asm4":
                                 cmd_parts[0] = "Assembly4"
-                            Gui.activateWorkbench(cmd_parts[0] + "Workbench")
-                            workbenches.append(cmd_parts[0])
+                            try:
+                                Gui.activateWorkbench(cmd_parts[0] + "Workbench")
+                                workbenches.append(cmd_parts[0])
+                            except:
+                                None
                     else:
                         pass
             else:
