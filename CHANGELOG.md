@@ -1,6 +1,6 @@
 # CHANGELOG
 ### 1.4.2
-- Fix problem whith WB that doesn't exist in other FreeCAD version, example: AssemblyWB exists in 0.22 but not in 0.21.
+- Fix problem: when adding WB that doesn't exist in other FreeCAD version, example: AssemblyWB exists in 0.22 but not in 0.21.
   
 ### 1.4.1
 - Fix bug with workbench associated
