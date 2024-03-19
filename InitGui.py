@@ -24,8 +24,11 @@
 # Attribution:
 # http://forum.freecadweb.org/
 # http://www.freecadweb.org/wiki/index.php?title=Code_snippets
-
-# expression binding in spinbox
+#
+# 1.5
+# Added Del and Suppr keys for deleting Tool in toollist
+# Added Expressions in fast spinbox 
+# Added button link to wiki documentation
 
 
 global PIE_MENU_VERSION
@@ -50,6 +53,7 @@ def pieMenuStart():
     from PySide2.QtCore import Qt
     from TranslateUtils import translate
     from FreeCAD import Units
+    import webbrowser
 
     # global variables
 
@@ -297,6 +301,7 @@ def pieMenuStart():
     iconInfo =  respath + "PieMenuInfo.svg"
     iconAddSeparator =  respath + "PieMenuAddSeparator.svg"
     iconSeparator =  respath + "PieMenuSeparator.svg"
+    iconDocumentation = respath + "PieMenuDocumentation.svg"
 
     def radiusSize(buttonSize):
         """Calculates border radius for QToolButton based on the given buttonSize."""
@@ -665,7 +670,7 @@ def pieMenuStart():
             else:
                 self.menu.setAttribute(QtCore.Qt.WA_PaintOnScreen)
             self.setFocus()
-
+            
         def validation(self):
             docName = App.ActiveDocument.Name
             Gui.getDocument(docName).resetEdit()
@@ -742,6 +747,7 @@ def pieMenuStart():
         def eventFilter(self, obj, event):
             """ Handle key and wheel event """
             
+
             """ Handle toggle mode for global shortcut """
             if event.type() == QtCore.QEvent.ShortcutOverride:
                 global flagVisi
@@ -764,6 +770,12 @@ def pieMenuStart():
                             self.validation()
                     except:
                         None
+                        
+                """ Handle delete in Toollist """ 
+                if key == Qt.Key_Backspace or key == Qt.Key_Delete:
+                    if buttonListWidget.hasFocus() == True:
+                        onButtonRemoveCommand()
+                        return True
 
             elif event.type() == QtCore.QEvent.Wheel:
                 """ Press CTRL + rotate Wheel = X10, Press SHIFT + rotate Wheel = X0.1, Press CTRL+SHIFT + rotate Wheel= X0.01 """
@@ -1287,8 +1299,6 @@ def pieMenuStart():
                                 layoutOptions.addLayout(layoutThroughAll)
                                
                         elif (str(fonctionActive) == '<PartDesign::Revolution>') or (str(fonctionActive) == '<PartDesign::Groove>'):
-                            
-                            FreeCADGui.ExpressionBinding(self.double_spinbox).bind(g.Object,"Angle")
                             unit = " °" # degres
                             quantity = Units.Quantity(Units.Quantity(g.Object.Angle).getUserPreferred()[0])
                             
@@ -1712,7 +1722,10 @@ def pieMenuStart():
                     # Assembly4 workbench
                     if cmd_parts[0][:4] == "Asm4":
                         cmd_parts[0] = "Assembly4"
-                    Gui.activateWorkbench(cmd_parts[0] + "Workbench")
+                    try:
+                        Gui.activateWorkbench(cmd_parts[0] + "Workbench")
+                    except:
+                        None
 
         return False
 
@@ -1952,8 +1965,11 @@ def pieMenuStart():
                             # Assembly4 workbench
                             if cmd_parts[0][:4] == "Asm4":
                                 cmd_parts[0] = "Assembly4"
-                            Gui.activateWorkbench(cmd_parts[0] + "Workbench")
-                            workbenches.append(cmd_parts[0])
+                            try:
+                                Gui.activateWorkbench(cmd_parts[0] + "Workbench")
+                                workbenches.append(cmd_parts[0])
+                            except:
+                                None
                     else:
                         pass
             else:
@@ -3460,7 +3476,7 @@ def pieMenuStart():
         objectSpin.setValue(objectValue)
         
         
-        defaultWorkbench = group.GetInt("DefaultWorkbench")
+        defaultWorkbench = group.GetString("DefaultWorkbench")
         if defaultWorkbench:
             pass
         else:
@@ -3988,12 +4004,22 @@ def pieMenuStart():
                 <p style='font-weight:normal;'>You should have received a copy of the GNU Lesser General Public License along with this library; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA</p>
             """
             res = QtGui.QMessageBox.question(None,"Help",msg,QtGui.QMessageBox.Ok)
-
+            
         info_button = QtGui.QPushButton()
         info_button.setToolTip(translate("MainWindow", "About"))
         info_button.setMaximumWidth(80)
         info_button.setIcon(QtGui.QIcon.fromTheme(iconInfo))
         info_button.clicked.connect(infoPopup)
+        
+        def documentationLink():
+            webbrowser.open('https://wiki.freecad.org/PieMenu_Workbench')
+            True
+
+        doc_button = QtGui.QPushButton(translate("PieMenuTab", "Documentation"))
+        doc_button.setToolTip(translate("MainWindow", "Documentation"))
+        # doc_button.setMinimumWidth(90)
+        doc_button.setIcon(QtGui.QIcon.fromTheme(iconDocumentation))
+        doc_button.clicked.connect(documentationLink)
 
         close_button = QtGui.QPushButton(translate("MainWindow", "Close"), \
                                          pieMenuDialog)
@@ -4006,6 +4032,7 @@ def pieMenuStart():
         button_row_layout.addStretch(1)
         button_row_layout.addWidget(close_button, 0, alignment=QtCore.Qt.AlignCenter)
         button_row_layout.addStretch(1)
+        button_row_layout.addWidget(doc_button, 0, alignment=QtCore.Qt.AlignRight)
 
         button_layout = QtGui.QVBoxLayout()
         button_layout.addLayout(layoutInfoShortcut)
