@@ -49,8 +49,7 @@ def pieMenuStart():
     from PySide2.QtCore import Qt
     from TranslateUtils import translate
     from FreeCAD import Units
-    import webbrowser
-    
+
 
     # global variables
 
@@ -4280,8 +4279,12 @@ def pieMenuStart():
         info_button.clicked.connect(infoPopup)
         
         def documentationLink():
-            webbrowser.open('https://wiki.freecad.org/PieMenu_Workbench')
-            True
+            """Open PieMenu documentation using the Help settings."""
+            from Help import show
+
+            pieMenuDialog.close()
+            # Open a wiki page
+            show("PieMenu Workbench")
 
         doc_button = QtGui.QPushButton(translate("MainWindow", "Documentation"))
         doc_button.setToolTip(translate("MainWindow", "Documentation"))
