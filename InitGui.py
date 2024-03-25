@@ -81,7 +81,7 @@ def pieMenuStart():
     shortcutList =[]
     flagVisi = False
     triggerMode = "Press"
-    hoverDelay  = 100
+    hoverDelay = 100
     listCommands = []
     listShortcutCode = []
     flagShortcutOverride = False
@@ -2023,6 +2023,7 @@ def pieMenuStart():
                 pass
         buttonListWidget.blockSignals(False)
 
+        # update label and greyed toollistwidget if maximum of tools is reached
         if ((buttonListWidget.count()) < maxNumberOfTools): 
             labelMaxTools.setText(translate("ToolsTab", "Max. number of tools 30 (" + str(maxNumberOfTools - (buttonListWidget.count())) + " slots remaining)"))
             toolListWidget.setEnabled(True)
@@ -2031,6 +2032,12 @@ def pieMenuStart():
             toolListWidget.setEnabled(False)
             buttonAddSeparator.setEnabled(False)
             labelMaxTools.setText(translate("ToolsTab", "Maximum number of tools reached!"))
+
+            # select last element of toolist and focus on remove button
+            currentIndex = maxNumberOfTools
+            buttonListWidget.setCurrentRow(currentIndex - 1)
+            buttonList2ToolList(buttonListWidget)
+            buttonRemoveCommand.setFocus()
 
 
     def cBoxUpdate():
