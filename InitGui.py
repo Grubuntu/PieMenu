@@ -73,6 +73,7 @@ def pieMenuStart():
     global hoverDelay
     global listCommands
     global listShortcutCode
+    global flagShortcutOverride
 
     shortcutKey = ""
     globalShortcutKey = "TAB"
@@ -82,6 +83,7 @@ def pieMenuStart():
     hoverDelay  = 100
     listCommands = []
     listShortcutCode = []
+    flagShortcutOverride = False
 
     paramPath = "User parameter:BaseApp/PieMenu"
     paramIndexPath = "User parameter:BaseApp/PieMenu/Index"
@@ -358,60 +360,52 @@ def pieMenuStart():
 
         def eventFilter(self, obj, event):
             """ Handle tool shortcut in PieMenus """
-            if event.type() == QtCore.QEvent.KeyRelease:
-                if self.menu.isVisible():
-                    global flagVisi
-                    key = event.key()
+            # Special case when shortcut is assigned to tool PieMenu AND also other there
+            if event.type() == QtCore.QEvent.ShortcutOverride and self.menu.isVisible():
+                # we need to set "flagShortcutOverride" to advertise that we go through Event.ShortcutOverride for this tool shortcut for the step "KeyRelease" below
+                global flagShortcutOverride
+                flagShortcutOverride = False
+                
+                key = event.key()
+                event.accept()
+                try:
+                    # if fast spinbox is open, we do nothing with shortcuts
+                    if self.double_spinbox.isVisible():
+                        pass
+                except:
+                    # spinbox not show
                     try:
-                        # if fast spinbox is open, we do nothing with shortcuts
-                        if self.double_spinbox.isVisible():
-                            pass
+                        charKey = chr(key)
                     except:
-                        # spinbox not show
-                        try:
-                            charKey = chr(key)
-                        except:
-                            charKey = ''
-                        # if chr(event.key()) in listShortcutCode:
-                        if charKey in listShortcutCode:
-                            self.menu.hide()
-                            event.accept()
-                            j = 0
-                            for i in listShortcutCode:
-                                # if i == event.text():
-                                if i == charKey:
-                                    listCommands[j].trigger()
-                                    module = None
-                                    try:
-                                        docName = App.ActiveDocument.Name
-                                        g = Gui.ActiveDocument.getInEdit()
-                                        module = g.Module
-                                        # global flagVisi
-                                        if (module is not None and module != 'SketcherGui'):
-                                            PieMenuInstance.showAtMouse()
-                                    except:
-                                        pass
-                                j+=1
-                            return True
+                        charKey = ''
 
-            """ Handle toggle mode for global shortcut """
-            if event.type() == QtCore.QEvent.ShortcutOverride:
-                if checkboxGlobalKeyToggle.isChecked():
-                    if event.key() == QtGui.QKeySequence(globalShortcutKey):
-                        if self.menu.isVisible():
-                            self.menu.hide()
-                            flagVisi = True
-                            return True
-                        else:
-                            flagVisi = False
-                            return False
+                    if charKey in listShortcutCode:
+                        self.menu.hide()
+                        # event.accept()
+                        j = 0
+                        for i in listShortcutCode:
+                            if i == charKey:
+                                # set flag here
+                                flagShortcutOverride = True
+                            j+=1
+                        return True
 
-                    ###### Handle individuals shortcuts toggle show/hide ####    
-                    else:
+                    ###Handle toggle mode for global shortcut###
+                    elif checkboxGlobalKeyToggle.isChecked():
+                        if event.key() == QtGui.QKeySequence(globalShortcutKey):
+                            if self.menu.isVisible():
+                                self.menu.hide()
+                                flagVisi = True
+                                return True
+                            else:
+                                flagVisi = False
+                                return False
+
                         for shortcut in mw.findChildren(QShortcut):
                             if event.key() == QtGui.QKeySequence(shortcut.key()):
                                 if self.menu.isVisible():
                                     self.menu.hide()
+                                    event.accept()
                                     flagVisi = True
                                     return True
                                 else:
@@ -421,24 +415,23 @@ def pieMenuStart():
             """ Handle keys Return and Enter for spinbox """
             if event.type() == QtCore.QEvent.KeyPress:
                 key = event.key()
+                ###### Confirm with 'Enter' or 'Return' key ######
                 if key == QtCore.Qt.Key_Enter or key == QtCore.Qt.Key_Return:
                     try:
                         if self.double_spinbox.isVisible():
                             self.validation()
                     except:
                         None
-                    ###### Confirm with 'Enter' or 'Return' key ######
                     try:
                         if self.menu.isVisible():
                             self.validation()
                     except:
                         None
-
                         flagVisi = True
                         return True
 
-                ######### Delete with keys SUPPR and DEL in Toollist #######################
-                """ Handle delete in Toollist """ 
+                ######### Keys SUPPR, DEL, UP and DOWN in Toollist #####
+                """ Handle Keys SUPPR, DEL, UP and DOWN in Toollist """ 
                 if key == Qt.Key_Backspace or key == Qt.Key_Delete:
                     if buttonListWidget.hasFocus() == True:
                         onButtonRemoveCommand()
@@ -450,7 +443,44 @@ def pieMenuStart():
                 if key == Qt.Key_Down:
                     if buttonListWidget.hasFocus() == True:
                         onButtonDown()
-                        return True  
+                        return True
+
+            if event.type() == QtCore.QEvent.KeyRelease:
+                ##""" Handle tool shortcut in PieMenu """
+                if self.menu.isVisible() or flagShortcutOverride:
+                    key = event.key()
+                    try:
+                        # if fast spinbox is open, we do nothing with shortcuts
+                        if self.double_spinbox.isVisible():
+                            pass
+                    except:
+                        # spinbox not show
+                        try:
+                            charKey = chr(key)
+                        except:
+                            charKey = ''
+
+                        if charKey in listShortcutCode:
+                            self.menu.hide()
+                            event.accept()
+                            j = 0
+                            for i in listShortcutCode:
+                                if i == charKey:
+                                    # trigger tool shortcut action 
+                                    listCommands[j].trigger()
+
+                                    module = None
+                                    try:
+                                        docName = App.ActiveDocument.Name
+                                        g = Gui.ActiveDocument.getInEdit()
+                                        module = g.Module
+
+                                        if (module is not None and module != 'SketcherGui'):
+                                            PieMenuInstance.showAtMouse()
+                                    except:
+                                        pass
+                                j+=1
+                            return True
 
             elif event.type() == QtCore.QEvent.Wheel:
                 """ Press CTRL + rotate Wheel = X10, Press SHIFT + rotate Wheel = X0.1, Press CTRL+SHIFT + rotate Wheel= X0.01 """
@@ -952,7 +982,7 @@ def pieMenuStart():
 
                             listCommands.append(commands[commands.index(i)])
                             listShortcutCode.append(chr(shortcutCode))
-                            # print(shortcutCode)
+
                             if shortcutCode == 57:
                                 shortcutCode = 64
                             shortcutCode += 1
