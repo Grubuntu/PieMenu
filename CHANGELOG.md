@@ -2,6 +2,12 @@
 
 ### 1.5
 - Added expressions in fast spinbox
+- Added DEL, SUPPR, UP and DOWN key for delete and move Tools il toollist (PrefeAdderences)
+- Added documentation link to wiki
+- Added Icon PieMenu to Preference dialog window
+- Added toogle behavior for individuals shortcuts (Limitation : works only for -ONE KEY- shortcuts or -'Modifier' + KEY- shortcuts (not for multikeysequence shortcuts eg. -V,G-)
+- Added tools shortcuts keys (for each shape !), update stylesheet according to this new feature
+- Limits the maximum number of tools in PieMenu to 30 to avoid problems with tools shortcuts
 
 ### 1.4
 - Added workbench associated setting
