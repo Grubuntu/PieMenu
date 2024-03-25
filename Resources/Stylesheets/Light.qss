@@ -37,10 +37,9 @@ QToolButton#pieMenu:checked:hover {
 /*                 Shortcuts on PieMenu                   */
 /* ====================================================== */
 /* It is the shortcut label near tools in PieMenu */
-QLabel#pieMenuShortcut {
+QToolButton#pieMenuShortcutTool {
     background-color: rgba(0, 0, 0, 0.05);
     border-radius : 5px;
-    border: 1px solid rgba(0, 0, 0, 0.2);
     font-size: 12px;
 }
 
