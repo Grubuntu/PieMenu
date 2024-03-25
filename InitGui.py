@@ -74,6 +74,7 @@ def pieMenuStart():
     global listCommands
     global listShortcutCode
     global flagShortcutOverride
+    global maxNumberOfTools
 
     shortcutKey = ""
     globalShortcutKey = "TAB"
@@ -84,6 +85,7 @@ def pieMenuStart():
     listCommands = []
     listShortcutCode = []
     flagShortcutOverride = False
+    maxNumberOfTools = 30
 
     paramPath = "User parameter:BaseApp/PieMenu"
     paramIndexPath = "User parameter:BaseApp/PieMenu/Index"
@@ -365,7 +367,7 @@ def pieMenuStart():
                 # we need to set "flagShortcutOverride" to advertise that we go through Event.ShortcutOverride for this tool shortcut for the step "KeyRelease" below
                 global flagShortcutOverride
                 flagShortcutOverride = False
-                
+
                 key = event.key()
                 event.accept()
                 try:
@@ -983,9 +985,12 @@ def pieMenuStart():
                             listCommands.append(commands[commands.index(i)])
                             listShortcutCode.append(chr(shortcutCode))
 
+                            ####
                             if shortcutCode == 57:
                                 shortcutCode = 64
                             shortcutCode += 1
+                            # if shortcutCode > 90:
+                                # shortcutCode = 100
 
                             shortcutLabel.setProperty("ButtonX", X_shortcut )
                             shortcutLabel.setProperty("ButtonY", Y_shortcut )
@@ -1389,7 +1394,6 @@ def pieMenuStart():
         return styleCurrentTheme
 
 
-    ###################################
     def getParameterGlobal(paramType="String", paramName=""):
         """Get parameter from user parameters."""
         if paramType == "String":
@@ -1451,7 +1455,6 @@ def pieMenuStart():
                 else:
                     pass
 
-    ################################
 
     def getIndexList():
         """Get current pieMenus using available index."""
@@ -1489,8 +1492,8 @@ def pieMenuStart():
                 PieMenuInstance.showAtMouse(keyValue=keyValue, notKeyTriggered=False))
             shortcut.setEnabled(True)
         return shortcutList
-        
-        
+
+
     def setTriggerMode(triggerMode):
         """ Set TriggerMode in parameter """
         if triggerMode == "Press":
@@ -2009,6 +2012,7 @@ def pieMenuStart():
                 pass
         Gui.activateWorkbench(lastWorkbench.__class__.__name__)
         actionMapAll = getGuiActionMapAll()
+
         for i in toolList:
             if i in actionMapAll:
                 item = QtGui.QListWidgetItem(buttonListWidget)
@@ -2018,6 +2022,15 @@ def pieMenuStart():
             else:
                 pass
         buttonListWidget.blockSignals(False)
+
+        if ((buttonListWidget.count()) < maxNumberOfTools): 
+            labelMaxTools.setText(translate("ToolsTab", "Max. number of tools 30 (" + str(maxNumberOfTools - (buttonListWidget.count())) + " slots remaining)"))
+            toolListWidget.setEnabled(True)
+            buttonAddSeparator.setEnabled(True)
+        else:
+            toolListWidget.setEnabled(False)
+            buttonAddSeparator.setEnabled(False)
+            labelMaxTools.setText(translate("ToolsTab", "Maximum number of tools reached!"))
 
 
     def cBoxUpdate():
@@ -2772,61 +2785,66 @@ def pieMenuStart():
 
     def onToolListWidget():
         text = cBox.currentText()
-
         items = []
-        for index in range(toolListWidget.count()):
-            items.append(toolListWidget.item(index))
 
-        checkListOn = []
-        checkListOff = []
-        for i in items:
-            if i.checkState():
-                checkListOn.append(i.data(QtCore.Qt.UserRole))
-            else:
-                checkListOff.append(i.data(QtCore.Qt.UserRole))
+        if ((buttonListWidget.count()) < maxNumberOfTools):
+            for index in range(toolListWidget.count()):
+                    items.append(toolListWidget.item(index))
 
-        toolList = None
-        indexList = getIndexList()
-        for i in indexList:
-            a = str(i)
-            try:
-                pie = paramIndexGet.GetString(a).decode("UTF-8")
-            except AttributeError:
-                pie = paramIndexGet.GetString(a)
-            if pie == text:
-                group = paramIndexGet.GetGroup(a)
-                toolList = group.GetString("ToolList")
-            else:
-                pass
+            checkListOn = []
+            checkListOff = []
 
-        if toolList:
-            toolList = toolList.split(".,.")
-        else:
-            toolList = []
+            for i in items:
+                if i.checkState():
+                    checkListOn.append(i.data(QtCore.Qt.UserRole)) 
+                else:
+                    checkListOff.append(i.data(QtCore.Qt.UserRole))
 
-        for i in checkListOn:
-            if i not in toolList:
-                toolList.append(i)
-            else:
-                pass
+            toolList = None
+            indexList = getIndexList()
+            for i in indexList:
+                a = str(i)
+                try:
+                    pie = paramIndexGet.GetString(a).decode("UTF-8")
+                except AttributeError:
+                    pie = paramIndexGet.GetString(a)
+                if pie == text:
+                    group = paramIndexGet.GetGroup(a)
+                    toolList = group.GetString("ToolList")
+                else:
+                    pass
 
-        for i in checkListOff:
-            if i in toolList:
-                toolList.remove(i)
+            if toolList:
+                toolList = toolList.split(".,.")
             else:
-                pass
-        for i in indexList:
-            a = str(i)
-            try:
-                pie = paramIndexGet.GetString(a).decode("UTF-8")
-            except AttributeError:
-                pie = paramIndexGet.GetString(a)
-            if pie == text:
-                group = paramIndexGet.GetGroup(a)
-                toolList = group.SetString("ToolList", ".,.".join(toolList))
-            else:
-                pass
+                toolList = []
+
+            for i in checkListOn:
+                if i not in toolList:
+                    toolList.append(i)
+
+                else:
+                    pass
+
+            for i in checkListOff:
+                if i in toolList:
+                    toolList.remove(i)
+                else:
+                    pass
+            for i in indexList:
+                a = str(i)
+                try:
+                    pie = paramIndexGet.GetString(a).decode("UTF-8")
+                except AttributeError:
+                    pie = paramIndexGet.GetString(a)
+                if pie == text:
+                    group = paramIndexGet.GetGroup(a)
+                    toolList = group.SetString("ToolList", ".,.".join(toolList))
+                else:
+                    pass 
+
         buttonList()
+
 
 
     def searchInToolList(search_text):
@@ -2954,6 +2972,7 @@ def pieMenuStart():
                 toolList = group.SetString("ToolList", ".,.".join(toolList))
             else:
                 pass
+
         buttonList()
 
 
@@ -2967,13 +2986,16 @@ def pieMenuStart():
 
 
     def onButtonRemoveCommand():
+        global maxNumberOfTools
         currentIndex = buttonListWidget.currentRow()
         buttonListWidget.takeItem(currentIndex)
         if currentIndex != 0:
             buttonListWidget.setCurrentRow(currentIndex - 1)
         buttonListWidget.setFocus()
         buttonList2ToolList(buttonListWidget)
+        buttonList()
         toolList()
+        buttonListWidget.setCurrentRow(currentIndex - 1)
 
 
     def comboBox(TopoType):
@@ -3540,6 +3562,8 @@ def pieMenuStart():
         """Initializes the preferences dialog."""
         shape = getShape(cBox.currentText())
         onShape(shape)
+        
+        buttonList()
 
         global pieMenuDialog
         global shortcutKey
@@ -3750,10 +3774,9 @@ def pieMenuStart():
         pieMenuTabLayout.insertLayout(10, layoutCommandPerCircle)
         pieMenuTabLayout.insertLayout(11, layoutDisplayCommandName)
         pieMenuTabLayout.insertLayout(12, layoutDisplayShortcut)
-        # pieMenuTabLayout.insertLayout(13, layoutShortcutSize)
-        pieMenuTabLayout.insertSpacing(14, 42)
-        pieMenuTabLayout.insertWidget(15, separatorPieMenu)
-        pieMenuTabLayout.insertLayout(16, layoutShortcut)
+        pieMenuTabLayout.insertSpacing(13, 42)
+        pieMenuTabLayout.insertWidget(14, separatorPieMenu)
+        pieMenuTabLayout.insertLayout(15, layoutShortcut)
 
         pieMenuTabLayout.addStretch(0)
 
@@ -3817,8 +3840,8 @@ def pieMenuStart():
         pieButtonsLayout.addWidget(buttonListWidget)
 
         buttonsLayout = QtGui.QHBoxLayout()
+        buttonsLayout.addWidget(labelMaxTools)
         buttonsLayout.addStretch(1)
-        
         buttonsLayout.addWidget(buttonAddSeparator)
         buttonsLayout.addWidget(buttonRemoveCommand)
         buttonsLayout.addWidget(buttonDown)
@@ -4032,7 +4055,6 @@ def pieMenuStart():
     spinShortcutLabelSize.setMaximum(50)
     spinShortcutLabelSize.setMinimumWidth(90)
     spinShortcutLabelSize.valueChanged.connect(onSpinShortcutLabelSize)
-    ########### TO DO set default value to spinShortcutLabelSize
 
     spinNumColumn = QtGui.QSpinBox()
     spinNumColumn.setMaximum(12)
@@ -4108,6 +4130,8 @@ def pieMenuStart():
 
     searchLayout.addWidget(searchLineEdit)
     searchLayout.addWidget(clearButton)
+    
+    labelMaxTools = QLabel()
 
     toolListLayout.addLayout(searchLayout)
     toolListLayout.addWidget(toolListWidget)
