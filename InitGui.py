@@ -2024,8 +2024,8 @@ def pieMenuStart():
         buttonListWidget.blockSignals(False)
 
         # update label and greyed toollistwidget if maximum of tools is reached
-        if ((buttonListWidget.count()) < maxNumberOfTools): 
-            labelMaxTools.setText(translate("ToolsTab", "Max. number of tools 30 (" + str(maxNumberOfTools - (buttonListWidget.count())) + " slots remaining)"))
+        if ((buttonListWidget.count()) < maxNumberOfTools):
+            labelMaxTools.setText(translate("ToolsTab", "Max. number of tools 30 ({} slots remaining)").format(str(maxNumberOfTools - (buttonListWidget.count()))))
             toolListWidget.setEnabled(True)
             buttonAddSeparator.setEnabled(True)
         else:
