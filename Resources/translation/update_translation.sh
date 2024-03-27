@@ -23,8 +23,8 @@
 # 	Arch-based: $ sudo pacman -S qt6-tools python-pyqt6
 # - Make the script executable
 # 	$ chmod +x update_translation.sh
-# - The script has to be executed within the `Resources/translations` directory.
-# 	Executing the script with no flags involes the help.
+# - The script has to be executed within the `Resources/translation` directory.
+# 	Executing the script with no flags invokes the help.
 # 	$ ./update_translation.sh
 #
 # NOTE: WORKFLOW TRANSLATOR (LOCAL)
@@ -40,7 +40,7 @@
 # - Execute the script passing the '-U' flag
 # 	$ ./update_translation.sh -U
 # - Upload the updated file to Crowdin and wait for translators do their thing ;-)
-# - Once done, download the translated files, copy them to `Resources/translations`
+# - Once done, download the translated files, copy them to `Resources/translation`
 # 	and release all the files to update the changes
 # 	$ ./update_translation.sh -R
 #
@@ -67,33 +67,37 @@ is_locale_supported() {
 	return 1
 }
 
+get_strings() {
+	# Get translatable strings from Python file(s)
+	# pylupdate5 -verbose ../../InitGui.py -ts _${WB}.ts
+	pylupdate6 ../../InitGui.py -ts _${WB}.ts
+}
+
 update_locale() {
 	local locale="$1"
 	local u=${locale:+_} # Conditional underscore
-
-	# Get translatable strings from Python file(s)
-	# pylupdate5 -verbose ../../InitGui.py -ts pyfiles.ts
-	pylupdate6 ../../*.py -ts _${WB}.ts
 
 	# NOTE: Execute the right commands depending on:
 	# - if the file already exists and
 	# - if it's a locale file or the main, agnostic one
 	if [ ! -f "${WB}${u}${locale}.ts" ]; then
+		echo -e "\033[1;34m\n\t<<< Creating '${WB}${u}${locale}.ts' file >>>\n\033[m"
+		get_strings
 		if [ "$locale" == "" ]; then
 			lconvert -i _${WB}.ts -o ${WB}.ts
 		else
-			lconvert -source-language en -target-language $locale \
+			lconvert -source-language en -target-language "${locale//-/_}" \
 				-i _${WB}.ts -o ${WB}_${locale}.ts
 		fi
-		echo -e "\033[1;34m\n\t<<< '${WB}${u}${locale}.ts' file created >>>\n\033[m"
 	else
+		echo -e "\033[1;34m\n\t<<< Updating '${WB}${u}${locale}.ts' file >>>\n\033[m"
+		get_strings
 		if [ "$locale" == "" ]; then
 			lconvert -i _${WB}.ts ${WB}.ts -o ${WB}.ts
 		else
-			lconvert -source-language en -target-language $locale \
+			lconvert -source-language en -target-language "${locale//-/_}" \
 				-i _${WB}.ts ${WB}_${locale}.ts -o ${WB}_${locale}.ts
 		fi
-		echo -e "\033[1;34m\n\t<<< '${WB}${u}${locale}.ts' file updated >>>\n\033[m"
 	fi
 
 	# Delete files that are no longer needed
