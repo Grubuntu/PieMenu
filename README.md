@@ -11,6 +11,7 @@ Quick customizable menus for FreeCAD.
 When you associate a workbench with a menu, it will be opened when you press the global shortcut.
 
 In the example below, the Draft workbench is associated with the "Snapping Tools" PieMenu: when the "Draft" workbench is active, the "Snapping Tools" PieMenu will open when the global shortcut key is pressed.
+> Open from menu Accessories->Pie menu settings.
 ![Capture d’écran (136)](https://github.com/Grubuntu/PieMenu/assets/56045316/dee7db17-bbb0-42ae-aaa4-c79fc8e1c773)
 
 In this way, you can associate a specific PieMenu for each Workbench. This is very useful, for example, for the Sketcher workbench, where you can associate a PieMenu with the tools specific to the Sketcher : 
