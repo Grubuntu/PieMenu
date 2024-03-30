@@ -41,7 +41,6 @@ QToolButton#pieMenuShortcutTool {
     background-color: transparent;
     border-radius : 5px;
     border: 1px solid transparent;
-    font-size: 12px;
 }
 
 /* ====================================================== */
