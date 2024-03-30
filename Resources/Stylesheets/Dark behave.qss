@@ -45,14 +45,13 @@ QToolButton#pieMenuShortcutTool {
     border: 1px solid #2c333d;
     border-radius : 4px;
     color: #557bb6; 
-    /* font-size: 12px; */
 }
 
-QToolButton#pieMenuShortcut:hover {
+QToolButton#pieMenuShortcutTool:hover {
     background-color: #2c333d;
 }
 
-QToolButton#pieMenuShortcut:disabled {
+QToolButton#pieMenuShortcutTool:disabled {
     color: rgba(255, 255, 255, 0.05);
 }
 

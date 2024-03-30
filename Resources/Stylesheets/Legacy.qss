@@ -40,18 +40,16 @@ QToolButton#pieMenu:checked:hover {
 QToolButton#pieMenuShortcutTool {
     background-color: rgba(211, 211, 211, 0.2);
     border: 1px solid darkGray;
-    border-radius : 10px;
+    border-radius : 6px;
     color: rgba(64, 64, 64, 1);
-    font-size: 12px;
-    
 }
 
-QToolButton#pieMenuShortcut:hover {
+QToolButton#pieMenuShortcutTool:hover {
     background-color: rgba(173, 216, 230, 0.6);
     
 }
 
-QToolButton#pieMenuShortcut:disabled {
+QToolButton#pieMenuShortcutTool:disabled {
     color: darkGray;
 }
 
