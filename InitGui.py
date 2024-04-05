@@ -74,7 +74,6 @@ def pieMenuStart():
     global listCommands
     global listShortcutCode
     global flagShortcutOverride
-    # global maxNumberOfTools
 
     shortcutKey = ""
     globalShortcutKey = "TAB"
@@ -85,7 +84,6 @@ def pieMenuStart():
     listCommands = []
     listShortcutCode = []
     flagShortcutOverride = False
-    # maxNumberOfTools = 30
 
     paramPath = "User parameter:BaseApp/PieMenu"
     paramIndexPath = "User parameter:BaseApp/PieMenu/Index"
@@ -260,7 +258,7 @@ def pieMenuStart():
                 pass
 
 
-    class PieMenuSeparator:
+    class PieMenuSeparator():
         """Class PieMenuSeparator"""
         def __init__(self):
             pass
@@ -1127,7 +1125,7 @@ def pieMenuStart():
                                 layoutOptions.addLayout(layoutThroughAll)
 
                         elif (str(fonctionActive) == '<PartDesign::Revolution>') or (str(fonctionActive) == '<PartDesign::Groove>'):
-                            unit = " °" # degres
+                            FreeCADGui.ExpressionBinding(self.double_spinbox).bind(g.Object,"Angle")
                             quantity = Units.Quantity(Units.Quantity(g.Object.Angle).getUserPreferred()[0])
 
                             self.checkbox_midPlane = checkbox_layout(self.checkboxSymToPlane, "Midplane", True)
@@ -3050,22 +3048,24 @@ def pieMenuStart():
         """ Handle separator for PieMenus """
         # we must create a custom toolbar "PieMenuTB" to 'activate' the command 'Std_PieMenuSeparator' otherwise the separators are not correctly handled
         globaltoolbar = FreeCAD.ParamGet('User parameter:BaseApp/Workbench/Global/Toolbar/Custom_PieMenu')
-        piemenuSeparator = globaltoolbar.GetString('Name')
-        if piemenuSeparator == "PieMenuTB":
+        pieMenuTB = globaltoolbar.GetString('Name')
+        if pieMenuTB == "PieMenuTB":
             pass
         else:
             globaltoolbar.SetString('Name','PieMenuTB')
-            globaltoolbar.SetString('Std_PieMenuSeparator','FreeCAD')
-            globaltoolbar.SetString('Value','1')
-            App.saveParameter()
-            wb = Gui.activeWorkbench()
-            wb.reloadActive()
-
             # we hide the custom toolbar
             mw = FreeCADGui.getMainWindow()
             for i in mw.findChildren(QtGui.QToolBar):
                 if i.windowTitle() == 'PieMenuTB':
                     i.setVisible(False)
+        
+        globaltoolbar.SetString('Std_PieMenuSeparator','FreeCAD')
+        App.saveParameter()
+        try:
+            wb = Gui.activeWorkbench()
+            wb.reloadActive()
+        except:
+            None
 
         text = cBox.currentText()
 
