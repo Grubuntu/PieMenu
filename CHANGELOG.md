@@ -2,12 +2,19 @@
 
 ### 1.5
 - Added expressions in fast spinbox
-- Added DEL, SUPPR, UP and DOWN key for delete and move Tools il toollist (PrefeAdderences)
+- Added DEL, SUPPR, UP and DOWN key for delete and move Tools il toollist (Settins > Tools tab)
 - Added documentation link to wiki
 - Added Icon PieMenu to Preference dialog window
 - Added toogle behavior for individuals shortcuts (Limitation : works only for -ONE KEY- shortcuts or -'Modifier' + KEY- shortcuts (not for multikeysequence shortcuts eg. -V,G-)
-- Added tools shortcuts keys (for each shape !), update stylesheet according to this new feature
-- Limits the maximum number of tools in PieMenu to 30 to avoid problems with tools shortcuts
+- Added tools shortcuts keys ('0 to 9' and 'A to Z', except 'X' which bug), update stylesheet according to this new feature
+- Enable the tools shortcuts will add a column with shortcuts in toollist
+- Added show/hide tools's shortcuts : + spinbox for selected font size
+- Added buttons to clear shortcut and globalshortcut
+- Added checkbox to set the defaut PieMenu in Preferences
+- Highlighting the default PieMenubox by an arrow in front in PieMenu's list and in QuickMenu
+- Added validation with 'Enter' and 'Return' keys, when buttons "Validate" and "Cancel" are visible.(as a side-effect, pressing the Enter and return keys also hides the PieMenu)
+- Matches the style of the Preferences window with the style of FreeCAD Preferences: Groupboxes, Checkboxes left aligned, Spinbox stretched etc
+- Rearranging code
 
 ### 1.4
 - Added workbench associated setting
