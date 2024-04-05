@@ -1,4 +1,23 @@
 # CHANGELOG
+
+### 1.5
+
+- Added toggle show/hide PieMenu behavior also for individuals shortcuts: need to change the title slightly
+- Added validation with 'Enter' and 'Return' keys, when buttons "Validate" and "Cancel" are visible.(as a side-effect, pressing the Enter and return keys also hides the PieMenu)
+- Added tools shortcuts ('0 to 9' and 'A to Z', except 'X' which bug)
+- Enable the tools shortcuts will add a column with shortcuts in toollist
+- Added show/hide tools's shortcuts : + spinbox for selected font siz
+- Added buttons to clear shortcut and globalshortcut
+- Highlighting the default PieMenubox by an arrow in front in PieMenu's list and in QuickMenu
+- Added checkbox to set the defaut PieMenu in Preferences
+- Matches the style of the Preferences window with the style of FreeCAD Preferences: Groupboxes, Checkboxes left aligned, Spinbox stretched etc
+- Added Icon PieMenu to Preference dialog window
+- DEL/SUPPR key can delete commands in tools list, UP/DOWN key can move commands : (Settins > Tools tab)
+- Added documentation link
+- Added expressions in spinbox
+- Updating styles according to the new feature 'Tools shortcut': QLabel#pieMenuShortcut
+- Rearranging code
+
 ### 1.4.2
 - Fix problem: when adding WB that doesn't exist in other FreeCAD version, example: AssemblyWB exists in 0.22 but not in 0.21.
   
