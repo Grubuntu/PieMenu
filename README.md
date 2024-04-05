@@ -3,40 +3,36 @@ PieMenu widget for FreeCAD
 
 Quick customizable menus for FreeCAD.
 
-## Attention ! Version 1.4 : IMPORTANT NEW FEATURE !
-### With this new version, you need to link the Sketcher workbench to your "Sketcher" PieMenu to keep your sketching PieMenu opening automatically, see below.
+###  Version 1.5 new feature : Tools shortcuts keys
+Quickly launch a tool with one key shortcut when a PieMenu is displayed
 
-### We can associate a workbench for each PieMenu :
+![Capture d’écran (173)](https://github.com/Grubuntu/PieMenu/assets/56045316/88752663-491a-47f4-9a5b-526b90606f86)
 
-When you associate a workbench with a menu, it will be opened when you press the global shortcut.
+You can enable them in the settings (from menu Accessories->Pie menu settings):
+Enable and display them (or only enable them without displaying). You can set the font size.
+
+![Capture d’écran (175)](https://github.com/Grubuntu/PieMenu/assets/56045316/fe63f92f-84ea-49c7-8c2c-f805434f8614)
+
+
+## Since version 1.4, you need to link the Sketcher workbench to your "Sketcher" PieMenu to keep your sketching PieMenu opening automatically, see below.
+We can associate a workbench for each PieMenu : When you associate a workbench with a menu, it will be opened when you press the global shortcut.
 
 In the example below, the Draft workbench is associated with the "Snapping Tools" PieMenu: when the "Draft" workbench is active, the "Snapping Tools" PieMenu will open when the global shortcut key is pressed.
-![Capture d’écran (136)](https://github.com/Grubuntu/PieMenu/assets/56045316/dee7db17-bbb0-42ae-aaa4-c79fc8e1c773)
+> Open from menu Accessories->Pie menu settings.
+
+![Capture d’écran (178)](https://github.com/Grubuntu/PieMenu/assets/56045316/b24a458e-2e67-4758-906a-238ff8ce08d7)
+
 
 In this way, you can associate a specific PieMenu for each Workbench. This is very useful, for example, for the Sketcher workbench, where you can associate a PieMenu with the tools specific to the Sketcher : 
 
-![Capture d’écran (135)](https://github.com/Grubuntu/PieMenu/assets/56045316/7f6d2367-007d-4893-a792-4337efd9ff9a)
+![Capture d’écran (179)](https://github.com/Grubuntu/PieMenu/assets/56045316/52a0a995-5161-4bb6-8da7-4bd47972f20a)
 
-
-### We can now set the trigger mode (Hover/Press) individually for each PieMenu.
-
-![Capture d’écran (134)](https://github.com/Grubuntu/PieMenu/assets/56045316/82652799-db00-4f10-9f9c-6c370599d51f)
-
-### Toggle mode for global shortcut :
-Pressing the global shortcut can toggle the PieMenu display.
-
-![Capture d’écran (137)](https://github.com/Grubuntu/PieMenu/assets/56045316/1f2254ae-c2df-45af-8b95-32f2acf4470b)
 
 
 
 # Presentation: PieMenu is a customizable menu, providing quick access to FreeCAD tools via keyboard shortcuts. You can choose from multiple shapes, themes, customize tools and shortcuts, and much more... 
 
 Warning: PieMenu is in development, bugs may still exist. It is necessary to backup your configuration files before any PieMenu installation or update to be able to restore them in case of issues. 
-
-New ! The fast spinbox menu now includes units and some capabilities for making calculations.
-Directly modify the length/size/angle value using the spinbox during the editing of Pad, Pocket, Chamfer, Fillet, Thickness, Groove, or Revolution.
-
-![Capture d’écran (98)](https://github.com/Grubuntu/PieMenu/assets/56045316/9a24e5bb-e619-4ed3-b3ce-4977c91cedf3)
 
 You can choose between many shapes :
 
@@ -58,9 +54,7 @@ Choose between many themes :
 
 
 Create custom PieMenus by adding desired commands through preferences :
-Select size, shape, tools, individual shortcut for each PieMenu and/or a global shortcut to open a default PieMenu (remove shortcuts by assigning an empty shortcut).
-
-![Capture d’écran (101)](https://github.com/Grubuntu/PieMenu/assets/56045316/bb576592-817d-4f20-aaae-230be850be35)
+Select size, shape, tools, individual shortcut for each PieMenu and/or a global shortcut to open a default PieMenu.
 
 
 ### Installation
@@ -134,11 +128,12 @@ To create or modify other PieMenus, simply go to the "Preferences" (*QuickMenu* 
 
 The *QuickMenu* is the contextual menu displayed when clicking on the integrated button in the PieMenu (option to activate if needed in the 'Preferences'). 
 
-![image](https://github.com/Grubuntu/PieMenu/assets/56045316/a2edd432-33c8-419f-b309-ee8bbb33f7aa)
+![Capture d’écran (180) quickmenu](https://github.com/Grubuntu/PieMenu/assets/56045316/5008258c-eb9f-4fb7-9a5c-ee55873173dc)
+
 
 The QuickMenu allows for quickly adjusting certain settings. If the QuickMenu is not visible, it must be enabled in the "Preferences" by activating the "Show QuickMenu" option.
 
-![Capture d’écran (138)](https://github.com/Grubuntu/PieMenu/assets/56045316/87613479-377d-4d47-b401-d13c45df3dd8)
+![Capture d’écran (177)](https://github.com/Grubuntu/PieMenu/assets/56045316/fef43f63-8ab5-4d91-9b64-32c4d2bf47e0)
 
 
 ### 1) PieMenu Tab:
@@ -188,8 +183,9 @@ You can enable/disable the context mode in the global preferences or via the Qui
 
 Important note: The "Context" mode takes priority over all other modes. Therefore, when the selection conditions are met, this PieMenu will be activated by the global shortcut even if another PieMenu is set as default via the QuickMenu  or via the association of a Workbench. Therefore, it is important to activate the context mode judiciously. 
 
-![image](https://github.com/Grubuntu/PieMenu/assets/56045316/c5c1c77d-d4de-4369-a6ec-9ed45cfc1371)
-![Capture d’écran (139)](https://github.com/Grubuntu/PieMenu/assets/56045316/6d07936d-3ebd-4bdf-a4fa-3740bb9ba3e1)
+![Capture d’écran (180)](https://github.com/Grubuntu/PieMenu/assets/56045316/b999ee58-b270-4e20-8195-953b52e69014)
+
+![Capture d’écran (177)](https://github.com/Grubuntu/PieMenu/assets/56045316/cdaa6f6a-e3f8-465d-ae7b-f2d8d3c821ac)
 
 
 
@@ -206,9 +202,8 @@ Here, you can:
     • Assign the global shortcut.
 
     • Enable or disable the toggle mode for the global shortcut.
-
-![Capture d’écran (138)](https://github.com/Grubuntu/PieMenu/assets/56045316/7f1bfe73-feef-41ce-a1d7-0a85707cb189)
-
+    
+![Capture d’écran (177)](https://github.com/Grubuntu/PieMenu/assets/56045316/19149d70-e511-414f-a589-e3edf4c63a35)
 
 ![Capture d’écran (113)](https://github.com/Grubuntu/PieMenu/assets/56045316/8a06e5c2-c67b-4d89-aea3-55f22d472195)
 
@@ -235,7 +230,11 @@ This shortcut bar will now be activated by default by the global shortcut. This 
 You can define a default PieMenu from the existing PieMenus:
 Open the QuickMenu
 
-![image](https://github.com/Grubuntu/PieMenu/assets/56045316/a8a25206-b775-42cc-90a6-f50e8977e48c)
+![Capture d’écran (180) defaut](https://github.com/Grubuntu/PieMenu/assets/56045316/d4c15cc3-7729-47e7-bb44-a3bc3b4631d2)
+
+Or in globals settings
+
+![Capture d’écran (176)](https://github.com/Grubuntu/PieMenu/assets/56045316/13144eb9-5b2d-4561-9414-3460b342af2f)
 
 Click on "PieMenu" to expand the menu and select the desired PieMenu: this will now be activated by default by the global shortcut (a checkmark is visible in front of the default PieMenu, if no checkmark is visible, it means that a ToolBar is currently active by default.
 
@@ -282,7 +281,17 @@ Otherwise, the default PieMenu (checked in the QuickMenu) will be displayed.
 
 The quick menu spinbox is displayed when pressing the global shortcut during the editing of certain features in the PartDesign workbench: Pad, Pocket, Chamfer, Fillet, Revolution, Groove.
 
-![image](https://github.com/Grubuntu/PieMenu/assets/56045316/742581eb-5884-4a31-a8c4-88945bb2fca3)
+![Capture d’écran (181)](https://github.com/Grubuntu/PieMenu/assets/56045316/9f19cae0-94fb-4998-a311-420ee0539ca1)
 
 It allows quick access to modifying the main value of the function (Length, Depth, Angle, Size, etc.) as well as quick access to certain parameters of the Pad and Pocket functions: 'Through all', 'Symmetric to plane', and 'Reversed'.
-It is possible to perform certain calculations in the input box and quickly validate either by pressing the 'Enter' or 'Return' key, or by clicking the 'Validation' button.
+The fast spinbox menu includes units and some capabilities for making calculations and expressions. You can quickly validate either by pressing the 'Enter' or 'Return' key, or by clicking the 'Validation' button.
+
+## Other settings :
+
+We can set the trigger mode (Hover/Press) individually for each PieMenu.
+
+![Capture d’écran (179)](https://github.com/Grubuntu/PieMenu/assets/56045316/c22fc499-778a-4418-916a-0868da69ddb8)
+
+Toggle mode for global shortcut : Pressing the global shortcut can toggle the PieMenu display.
+
+![Capture d’écran (177)](https://github.com/Grubuntu/PieMenu/assets/56045316/34b6f579-074c-49e3-bd43-684a35ac9147)
