@@ -33,6 +33,15 @@ QToolButton#pieMenu:checked:hover {
     background-color: rgba(127, 127, 127, 0.2);
 }
 
+/* ====================================================== */
+/*                 Shortcuts on PieMenu                   */
+/* ====================================================== */
+/* It is the shortcut label near tools in PieMenu */
+QToolButton#pieMenuShortcutTool {
+    background-color: transparent;
+    border-radius : 5px;
+    border: 1px solid transparent;
+}
 
 /* ====================================================== */
 /*                 Close pie button style                 */
