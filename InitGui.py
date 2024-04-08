@@ -49,7 +49,7 @@ def pieMenuStart():
     from PySide2.QtCore import Qt
     from TranslateUtils import translate
     from FreeCAD import Units
-    
+
     # global variables
     path = locator.path()
     respath = path + "/Resources/icons/"
@@ -74,6 +74,7 @@ def pieMenuStart():
     global listCommands
     global listShortcutCode
     global flagShortcutOverride
+
 
     shortcutKey = ""
     globalShortcutKey = "TAB"
@@ -472,7 +473,9 @@ def pieMenuStart():
 
             if event.type() == QtCore.QEvent.KeyRelease:
                 ##""" Handle tool shortcut in PieMenu """
-                if self.menu.isVisible() or flagShortcutOverride:
+                
+                if flagShortcutOverride :
+                    print("override:", flagShortcutOverride)
                     key = event.key()
                     try:
                         # if fast spinbox is open, we do nothing with shortcuts
@@ -493,8 +496,46 @@ def pieMenuStart():
                                 if i == charKey:
                                     # trigger tool shortcut action 
                                     listCommands[j].trigger()
-
+                                    flagShortcutOverride = False
                                     module = None
+                                    event.accept()
+                                    try:
+                                        docName = App.ActiveDocument.Name
+                                        g = Gui.ActiveDocument.getInEdit()
+                                        module = g.Module
+
+                                        if (module is not None and module != 'SketcherGui'):
+                                            PieMenuInstance.showAtMouse()
+
+                                    except:
+                                        pass
+                                j+=1
+                            return True
+                                
+                if self.menu.isVisible() and flagShortcutOverride:
+                    print("visible:", self.menu.isVisible())
+                    key = event.key()
+                    try:
+                        # if fast spinbox is open, we do nothing with shortcuts
+                        if self.double_spinbox.isVisible():
+                            pass
+                    except:
+                        # spinbox not show
+                        try:
+                            charKey = chr(key)
+                        except:
+                            charKey = ''
+
+                        if charKey in listShortcutCode:
+                            self.menu.hide()
+                            event.accept()
+                            j = 0
+                            for i in listShortcutCode:
+                                if i == charKey:
+                                    # trigger tool shortcut action 
+                                    listCommands[j].trigger()
+                                    module = None
+                                    event.accept()
                                     try:
                                         docName = App.ActiveDocument.Name
                                         g = Gui.ActiveDocument.getInEdit()
@@ -2750,13 +2791,11 @@ def pieMenuStart():
             spinShortcutLabelSize.setEnabled(True)
             buttonListWidget.setColumnHidden(0, False)
             checkboxDisplayShortcut.setEnabled(True)
-            buttonListWidget.setColumnHidden(0, False)
 
         else:
             spinShortcutLabelSize.setEnabled(False)
             buttonListWidget.setColumnHidden(0, True)
             checkboxDisplayShortcut.setEnabled(False)
-            buttonListWidget.setColumnHidden(0, True)
 
         indexList = getIndexList()
         for i in indexList:
