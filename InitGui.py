@@ -475,7 +475,6 @@ def pieMenuStart():
                 ##""" Handle tool shortcut in PieMenu """
                 
                 if flagShortcutOverride :
-                    print("override:", flagShortcutOverride)
                     key = event.key()
                     try:
                         # if fast spinbox is open, we do nothing with shortcuts
@@ -513,7 +512,6 @@ def pieMenuStart():
                             return True
                                 
                 if self.menu.isVisible() and flagShortcutOverride:
-                    print("visible:", self.menu.isVisible())
                     key = event.key()
                     try:
                         # if fast spinbox is open, we do nothing with shortcuts
