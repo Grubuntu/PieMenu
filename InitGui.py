@@ -28,7 +28,7 @@
 
 
 global PIE_MENU_VERSION
-PIE_MENU_VERSION = "1.5"
+PIE_MENU_VERSION = "1.6"
 
 def pieMenuStart():
     """Main function that starts the Pie Menu."""
@@ -44,7 +44,7 @@ def pieMenuStart():
     from PySide2.QtGui import QKeyEvent, QFontMetrics
     from PySide.QtWidgets import QApplication, QLineEdit, QWidget, QAction, \
         QPushButton, QLabel, QVBoxLayout, QHBoxLayout, QCheckBox, \
-        QMessageBox, QShortcut, QListWidgetItem, QListWidget, QComboBox, QDialog, QGroupBox
+        QMessageBox, QShortcut, QListWidgetItem, QListWidget, QComboBox, QDialog, QGroupBox, QFileDialog
     from PySide2.QtGui import QKeySequence
     from PySide2.QtCore import Qt
     from TranslateUtils import translate
@@ -74,7 +74,6 @@ def pieMenuStart():
     global listCommands
     global listShortcutCode
     global flagShortcutOverride
-
 
     shortcutKey = ""
     globalShortcutKey = "TAB"
@@ -125,7 +124,6 @@ def pieMenuStart():
         ">": operator.gt,
         ">=": operator.ge,
         }
-
     #### Classes definition ####
     class SelObserver:
         def addSelection(self, doc, obj, sub, pnt):
@@ -275,6 +273,37 @@ def pieMenuStart():
         def IsActive(self):
             """Return True when the command should be active or False when it should be disabled (greyed)."""
             return False
+
+
+    class NestedPieMenu():
+        """Class nested PieMenu """
+        def __init__(self, keyValue, iconPath=None):
+            self.keyValue = keyValue
+            if iconPath == None:
+                self.iconPath = getParameterGroup(self.keyValue, "String", "IconPath")
+                if self.iconPath == "":
+                    # default icon when noone
+                    self.iconPath = iconPieMenuLogo
+                else :
+                    self.iconPath = getParameterGroup(self.keyValue, "String", "IconPath")
+            else:
+                self.iconPath = iconPath
+                
+        def GetResources(self):
+            """Return a dictionary with data that will be used by the button or menu item."""
+            return {'Pixmap' : self.iconPath, 'MenuText':'PieMenu '+ self.keyValue, 'ToolTip': 'Piemenu '+ self.keyValue}
+
+        def Activated(self):
+            """Run the following code when the command is activated (button press)."""
+            PieMenuInstance.showAtMouse(self.keyValue, notKeyTriggered=False)
+
+        def IsActive(self):
+            """Return True when the command should be active or False when it should be disabled (greyed)."""
+            return True
+
+        def setIconPath(self, icon_path):
+            """Set the icon path for the NestedPieMenu instance."""
+            self.iconPath = icon_path
 
 
     #### Class PieMenu ####
@@ -473,7 +502,6 @@ def pieMenuStart():
 
             if event.type() == QtCore.QEvent.KeyRelease:
                 ##""" Handle tool shortcut in PieMenu """
-                
                 if flagShortcutOverride :
                     key = event.key()
                     try:
@@ -1379,7 +1407,6 @@ def pieMenuStart():
 
             self.setMaximumHeight(600)
             self.move(400, 20)
-            
             self.setObjectName("PieMenuPreferences")
             self.setWindowTitle("PieMenu " + PIE_MENU_VERSION)
             self.closeEvent = self.customCloseEvent
@@ -1591,6 +1618,43 @@ def pieMenuStart():
         paramGet.SetBool("GlobalKeyToggle", globalKeyToggle)
         flagVisi = False
         actionKey.setEnabled(True)
+
+    def reloadWorkbench():
+        try:
+            wb = Gui.activeWorkbench()
+            # needed to change WB and reload it : do only Gui.reloadWorkbench() is not enough
+            Gui.activateWorkbench('PartDesignWorkbench')
+            Gui.activateWorkbench('PartWorkbench')
+            Gui.activateWorkbench(wb.name())
+            Gui.updateGui()
+        except:
+            pass
+
+
+    def updateNestedPieMenus():
+        indexList = getIndexList()
+        for i in indexList:
+            a = str(i)
+            try:
+                pie = paramIndexGet.GetString(a).decode("UTF-8")
+            except AttributeError:
+                pie = paramIndexGet.GetString(a)
+
+            iconPath = getParameterGroup(pie, "String", "IconPath")
+            if iconPath == "":
+                iconPath = iconPieMenuLogo
+
+            FreeCADGui.addCommand('Std_PieMenu_' + pie, NestedPieMenu(pie, iconPath))
+
+            globaltoolbar = FreeCAD.ParamGet('User parameter:BaseApp/Workbench/Global/Toolbar/Custom_PieMenu')
+                
+            pieMenuTB = globaltoolbar.GetString('Name')
+            if pieMenuTB == 'PieMenuTB':
+                pass
+            else:
+                globaltoolbar.SetString('Name','PieMenuTB')
+
+            globaltoolbar.SetString('Std_PieMenu_' + pie,'FreeCAD')
 
 
     def remObsoleteParams():
@@ -2084,7 +2148,6 @@ def pieMenuStart():
                 pass
         Gui.activateWorkbench(lastWorkbench.__class__.__name__)
         actionMapAll = getGuiActionMapAll()
-
         buttonListWidget.blockSignals(True)
         buttonListWidget.clearContents()
         buttonListWidget.setRowCount(0)
@@ -2095,11 +2158,10 @@ def pieMenuStart():
 
                 rowPosition = buttonListWidget.rowCount()
                 buttonListWidget.insertRow(rowPosition)
-                
+
                 actionItem = QtWidgets.QTableWidgetItem(actionMapAll[i].text().replace("&", ""))
                 actionItem.setData(QtCore.Qt.UserRole, i)
                 actionItem.setIcon(actionMapAll[i].icon())
-                
                 shortcutItem = QtWidgets.QTableWidgetItem()
                 # prevent user to select shortcut in list
                 shortcutItem.setFlags(QtCore.Qt.ItemIsEnabled)
@@ -2226,7 +2288,6 @@ def pieMenuStart():
         globalShortcutLineEdit.setText(globalShortcutKey)
 
 
-
     def infoPopup():
         msg = """
             <h2>Pie menu</h2>
@@ -2296,7 +2357,6 @@ def pieMenuStart():
 
         contextPieMenu = setCheckContext()
         settingContextGroup.setChecked(contextPieMenu)
-
         displayShortcut = getParameterGroup(cBox.currentText(), "Bool", "DisplayShorcut")
         checkboxDisplayShortcut.setChecked(displayShortcut)
 
@@ -2318,6 +2378,12 @@ def pieMenuStart():
 
         spinHoverDelay.setValue(getParameterGroup(cBox.currentText(), "Int", "HoverDelay"))
         spinShortcutLabelSize.setValue(getParameterGroup(cBox.currentText(), "Int", "ShortcutLabelSize"))
+        
+        iconPath = getParameterGroup(cBox.currentText(), "String", "IconPath")
+        if iconPath != "":
+            buttonIconPieMenu.setIcon(QtGui.QIcon(iconPath))
+        else:
+            buttonIconPieMenu.setIcon(QtGui.QIcon(iconPieMenuLogo))
 
 
     def inputTextDialog(title):
@@ -2389,6 +2455,10 @@ def pieMenuStart():
             if index != -1:
                 cBox.setCurrentIndex(index)
 
+        ###########################
+            updateNestedPieMenus()
+            reloadWorkbench()
+        ################################
         return paramIndexGet.GetGroup(indexNumber)
 
 
@@ -2430,6 +2500,10 @@ def pieMenuStart():
 
                 paramIndexGet.RemGroup(a)
                 paramIndexGet.RemString(a)
+
+                globaltoolbar = FreeCAD.ParamGet('User parameter:BaseApp/Workbench/Global/Toolbar/Custom_PieMenu')
+                globaltoolbar.RemString('Std_PieMenu_' + pie)
+
                 # special case treatment
                 if pie == currentPie:
                     currentPie = "View"
@@ -2478,6 +2552,16 @@ def pieMenuStart():
                         paramGet.SetString("CurrentPie", text)
                 else:
                     pass
+
+        globaltoolbar = FreeCAD.ParamGet('User parameter:BaseApp/Workbench/Global/Toolbar/Custom_PieMenu')
+        globaltoolbar.RemString('Std_PieMenu_' + pie)
+        FreeCADGui.addCommand('Std_PieMenu_' + text, NestedPieMenu(text))
+        globaltoolbar.SetString('Std_PieMenu_' + text, 'FreeCAD')
+        # App.saveParameter()
+
+        reloadWorkbench()
+
+        toolList()
         cBoxUpdate()
 
 
@@ -2879,6 +2963,34 @@ def pieMenuStart():
             paramGet.SetBool("ShowQuickMenu", False)
 
 
+    def onButtonIconPieMenu():
+        """ Set path for icon's PieMenu """
+        file_dialog = QFileDialog()
+        # TO DO : translation
+        # file_path, _ = file_dialog.getOpenFileName(None, "Choisir une icône", "", "Fichiers SVG (*.svg);;Fichiers ICO (*.ico);;Tous les fichiers (*.*)")
+        file_path, _ = file_dialog.getOpenFileName(None, "Choisir une icône", "", "Fichiers SVG (*.svg);;Fichiers ICO (*.ico);;Tous les fichiers (*.*)")
+        
+        if file_path:
+            indexList = getIndexList()
+            for i in indexList:
+                a = str(i)
+                try:
+                    pieName = paramIndexGet.GetString(a).decode("UTF-8")
+                except AttributeError:
+                    pieName = paramIndexGet.GetString(a)
+                if pieName == cBox.currentText():
+                    param = paramIndexGet.GetGroup(str(i))
+                    param.SetString("IconPath", file_path)
+                    buttonIconPieMenu.setIcon(QtGui.QIcon(file_path))
+
+            globaltoolbar = FreeCAD.ParamGet('User parameter:BaseApp/Workbench/Global/Toolbar/Custom_PieMenu')
+            globaltoolbar.SetString('Std_PieMenu_' + pieName, 'FreeCAD')
+
+            updateNestedPieMenus()
+            reloadWorkbench()
+            toolList()
+
+
     def onContext(state):
         if state == Qt.Checked:
             paramGet.SetBool("EnableContext", True)
@@ -2930,7 +3042,6 @@ def pieMenuStart():
         text = cBox.currentText()
         items = []
 
-        # if ((buttonListWidget.rowCount()) < maxNumberOfTools):
         for index in range(toolListWidget.count()):
             items.append(toolListWidget.item(index))
 
@@ -3085,24 +3196,23 @@ def pieMenuStart():
         """ Handle separator for PieMenus """
         # we must create a custom toolbar "PieMenuTB" to 'activate' the command 'Std_PieMenuSeparator' otherwise the separators are not correctly handled
         globaltoolbar = FreeCAD.ParamGet('User parameter:BaseApp/Workbench/Global/Toolbar/Custom_PieMenu')
+
         pieMenuTB = globaltoolbar.GetString('Name')
         if pieMenuTB == "PieMenuTB":
             pass
         else:
             globaltoolbar.SetString('Name','PieMenuTB')
-            # we hide the custom toolbar
-            mw = FreeCADGui.getMainWindow()
-            for i in mw.findChildren(QtGui.QToolBar):
-                if i.windowTitle() == 'PieMenuTB':
-                    i.setVisible(False)
-        
+            App.saveParameter()
         globaltoolbar.SetString('Std_PieMenuSeparator','FreeCAD')
-        App.saveParameter()
-        try:
-            wb = Gui.activeWorkbench()
-            wb.reloadActive()
-        except:
-            None
+        # globaltoolbar.SetString('Value','1')
+
+        reloadWorkbench()
+
+        # we hide the custom toolbar
+        mw = FreeCADGui.getMainWindow()
+        for i in mw.findChildren(QtGui.QToolBar):
+            if i.windowTitle() == 'PieMenuTB':
+                i.setVisible(False)
 
         text = cBox.currentText()
 
@@ -3165,7 +3275,6 @@ def pieMenuStart():
             toolList()
             if currentIndex != 0:
                 buttonListWidget.setCurrentCell(currentIndex - 1, 1)
-
 
 
     def comboBox(TopoType):
@@ -3490,7 +3599,7 @@ def pieMenuStart():
         paramGet.SetBool("ShowQuickMenu", True)
         paramGet.SetBool("EnableContext", False)
         paramGet.SetBool("GlobalKeyToggle", True)
-        App.saveParameter() 
+        App.saveParameter()
 
 
     ### Begin QuickMenu  Def ###
@@ -3733,8 +3842,8 @@ def pieMenuStart():
         menu.addAction(prefButtonWidgetAction)
 
         return button
-    ### END QuickMenu   Def ###getTheme
 
+    ### END QuickMenu   Def ###
 
     def onControl():
         """Initializes the preferences dialog."""
@@ -3773,6 +3882,7 @@ def pieMenuStart():
         pieMenuTab.setLayout(pieMenuTabLayout)
 
         layoutAddRemove = QtGui.QHBoxLayout()
+        layoutAddRemove.addWidget(buttonIconPieMenu)
         layoutAddRemove.addWidget(cBox)
         layoutAddRemove.addWidget(buttonAddPieMenu)
         layoutAddRemove.addWidget(buttonRemovePieMenu)
@@ -4083,11 +4193,9 @@ def pieMenuStart():
         #### END Preferences dialog ####
 
     ####END Functions Def ####
-
     #### Main code ####
     styleCurrentTheme = getStyle()
     globalShortcutKey = paramGet.GetString("GlobalShortcutKey")
-
 
     checkboxGlobalKeyToggle = QCheckBox()
     checkboxGlobalKeyToggle.setCheckable(True)
@@ -4102,7 +4210,6 @@ def pieMenuStart():
     buttonListWidget.verticalHeader().setVisible(False)
     buttonListWidget.horizontalHeaderItem(0).setTextAlignment(QtCore.Qt.AlignCenter | QtCore.Qt.AlignVCenter)
     buttonListWidget.horizontalHeaderItem(1).setTextAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
-
     buttonListWidget.horizontalHeader().setSectionResizeMode(QtGui.QHeaderView.Interactive)
     buttonListWidget.setColumnWidth(0, 60)
     buttonListWidget.horizontalHeader().setMinimumSectionSize(60)
@@ -4133,7 +4240,6 @@ def pieMenuStart():
 
     assignShortcutButton = QtGui.QPushButton(translate("GlobalSettingsTab", "Assign"))
     assignShortcutButton.clicked.connect(lambda: updateShortcutKey(shortcutLineEdit.text()))
-    
     deleteShortcutButton = QtGui.QPushButton()
     deleteShortcutButton.setMaximumWidth(40)
     deleteShortcutButton.setIcon(QtGui.QIcon.fromTheme(iconBackspace))
@@ -4142,7 +4248,6 @@ def pieMenuStart():
     assignGlobalShortcutButton = QtGui.QPushButton(translate("PieMenuTab", \
                                                                  "Assign"))
     assignGlobalShortcutButton.clicked.connect(lambda: updateGlobalShortcutKey(globalShortcutLineEdit.text()))
-    
     deleteGlobalShortcutButton = QtGui.QPushButton()
     deleteGlobalShortcutButton.setMaximumWidth(40)
     deleteGlobalShortcutButton.setIcon(QtGui.QIcon.fromTheme(iconBackspace))
@@ -4230,6 +4335,16 @@ def pieMenuStart():
     labelShortcutSize = QtGui.QLabel(translate("PieMenuTab", "Font size:"))
     labelShortcutSize.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
 
+    labelIconPieMenu = QtGui.QLabel(translate("PieMenuTab", "Icon for this PieMenu:"))
+    labelIconPieMenu.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
+
+    ####################
+    buttonIconPieMenu = QtGui.QToolButton()
+    buttonIconPieMenu.setToolTip(translate("PieMenuTab", "Set icon to current PieMenu, FreeCAD restart needed"))
+    buttonIconPieMenu.setMinimumHeight(30)
+    buttonIconPieMenu.setMinimumWidth(30)
+    buttonIconPieMenu.clicked.connect(onButtonIconPieMenu)
+
     spinShortcutLabelSize = QtGui.QSpinBox()
     spinShortcutLabelSize.setMinimum(6)
     spinShortcutLabelSize.setMaximum(50)
@@ -4282,7 +4397,6 @@ def pieMenuStart():
     settingContextGroup = QGroupBox(translate("GlobalSettingsTab", "Context"))
     settingContextGroup.setCheckable(True)
     settingContextGroup.toggled.connect(lambda state: onCheckContext(state))
-
     checkboxDisplayShortcut = QCheckBox()
     checkboxDisplayShortcut.setCheckable(True)
     checkboxDisplayShortcut.stateChanged.connect(lambda state: onDisplayShortcut(state))
@@ -4439,6 +4553,7 @@ def pieMenuStart():
 
     # Create a fake command in FreeCAD to handle the PieMenu Separator
     FreeCADGui.addCommand('Std_PieMenuSeparator', PieMenuSeparator())
+    updateNestedPieMenus()
 
     mw = Gui.getMainWindow()
     start = True
@@ -4479,10 +4594,8 @@ def pieMenuStart():
         actionKey = QtGui.QAction(mw)
         actionKey.setText("Invoke pie menu")
         actionKey.setObjectName("PieMenuShortCut")
-
         # fix shortcut not trigger on fresh install
         globalShortcutKey = paramGet.GetString("GlobalShortcutKey")
-
         actionKey.setShortcut(QtGui.QKeySequence(globalShortcutKey))
         actionKey.triggered.connect(PieMenuInstance.showAtMouse)
         mw.addAction(actionKey)
