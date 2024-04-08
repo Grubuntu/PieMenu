@@ -1,9 +1,4 @@
 # CHANGELOG
-### 1.4.2
-- Fix problem: when adding WB that doesn't exist in other FreeCAD version, example: AssemblyWB exists in 0.22 but not in 0.21.
-  
-### 1.4.1
-- Fix bug with workbench associated
 
 ### 1.5
 - Added expressions in fast spinbox
@@ -20,6 +15,12 @@
 - Added validation with 'Enter' and 'Return' keys, when buttons "Validate" and "Cancel" are visible.(as a side-effect, pressing the Enter and return keys also hides the PieMenu)
 - Matches the style of the Preferences window with the style of FreeCAD Preferences: Groupboxes, Checkboxes left aligned, Spinbox stretched etc
 - Rearranging code
+
+### 1.4.2
+- Fix problem: when adding WB that doesn't exist in other FreeCAD version, example: AssemblyWB exists in 0.22 but not in 0.21.
+  
+### 1.4.1
+- Fix bug with workbench associated
 
 ### 1.4
 - Added workbench associated setting
