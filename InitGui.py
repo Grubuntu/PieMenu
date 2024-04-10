@@ -1669,21 +1669,24 @@ def pieMenuStart():
                 text = toolbar_desc[1]
         else:
             text = None
-                
+
         for toolbar in mw.findChildren(QtGui.QToolBar):
-            commands = []
+            barList = []
+
             for action in toolbar.findChildren(QtGui.QAction):
-
                 if not action.isSeparator() and action.text() != "":
-                    commands.append(action)
+                    barList.append(action)
 
-            for command in commands:
+            for command in barList:
                 item = QListWidgetItem()
                 item.setText(command.text())
-                item.setIcon(command.icon())
-                item.setData(QtCore.Qt.UserRole, command.objectName())
-                listToolBar.addItem(item)
                 
+                # filter for empty toolbar
+                commands = []
+                getGuiToolButtonData(command.text(), None, commands, None)
+                if len(commands) != 0:
+                    listToolBar.addItem(item)
+
         listToolBar.blockSignals(False)
         return listToolBar
 
@@ -3079,86 +3082,26 @@ def pieMenuStart():
         newPieGroup.SetString("ToolList", ".,.".join(commands))
         newPieGroup.SetString("Shape", "Pie")
         buttonList()
+        tabs.setCurrentIndex(0)
 
 
     def showListToolBar():
         """ show list of tools of an existing toolbar  """
         items = []
         commands = []
-        toolList = []
-        
+
         for index in range(listToolBar.count()):
             items.append(listToolBar.item(index))
-
             if items[index].isSelected():
                 sender = listToolBar.item(index)
-                pieList = []
-                indexList = getIndexList()
-                for i in indexList:
-                    a = str(i)
-                    pieList.append(paramIndexGet.GetString(a))
-                if sender.text().encode('UTF-8') in pieList:
-                    pass
-                elif not sender.text():
-                    pass
-                else:
-                    x = 1
-                    while x in indexList and x < 999:
-                        x = x + 1
-                    else:
-                        indexNumber = x
-                    indexList.append(indexNumber)
-                    indexNumber = str(indexNumber)
-                newPieGroup = paramIndexGet.GetGroup(indexNumber)
                 getGuiToolButtonData(sender.text(), None, commands, None)
-                toolList = commands
 
-        group = getGroup()
-        actionMapAll = getGuiActionMapAll()
-
-        workbenches = []
-        try:
-            lastWorkbench = Gui.activeWorkbench()
-        except:
-            None
-        for i in toolList:
-            if i not in actionMapAll:
-                # rule out special case: there has to be an entry
-                if i == "":
-                    pass
-                else:
-                    cmd_parts = i.split("_")
-                    if cmd_parts[0] not in workbenches:
-                        # rule out special case: unknown Std action
-                        if cmd_parts[0] == "Std":
-                            pass
-                        else:
-                            # treatment of special cases
-                            # Fem workbench
-                            if cmd_parts[0] == "FEM":
-                                cmd_parts[0] = "Fem"
-                            # Sheet Metal workbench
-                            if cmd_parts[0][:2] == "SM":
-                                cmd_parts[0] = cmd_parts[0][:2]
-                            # Assembly4 workbench
-                            if cmd_parts[0][:4] == "Asm4":
-                                cmd_parts[0] = "Assembly4"
-                            try:
-                                Gui.activateWorkbench(cmd_parts[0] + "Workbench")
-                                workbenches.append(cmd_parts[0])
-                            except:
-                                None
-                    else:
-                        pass
-            else:
-                pass
-        Gui.activateWorkbench(lastWorkbench.__class__.__name__)
-        actionMapAll = getGuiActionMapAll()
         buttonListWidget.blockSignals(True)
         buttonListWidget.clearContents()
         buttonListWidget.setRowCount(0)
 
-        for i in toolList:
+        actionMapAll = getGuiActionMapAll()
+        for i in commands:
             if i in actionMapAll:
                 rowPosition = buttonListWidget.rowCount()
                 buttonListWidget.insertRow(rowPosition)
@@ -4008,6 +3951,7 @@ def pieMenuStart():
         onShape(shape)
         buttonList()
         listToolBar = onListToolBar()
+        tabs.setCurrentIndex(0)
 
         for i in mw.findChildren(QtGui.QDialog):
             if i.objectName() == "PieMenuPreferences":
@@ -4153,23 +4097,32 @@ def pieMenuStart():
 
     #### Tab ToolBar ####
     listToolBar = QtGui.QListWidget()
+    # listToolBar.setHorizontalHeaderLabels([translate("ToolBarTab", "ToolBars")])
     listToolBar.setSortingEnabled(True)
     listToolBar.sortItems(QtCore.Qt.AscendingOrder)
     listToolBar.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
     listToolBar.itemSelectionChanged.connect(showListToolBar)
 
     buttonAddToolBar = QtGui.QToolButton()
-    buttonAddToolBar.setToolTip(translate("ToolBarTab", "Add ToolBar as PieMenu"))
+    buttonAddToolBar.setToolTip(translate("ToolBarTab", "Add selected ToolBar as PieMenu"))
     buttonAddToolBar.setIcon(QtGui.QIcon(iconAdd))
     buttonAddToolBar.setMinimumHeight(30)
     buttonAddToolBar.setMinimumWidth(30)
     buttonAddToolBar.clicked.connect(onAddToolBar)
 
+    labelAddToolBar = QLabel(translate("ToolBarTab", "Add an existing ToolBar as a new PieMenu"))
+
+    layoutAddToolBar = QtGui.QHBoxLayout()
+    layoutAddToolBar.addWidget(labelAddToolBar)
+    layoutAddToolBar.addStretch(1)
+    layoutAddToolBar.addWidget(buttonAddToolBar)
+
     toolBarTab = QtGui.QWidget()
     toolBarTabLayout = QtGui.QVBoxLayout()
     toolBarTab.setLayout(toolBarTabLayout)
+    toolBarTabLayout.addLayout(layoutAddToolBar)
     toolBarTabLayout.addWidget(listToolBar)
-    toolBarTabLayout.addWidget(buttonAddToolBar)
+
 
     #### Tab Global Settings ####
     settingsTab = QtGui.QWidget()
