@@ -1,0 +1,23 @@
+<RCC>
+  <qresource>
+    <file>icons/PieMenuAdd.svg</file>
+    <file>icons/PieMenuAddCommand.svg</file>
+    <file>icons/PieMenuAddMenu.svg</file>
+    <file>icons/PieMenuAddSeparator.svg</file>
+    <file>icons/PieMenuBackspace.svg</file>
+    <file>icons/PieMenuClose.svg</file>
+    <file>icons/PieMenuCopy.svg</file>
+    <file>icons/PieMenuDocumentation.svg</file>
+    <file>icons/PieMenuDown.svg</file>
+    <file>icons/PieMenuEditMenu.svg</file>
+    <file>icons/PieMenuInfo.svg</file>
+    <file>icons/PieMenu_Logo.svg</file>
+    <file>icons/PieMenuReload.svg</file>
+    <file>icons/PieMenuRemove.svg</file>
+    <file>icons/PieMenuRemoveCommand.svg</file>
+    <file>icons/PieMenuRename.svg</file>
+    <file>icons/PieMenuReset.svg</file>
+    <file>icons/PieMenuSeparator.svg</file>
+    <file>icons/PieMenuUp.svg</file>
+  </qresource>
+</RCC>
