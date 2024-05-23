@@ -1749,26 +1749,39 @@ def pieMenuStart():
             Gui.Selection.removeObserver(selObserver)
 
 
+
     def getGuiActionMapAll():
-        actions = {}
+        availableActions = {}
         duplicates = []
+
+        #### WBs workaround 0.22.37436
+        wbContainer = mw.findChild(QtGui.QAction, "Std_Workbench")
+        parentWbContainer = wbContainer.parent()
+        wbGroup = parentWbContainer.findChild(QtGui.QActionGroup)
+        for i in wbGroup.actions():
+            if i.objectName() != "" and i.icon():
+                availableActions[i.objectName()] = i
+            else:
+                pass
+        ############################
+
         for i in mw.findChildren(QtGui.QAction):
             if i.objectName() is not None:
                 if i.objectName() != "" and i.icon():
-                    if i.objectName() in actions:
-                        if i.objectName() not in duplicates:
-                            duplicates.append(i.objectName())
-                        else:
-                            pass
+                    if i.objectName() in availableActions:
+                        pass
                     else:
-                        actions[i.objectName()] = i
+                        availableActions[i.objectName()] = i
                 else:
                     pass
             else:
                 pass
+
+
         for d in duplicates:
-            del actions[d]
-        return actions
+            del availableActions[d]
+
+        return availableActions
 
 
     def extractWorkbench(command):
