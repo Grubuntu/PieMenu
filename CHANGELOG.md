@@ -1,5 +1,8 @@
 # CHANGELOG
 
+### 1.5.1
+- Fix problem : the workbenches were no longer available in the PieMenus due to FreeCAD 0.22Dev code changes
+  
 ### 1.5
 - Added expressions in fast spinbox
 - Added DEL, SUPPR, UP and DOWN key for delete and move Tools il toollist (Settins > Tools tab)
