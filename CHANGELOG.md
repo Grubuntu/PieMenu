@@ -1,5 +1,13 @@
 # CHANGELOG
 
+### 1.6
+
+- Added ability to add a custom icon for each PieMenu (SVG or ICO)
+- Added ability to call a PieMenu in an other PieMenu (nested PieMenu)
+- Added new Toolbars tab in Preferences setting for adding existing FreeCAD's toolbar as new PieMenu
+- Added experimental feature : long right click can open the current PieMenu
+- Added offset of 1/2 icon for outer rings for Concentric shape
+
 ### 1.5.1
 - Fix problem : the workbenches were no longer available in the PieMenus due to FreeCAD 0.22Dev code changes
   
