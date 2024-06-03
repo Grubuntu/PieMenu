@@ -327,10 +327,6 @@ def pieMenuStart():
             self.timer = QtCore.QTimer(self)
             self.timer.setSingleShot(True)
             self.timer.timeout.connect(self.show_menu)
-            
-            self.debounceTimer = QtCore.QTimer(self)
-            self.debounceTimer.setSingleShot(True)
-            self.debounceTimer.timeout.connect(self.handleDebouncedEvent)
 
             if not PieMenu.event_filter_installed:
                 app = QtGui.QGuiApplication.instance() or QtGui.QApplication([])
@@ -367,9 +363,6 @@ def pieMenuStart():
         def install_filter(self):
             app = QtGui.QGuiApplication.instance() or QtGui.QApplication([])
             app.installEventFilter(self)
-
-        def handleDebouncedEvent(self):
-            self.install_filter()
 
         def validation(self):
             docName = App.ActiveDocument.Name
