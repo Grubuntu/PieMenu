@@ -7,6 +7,7 @@
 - Added new Toolbars tab in Preferences setting for adding existing FreeCAD's toolbar as new PieMenu
 - Added experimental feature : long right click can open the current PieMenu
 - Added offset of 1/2 icon for outer rings for Concentric shape
+- Fix pyside inconsistent imports
 
 ### 1.5.1
 - Fix problem : the workbenches were no longer available in the PieMenus due to FreeCAD 0.22Dev code changes
