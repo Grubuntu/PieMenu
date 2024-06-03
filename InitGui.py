@@ -2602,6 +2602,26 @@ def pieMenuStart():
                         paramGet.SetString("CurrentPie", currentPie)
                 if pie == contextPie:
                     paramGet.RemString("ContextPie")
+                    
+                # remove nested_menu in toollist
+                for i in indexList:
+                    a = str(i)
+                    toolListe = None
+
+                    group = paramIndexGet.GetGroup(a)
+                    toolListe = group.GetString("ToolList")
+
+                    if toolListe:
+                        toolListe = toolListe.split(".,.")
+                    else:
+                        toolListe = []
+
+                    stringToFind = 'Std_PieMenu_' + pie
+
+                    if (stringToFind) in toolListe:
+                        toolListe.remove(stringToFind)
+                        toolListe = group.SetString("ToolList", ".,.".join(toolListe))
+
             else:
                 pass
 
@@ -2641,6 +2661,26 @@ def pieMenuStart():
                         paramGet.SetString("CurrentPie", text)
                 else:
                     pass
+
+                # rename nested_menu in toollist
+                for i in indexList:
+                    a = str(i)
+                    toolListe = None
+
+                    group = paramIndexGet.GetGroup(a)
+                    toolListe = group.GetString("ToolList")
+
+                    if toolListe:
+                        toolListe = toolListe.split(".,.")
+                    else:
+                        toolListe = []
+
+                    stringToFind = 'Std_PieMenu_' + pie
+
+                    if (stringToFind) in toolListe:
+                        index = toolListe.index(stringToFind)
+                        toolListe[index] = 'Std_PieMenu_' + text
+                        toolListe = group.SetString("ToolList", ".,.".join(toolListe))
 
         globaltoolbar = FreeCAD.ParamGet('User parameter:BaseApp/Workbench/Global/Toolbar/Custom_PieMenu')
         globaltoolbar.RemString('Std_PieMenu_' + pie)
