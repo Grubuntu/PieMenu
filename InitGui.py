@@ -999,7 +999,7 @@ def pieMenuStart():
                             number_of_circle = number_of_circle + 1
                             command_per_circle = command_per_circle + command_per_circle
                             angle = 2 * math.pi / command_per_circle
-                            angleStart = angleStart + angle
+                            angleStart = angleStart + angle/2
 
                     elif shape == "Star":
                         ### Star ###
