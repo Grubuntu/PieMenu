@@ -3,31 +3,25 @@ PieMenu widget for FreeCAD
 
 Quick customizable menus for FreeCAD.
 
-###  Version 1.5 new feature : Tools shortcuts keys
-Quickly launch a tool with one key shortcut when a PieMenu is displayed
+### Version 1.6 new features :
 
-![Capture d’écran (173)](https://github.com/Grubuntu/PieMenu/assets/56045316/88752663-491a-47f4-9a5b-526b90606f86)
+- Ability to set icon for each PieMenu (FreeCAD must be restarted for the new icon to take effect correctly.):
+  
+![Capture d’écran (200)](https://github.com/Grubuntu/PieMenu/assets/56045316/0bab416c-444a-41e5-9302-0a6d14c344d9)
 
-You can enable them in the settings (from menu Accessories->Pie menu settings):
-Enable and display them (or only enable them without displaying). You can set the font size.
+- Ability to add nested PieMenu : a PieMenu can now call another PieMenu:
 
-![Capture d’écran (175)](https://github.com/Grubuntu/PieMenu/assets/56045316/fe63f92f-84ea-49c7-8c2c-f805434f8614)
-
-
-## Since version 1.4, you need to link the Sketcher workbench to your "Sketcher" PieMenu to keep your sketching PieMenu opening automatically, see below.
-We can associate a workbench for each PieMenu : When you associate a workbench with a menu, it will be opened when you press the global shortcut.
-
-In the example below, the Draft workbench is associated with the "Snapping Tools" PieMenu: when the "Draft" workbench is active, the "Snapping Tools" PieMenu will open when the global shortcut key is pressed.
-> Open from menu Accessories->Pie menu settings.
-
-![Capture d’écran (178)](https://github.com/Grubuntu/PieMenu/assets/56045316/b24a458e-2e67-4758-906a-238ff8ce08d7)
+![Capture d’écran (201)](https://github.com/Grubuntu/PieMenu/assets/56045316/9082b6f5-5e5d-4c95-9fb3-d42eb1995330)
+![Capture d’écran (205)](https://github.com/Grubuntu/PieMenu/assets/56045316/6364fc68-dc68-4f71-9aec-02cef1606133)
 
 
-In this way, you can associate a specific PieMenu for each Workbench. This is very useful, for example, for the Sketcher workbench, where you can associate a PieMenu with the tools specific to the Sketcher : 
+- New ToolBars tab: Ability to create a pieMenu from an existing Freecad toolbar in the preferences menu:
+  
+![Capture d’écran (204)](https://github.com/Grubuntu/PieMenu/assets/56045316/03a3063c-6619-428f-9f4d-64f640c7bb34)
 
-![Capture d’écran (179)](https://github.com/Grubuntu/PieMenu/assets/56045316/52a0a995-5161-4bb6-8da7-4bd47972f20a)
-
-
+- Experimental feature: long right click open the current PieMenu:
+#### (Try it at your own risk: this may cause unexpected behaviour depending on the mouse settings (CAD, Blender, OpenScad etc) 
+![Capture d’écran (202)](https://github.com/Grubuntu/PieMenu/assets/56045316/798d5c8d-e09d-499c-b5bb-5645b322b7b3)
 
 
 # Presentation: PieMenu is a customizable menu, providing quick access to FreeCAD tools via keyboard shortcuts. You can choose from multiple shapes, themes, customize tools and shortcuts, and much more... 
@@ -295,3 +289,26 @@ We can set the trigger mode (Hover/Press) individually for each PieMenu.
 Toggle mode for global shortcut : Pressing the global shortcut can toggle the PieMenu display.
 
 ![Capture d’écran (177)](https://github.com/Grubuntu/PieMenu/assets/56045316/34b6f579-074c-49e3-bd43-684a35ac9147)
+
+## Since version 1.4, you need to link the Sketcher workbench to your "Sketcher" PieMenu to keep your sketching PieMenu opening automatically, see below.
+We can associate a workbench for each PieMenu : When you associate a workbench with a menu, it will be opened when you press the global shortcut.
+
+In the example below, the Draft workbench is associated with the "Snapping Tools" PieMenu: when the "Draft" workbench is active, the "Snapping Tools" PieMenu will open when the global shortcut key is pressed.
+> Open from menu Accessories->Pie menu settings.
+
+![Capture d’écran (178)](https://github.com/Grubuntu/PieMenu/assets/56045316/b24a458e-2e67-4758-906a-238ff8ce08d7)
+
+
+In this way, you can associate a specific PieMenu for each Workbench. This is very useful, for example, for the Sketcher workbench, where you can associate a PieMenu with the tools specific to the Sketcher : 
+
+![Capture d’écran (179)](https://github.com/Grubuntu/PieMenu/assets/56045316/52a0a995-5161-4bb6-8da7-4bd47972f20a)
+
+## Tools shortcuts keys
+Quickly launch a tool with one key shortcut when a PieMenu is displayed
+
+![Capture d’écran (173)](https://github.com/Grubuntu/PieMenu/assets/56045316/88752663-491a-47f4-9a5b-526b90606f86)
+
+You can enable them in the settings (from menu Accessories->Pie menu settings):
+Enable and display them (or only enable them without displaying). You can set the font size.
+
+![Capture d’écran (175)](https://github.com/Grubuntu/PieMenu/assets/56045316/fe63f92f-84ea-49c7-8c2c-f805434f8614)
