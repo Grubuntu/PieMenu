@@ -4231,7 +4231,7 @@ def pieMenuStart():
                             .ToolButtonPopupMode.InstantPopup)
 
         actionContext = QtGui.QAction(menu)
-        actionContext.setText(translate("QuickMenu", "Context"))
+        actionContext.setText(translate("QuickMenu", "Global context"))
         actionContext.setCheckable(True)
 
         menuPieMenu = QtGui.QMenu()
