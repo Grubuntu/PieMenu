@@ -14,6 +14,7 @@ Quick customizable menus for FreeCAD.
 
 When the immediate context trigger mode is ticked and the trigger conditions are obtained (selection of edges, faces, etc.), the PieMenu will be displayed immediately without pressing the keyboard shortcut.
 You can set context mode individually for each PieMenu.
+
 ![Capture d’écran (214)](https://github.com/Grubuntu/PieMenu/assets/56045316/61c3f437-8249-439e-acf4-7bd4debf0297)
 
 (it is still possible to deactivate or activate globaly the context mode with the global parameter).
