@@ -3,6 +3,23 @@ PieMenu widget for FreeCAD
 
 Quick customizable menus for FreeCAD.
 
+### Version 1.7 new features:
+
+- Added Piemenu preview in Preferences : We can now easily adjust the PieMenus settings thanks to the immediate display of the PieMenu in the settings window.
+
+![Capture d’écran (213)](https://github.com/Grubuntu/PieMenu/assets/56045316/63871b09-0519-4c45-8334-7e0304bcc126)
+
+
+- Introduction of context immediate trigger:
+
+When the immediate context trigger mode is ticked and the trigger conditions are obtained (selection of edges, faces, etc.), the PieMenu will be displayed immediately without pressing the keyboard shortcut.
+You can set context mode individually for each PieMenu.
+![Capture d’écran (214)](https://github.com/Grubuntu/PieMenu/assets/56045316/61c3f437-8249-439e-acf4-7bd4debf0297)
+
+(it is still possible to deactivate or activate globaly the context mode with the global parameter).
+![Capture d’écran (215)2](https://github.com/Grubuntu/PieMenu/assets/56045316/188d4550-6c31-4597-83d0-ff25c79248f4) ![Capture d’écran (216)](https://github.com/Grubuntu/PieMenu/assets/56045316/a7359a26-cabf-44d3-b316-583ff2ddc970)
+
+
 ### Version 1.6 new features :
 
 - Ability to set icon for each PieMenu (FreeCAD must be restarted for the new icon to take effect correctly.):
