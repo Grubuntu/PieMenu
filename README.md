@@ -7,7 +7,7 @@ Quick customizable menus for FreeCAD.
 
 - Added Piemenu preview in Preferences : We can now easily adjust the PieMenus settings thanks to the immediate display of the PieMenu in the settings window.
 
-![Capture d’écran (213)](https://github.com/Grubuntu/PieMenu/assets/56045316/63871b09-0519-4c45-8334-7e0304bcc126)
+![Capture d’écran (217)](https://github.com/Grubuntu/PieMenu/assets/56045316/d2da266b-2858-4093-b141-107b5b0264df)
 
 
 - Introduction of context immediate trigger:
@@ -15,31 +15,15 @@ Quick customizable menus for FreeCAD.
 When the immediate context trigger mode is ticked and the trigger conditions are obtained (selection of edges, faces, etc.), the PieMenu will be displayed immediately without pressing the keyboard shortcut.
 You can set context mode individually for each PieMenu.
 
-![Capture d’écran (214)](https://github.com/Grubuntu/PieMenu/assets/56045316/61c3f437-8249-439e-acf4-7bd4debf0297)
+![Capture d’écran (218)](https://github.com/Grubuntu/PieMenu/assets/56045316/c823c91a-3474-4af7-bc0e-95535b101187)
 
 (it is still possible to deactivate or activate globaly the context mode with the global parameter).
-![Capture d’écran (215)2](https://github.com/Grubuntu/PieMenu/assets/56045316/188d4550-6c31-4597-83d0-ff25c79248f4) ![Capture d’écran (216)](https://github.com/Grubuntu/PieMenu/assets/56045316/a7359a26-cabf-44d3-b316-583ff2ddc970)
+![Capture d’écran (219)](https://github.com/Grubuntu/PieMenu/assets/56045316/0f82c3cc-3951-497f-ac5f-054ee1f359e2) ![Capture d’écran (216)](https://github.com/Grubuntu/PieMenu/assets/56045316/a7359a26-cabf-44d3-b316-583ff2ddc970)
 
 
-### Version 1.6 new features :
+- New interface for adding existing FreeCAD's toolbars:
 
-- Ability to set icon for each PieMenu (FreeCAD must be restarted for the new icon to take effect correctly.):
-  
-![Capture d’écran (200)](https://github.com/Grubuntu/PieMenu/assets/56045316/0bab416c-444a-41e5-9302-0a6d14c344d9)
-
-- Ability to add nested PieMenu : a PieMenu can now call another PieMenu:
-
-![Capture d’écran (201)](https://github.com/Grubuntu/PieMenu/assets/56045316/9082b6f5-5e5d-4c95-9fb3-d42eb1995330)
-![Capture d’écran (205)](https://github.com/Grubuntu/PieMenu/assets/56045316/6364fc68-dc68-4f71-9aec-02cef1606133)
-
-
-- New ToolBars tab: Ability to create a pieMenu from an existing Freecad toolbar in the preferences menu:
-  
-![Capture d’écran (204)](https://github.com/Grubuntu/PieMenu/assets/56045316/03a3063c-6619-428f-9f4d-64f640c7bb34)
-
-- Experimental feature: long right click open the current PieMenu:
-#### (Try it at your own risk: this may cause unexpected behaviour depending on the mouse settings (CAD, Blender, OpenScad etc) 
-![Capture d’écran (202)](https://github.com/Grubuntu/PieMenu/assets/56045316/798d5c8d-e09d-499c-b5bb-5645b322b7b3)
+![Capture d’écran (220)](https://github.com/Grubuntu/PieMenu/assets/56045316/7f8a1179-d494-4949-9c3f-3ef8c8dde504)
 
 
 # Presentation: PieMenu is a customizable menu, providing quick access to FreeCAD tools via keyboard shortcuts. You can choose from multiple shapes, themes, customize tools and shortcuts, and much more... 
@@ -330,3 +314,23 @@ You can enable them in the settings (from menu Accessories->Pie menu settings):
 Enable and display them (or only enable them without displaying). You can set the font size.
 
 ![Capture d’écran (175)](https://github.com/Grubuntu/PieMenu/assets/56045316/fe63f92f-84ea-49c7-8c2c-f805434f8614)
+
+### Version 1.6 new features :
+
+- Ability to set icon for each PieMenu (FreeCAD must be restarted for the new icon to take effect correctly.):
+  
+![Capture d’écran (200)](https://github.com/Grubuntu/PieMenu/assets/56045316/0bab416c-444a-41e5-9302-0a6d14c344d9)
+
+- Ability to add nested PieMenu : a PieMenu can now call another PieMenu:
+
+![Capture d’écran (201)](https://github.com/Grubuntu/PieMenu/assets/56045316/9082b6f5-5e5d-4c95-9fb3-d42eb1995330)
+![Capture d’écran (205)](https://github.com/Grubuntu/PieMenu/assets/56045316/6364fc68-dc68-4f71-9aec-02cef1606133)
+
+
+- New ToolBars tab: Ability to create a pieMenu from an existing Freecad toolbar in the preferences menu:
+  
+![Capture d’écran (204)](https://github.com/Grubuntu/PieMenu/assets/56045316/03a3063c-6619-428f-9f4d-64f640c7bb34)
+
+- Experimental feature: long right click open the current PieMenu:
+#### (Try it at your own risk: this may cause unexpected behaviour depending on the mouse settings (CAD, Blender, OpenScad etc) 
+![Capture d’écran (202)](https://github.com/Grubuntu/PieMenu/assets/56045316/798d5c8d-e09d-499c-b5bb-5645b322b7b3)
