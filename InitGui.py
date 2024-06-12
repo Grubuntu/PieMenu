@@ -276,6 +276,7 @@ def pieMenuStart():
             self.hoverTimer.start(hoverDelay)
             self.isMouseOver = True
 
+
         def mouseReleaseEvent(self, event):
             if self.isMouseOver and self.defaultAction().isEnabled():
                 if not pieMenuDialog.isVisible():
@@ -609,7 +610,6 @@ def pieMenuStart():
 
                                         if (module is not None and module != 'SketcherGui'):
                                             PieMenuInstance.showAtMouse()
-
                                     except:
                                         pass
                                 j+=1
@@ -651,7 +651,9 @@ def pieMenuStart():
                             return True
                 # run listTopo (context) when CTRL is release: allow multiple selection
                 if event.type() == QtCore.QEvent.KeyRelease and event.key() == QtCore.Qt.Key_Control:
-                    listTopo()
+                    enableContext = paramGet.GetBool("EnableContext")
+                    if enableContext:
+                        listTopo()
                     
             elif event.type() == QtCore.QEvent.Wheel:
                 """ Press CTRL + rotate Wheel = X10, Press SHIFT + rotate Wheel = X0.1, Press CTRL+SHIFT + rotate Wheel= X0.01 """
@@ -1580,7 +1582,7 @@ def pieMenuStart():
             self.setWindowTitle("PieMenu " + PIE_MENU_VERSION)
             self.closeEvent = self.customCloseEvent
             self.setWindowIcon(QtGui.QIcon(iconPieMenuLogo))
-            self.setMinimumSize(1000, 650)
+            self.setMinimumSize(1000, 680)
             self.setModal(True)
 
 
