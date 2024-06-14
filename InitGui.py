@@ -3046,12 +3046,15 @@ def pieMenuStart():
 
 
     def updatePiemenuPreview(key=None):
-        showPiemenu.hide()
-        if key == "toolBarTab":
-            PieMenuInstance.showPiemenuPreview("toolBarTab")
-        else:
-            PieMenuInstance.showPiemenuPreview(keyValue=cBox.currentText(), notKeyTriggered=False)
-        showPiemenu.show()
+        try:
+            showPiemenu.hide()
+            if key == "toolBarTab":
+                PieMenuInstance.showPiemenuPreview("toolBarTab")
+            else:
+                PieMenuInstance.showPiemenuPreview(keyValue=cBox.currentText(), notKeyTriggered=False)
+            showPiemenu.show()
+        except:
+            None
 
 
     def onSpinShortcutLabelSize():
