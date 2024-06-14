@@ -1576,15 +1576,12 @@ def pieMenuStart():
 
             super(PieMenuDialog, self).__init__(parent)
 
-            # self.move(300, 20)
-
             self.setObjectName("PieMenuPreferences")
             self.setWindowTitle("PieMenu " + PIE_MENU_VERSION)
             self.closeEvent = self.customCloseEvent
             self.setWindowIcon(QtGui.QIcon(iconPieMenuLogo))
             self.setMinimumSize(1000, 680)
             self.setModal(True)
-
 
         def customCloseEvent(self, event):
             # Caught close event to save parameters on disk
@@ -2115,8 +2112,10 @@ def pieMenuStart():
                     if cmd_parts[0] == "FEM":
                         cmd_parts[0] = "Fem"
                     # Sheet Metal workbench
-                    if cmd_parts[0][:2] == "SM":
-                        cmd_parts[0] = cmd_parts[0][:2]
+                    # Sheet Metal has changed its command name?
+                    # if cmd_parts[0][:2] == "SM":
+                    if cmd_parts[0] == "SheetMetal":
+                        cmd_parts[0] = "SM"
                     # Assembly4 workbench
                     if cmd_parts[0][:4] == "Asm4":
                         cmd_parts[0] = "Assembly4"
@@ -2183,8 +2182,10 @@ def pieMenuStart():
                             if i == "FEM":
                                 i = "Fem"
                             # Sheet Metal workbench
-                            if i[:2] == "SM":
-                                i = i[:2]
+                            # if i[:2] == "SM":
+                            if i == "SheetMetal":
+                                # i = i[:2]
+                                i = "SM"
                             # Assembly4 workbench
                             if i == "Asm4":
                                 i = "Assembly4"
@@ -2378,8 +2379,10 @@ def pieMenuStart():
                             if cmd_parts[0] == "FEM":
                                 cmd_parts[0] = "Fem"
                             # Sheet Metal workbench
-                            if cmd_parts[0][:2] == "SM":
-                                cmd_parts[0] = cmd_parts[0][:2]
+                            # if cmd_parts[0][:2] == "SM":
+                            if cmd_parts[0] == "SheetMetal":
+                                # cmd_parts[0] = cmd_parts[0][:2]
+                                cmd_parts[0] = "SM"
                             # Assembly4 workbench
                             if cmd_parts[0][:4] == "Asm4":
                                 cmd_parts[0] = "Assembly4"
@@ -2408,6 +2411,7 @@ def pieMenuStart():
                 actionItem = QtWidgets.QTableWidgetItem(actionMapAll[i].text().replace("&", ""))
                 actionItem.setData(QtCore.Qt.UserRole, i)
                 actionItem.setIcon(actionMapAll[i].icon())
+                actionItem.setToolTip(actionMapAll[i].toolTip())
                 # prevent user to write something in list
                 actionItem.setFlags(QtCore.Qt.ItemIsEnabled)
                 shortcutItem = QtWidgets.QTableWidgetItem()
@@ -3367,6 +3371,7 @@ def pieMenuStart():
             item.setIcon(actionMapAll[i].icon())
             item.setCheckState(QtCore.Qt.CheckState(0))
             item.setData(QtCore.Qt.UserRole, actionMapAll[i].objectName())
+            item.setToolTip(actionMapAll[i].toolTip())
 
         toolListOn = None
         indexList = getIndexList()
@@ -3441,6 +3446,7 @@ def pieMenuStart():
                 actionItem.setIcon(actionMapAll[i].icon())
                 actionItem.setFlags(QtCore.Qt.ItemIsEnabled)
                 buttonListWidget.setItem(rowPosition, 1, actionItem)
+                actionItem.setToolTip(actionMapAll[i].toolTip())
 
         buttonListWidget.blockSignals(False)
         updatePiemenuPreview("toolBarTab")
@@ -3523,6 +3529,7 @@ def pieMenuStart():
                 item.setIcon(actionMapAll[i].icon())
                 item.setCheckState(QtCore.Qt.CheckState(0))
                 item.setData(QtCore.Qt.UserRole, actionMapAll[i].objectName())
+                item.setToolTip(actionMapAll[i].toolTip())
 
         toolListOn = None
         indexList = getIndexList()
@@ -4278,7 +4285,6 @@ def pieMenuStart():
         cBoxUpdate(keyValue)
 
         buttonList()
-        # listToolBar = onListToolBar()
         tabs.setCurrentIndex(0)
 
         for i in mw.findChildren(QtGui.QDialog):
@@ -4293,9 +4299,6 @@ def pieMenuStart():
         pieMenuDialog.show()
         shape = getShape(cBox.currentText())
         onShape(shape)
-
-        close_button.setFocus()
-
         updatePiemenuPreview()
 
         #### END Preferences dialog ####
@@ -4783,13 +4786,6 @@ def pieMenuStart():
     contextTabLayout.addStretch(1)
 
     #### Tab ToolBar ####
-    listToolBar = QtGui.QListWidget()
-    listToolBar.setSortingEnabled(True)
-    listToolBar.sortItems(QtCore.Qt.AscendingOrder)
-    listToolBar.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-    listToolBar.setMinimumSize(QSize(385, 473));
-    listToolBar.itemSelectionChanged.connect(showListToolBar)
-
     buttonBackToSettings = QtGui.QPushButton(translate("ToolBarTab", "Return to settings..."))
     buttonBackToSettings.setToolTip(translate("ToolBarTab", "Return to general settings"))
     buttonBackToSettings.setIcon(QtGui.QIcon(iconLeft))
@@ -4798,7 +4794,16 @@ def pieMenuStart():
     buttonBackToSettings.clicked.connect(onBackToSettings)
     buttonBackToSettings.setVisible(False)
 
-    labelAddToolBar = QLabel(translate("ToolBarTab", "Add an existing ToolBar as a new PieMenu"))
+    listToolBar = QtGui.QListWidget()
+    listToolBar.setSortingEnabled(True)
+    listToolBar.sortItems(QtCore.Qt.AscendingOrder)
+    listToolBar.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+    listToolBar.setMinimumSize(QSize(385, 460));
+    listToolBar.itemSelectionChanged.connect(showListToolBar)
+    
+    listToolBarLayout = QtGui.QVBoxLayout()
+    listToolBarLayout.addWidget(listToolBar)
+    labelAddToolBar = QLabel(translate("ToolBarTab", "Add the selected toolbar as a new PieMenu"))
 
     buttonAddToolBar = QtGui.QToolButton()
     buttonAddToolBar.setToolTip(translate("ToolBarTab", "Add selected ToolBar as PieMenu"))
@@ -4807,17 +4812,22 @@ def pieMenuStart():
     buttonAddToolBar.setMinimumWidth(30)
     buttonAddToolBar.clicked.connect(onAddToolBar)
 
-    buttonAddToolBarGroup = QGroupBox(translate("ToolBarTab", "ToolBar"))
-    buttonAddToolBarGroup.setLayout(QtGui.QHBoxLayout())
-    buttonAddToolBarGroup.layout().addWidget(labelAddToolBar)
-    buttonAddToolBarGroup.layout().addStretch(1)
-    buttonAddToolBarGroup.layout().addWidget(buttonAddToolBar)
+    labelAddToolBarLayout = QtGui.QHBoxLayout()
+    labelAddToolBarLayout.addWidget(labelAddToolBar)
+    labelAddToolBarLayout.addStretch(1)
+    labelAddToolBarLayout.addWidget(buttonAddToolBar)
+
+    addToolBarGroup = QGroupBox(translate("ToolBarTab", "ToolBars "))
+    addToolBarGroup.setLayout(QtGui.QVBoxLayout())
+    addToolBarGroup.layout().addLayout(listToolBarLayout)
+    addToolBarGroup.layout().addStretch(1)
+    addToolBarGroup.layout().addLayout(labelAddToolBarLayout)
+
+    toolBarTabLayout = QtGui.QVBoxLayout()
+    toolBarTabLayout.addWidget(addToolBarGroup)
 
     toolBarTab = QtGui.QWidget()
-    toolBarTabLayout = QtGui.QVBoxLayout()
     toolBarTab.setLayout(toolBarTabLayout)
-    toolBarTabLayout.addWidget(buttonAddToolBarGroup)
-    toolBarTabLayout.addWidget(listToolBar)
 
     #### Tab Global Settings ####
     settingsTab = QtGui.QWidget()
