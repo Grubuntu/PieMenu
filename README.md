@@ -23,7 +23,7 @@ You can set context mode individually for each PieMenu.
 
 - New interface for adding existing FreeCAD's toolbars:
 
-![Capture d’écran (220)](https://github.com/Grubuntu/PieMenu/assets/56045316/7f8a1179-d494-4949-9c3f-3ef8c8dde504)
+![Capture d’écran (221)](https://github.com/Grubuntu/PieMenu/assets/56045316/313185d9-cb42-4656-9abe-3228e7aff3fc)
 
 
 # Presentation: PieMenu is a customizable menu, providing quick access to FreeCAD tools via keyboard shortcuts. You can choose from multiple shapes, themes, customize tools and shortcuts, and much more... 
