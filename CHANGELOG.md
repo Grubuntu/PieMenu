@@ -5,6 +5,9 @@
 - Added Piemenu preview in Preferences
 - Move cBox to the up of settings, disable it when toolBarTab is active
 - Fix cBox order
+- Added Preselect arrow feature
+- Added ability to set a WB for Context mode
+- Added added management of the CTRL key for multiple selection in Context mode
 - Remove button size limitation and set mini and maxi button size (16-120)
 - Remove PiemenuDialog fixed size, position and set it modal.
 - Fix cBox index to CurrentPie when the Preferences settings are opened
