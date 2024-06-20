@@ -7,7 +7,9 @@ Quick customizable menus for FreeCAD.
 
 - Added Piemenu preview in Preferences : We can now easily adjust the PieMenus settings thanks to the immediate display of the PieMenu in the settings window.
 
-![Capture d’écran (217)](https://github.com/Grubuntu/PieMenu/assets/56045316/d2da266b-2858-4093-b141-107b5b0264df)
+
+![Capture d’écran (223)](https://github.com/Grubuntu/PieMenu/assets/56045316/70de42e6-e34e-4d51-907d-f53cdf007c98)
+
 
 
 - Introduction of context immediate trigger:
@@ -15,7 +17,12 @@ Quick customizable menus for FreeCAD.
 When the immediate context trigger mode is ticked and the trigger conditions are obtained (selection of edges, faces, etc.), the PieMenu will be displayed immediately without pressing the keyboard shortcut.
 You can set context mode individually for each PieMenu.
 
-![Capture d’écran (218)](https://github.com/Grubuntu/PieMenu/assets/56045316/c823c91a-3474-4af7-bc0e-95535b101187)
+![Capture d’écran (222)4](https://github.com/Grubuntu/PieMenu/assets/56045316/c68f0ef7-d944-4013-82ec-a5d254b96cdb)
+
+You can set a single workbench in which the context will be triggered:
+
+![Capture d’écran (222)5](https://github.com/Grubuntu/PieMenu/assets/56045316/4a39fecd-9da8-4050-af1b-a2d45a0f41b6)
+
 
 (it is still possible to deactivate or activate globaly the context mode with the global parameter).
 ![Capture d’écran (219)](https://github.com/Grubuntu/PieMenu/assets/56045316/0f82c3cc-3951-497f-ac5f-054ee1f359e2) ![Capture d’écran (216)](https://github.com/Grubuntu/PieMenu/assets/56045316/a7359a26-cabf-44d3-b316-583ff2ddc970)
