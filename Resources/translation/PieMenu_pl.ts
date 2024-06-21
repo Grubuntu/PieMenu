@@ -277,7 +277,7 @@
     <message>
       <location filename="../../InitGui.py" line="3868"/>
       <source>Tools shortcuts</source>
-      <translation>Skrót do narzędzia</translation>
+      <translation>Narzędzia skrótów</translation>
     </message>
     <message>
       <location filename="../../InitGui.py" line="4063"/>

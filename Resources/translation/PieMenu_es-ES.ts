@@ -131,22 +131,22 @@
     <message>
       <location filename="../../InitGui.py" line="3932"/>
       <source>Show QuickMenu</source>
-      <translation type="unfinished">Show QuickMenu</translation>
+      <translation>Mostrar menú rápido</translation>
     </message>
     <message>
       <location filename="../../InitGui.py" line="3944"/>
       <source>Global context</source>
-      <translation type="unfinished">Global context</translation>
+      <translation>Contexto global</translation>
     </message>
     <message>
       <location filename="../../InitGui.py" line="3954"/>
       <source>Shortcuts behavior: Toggle show/hide PieMenu</source>
-      <translation type="unfinished">Shortcuts behavior: Toggle show/hide PieMenu</translation>
+      <translation>Comportamiento de atajos: Alternar entre mostrar/ocultar menú</translation>
     </message>
     <message>
       <location filename="../../InitGui.py" line="4154"/>
       <source>Set this PieMenu as default</source>
-      <translation type="unfinished">Set this PieMenu as default</translation>
+      <translation>Establecer este menú como principal</translation>
     </message>
     <message>
       <location filename="../../InitGui.py" line="4176"/>
@@ -216,7 +216,7 @@
       <location filename="../../InitGui.py" line="4024"/>
       <location filename="../../InitGui.py" line="4025"/>
       <source>Documentation</source>
-      <translation type="unfinished">Documentation</translation>
+      <translation>Documentación</translation>
     </message>
     <message>
       <location filename="../../InitGui.py" line="4029"/>
@@ -272,22 +272,22 @@
     <message>
       <location filename="../../InitGui.py" line="3852"/>
       <source>Trigger mode</source>
-      <translation type="unfinished">Trigger mode</translation>
+      <translation>Modo de activación</translation>
     </message>
     <message>
       <location filename="../../InitGui.py" line="3868"/>
       <source>Tools shortcuts</source>
-      <translation type="unfinished">Tools shortcuts</translation>
+      <translation>Atajos de herramientas</translation>
     </message>
     <message>
       <location filename="../../InitGui.py" line="4063"/>
       <source>Shortcut</source>
-      <translation type="unfinished">Shortcut</translation>
+      <translation>Atajo</translation>
     </message>
     <message>
       <location filename="../../InitGui.py" line="4063"/>
       <source>Action</source>
-      <translation type="unfinished">Action</translation>
+      <translation>Acción</translation>
     </message>
     <message>
       <location filename="../../InitGui.py" line="4135"/>
@@ -302,7 +302,7 @@
     <message>
       <location filename="../../InitGui.py" line="4234"/>
       <source>Command for first circle:</source>
-      <translation type="unfinished">Command for first circle:</translation>
+      <translation>Comando para el primer círculo:</translation>
     </message>
     <message>
       <location filename="../../InitGui.py" line="2418"/>
@@ -317,7 +317,7 @@
     <message>
       <location filename="../../InitGui.py" line="2490"/>
       <source>Copy menu</source>
-      <translation>Copiar Menú</translation>
+      <translation>Copiar menú</translation>
     </message>
     <message>
       <location filename="../../InitGui.py" line="4161"/>
@@ -348,17 +348,17 @@
     <message>
       <location filename="../../InitGui.py" line="4187"/>
       <source>Show command names</source>
-      <translation type="unfinished">Show command names</translation>
+      <translation>Mostrar nombres de comandos</translation>
     </message>
     <message>
       <location filename="../../InitGui.py" line="4190"/>
       <source>Display tools shortcut</source>
-      <translation type="unfinished">Display tools shortcut</translation>
+      <translation>Mostrar atajos de herramientas</translation>
     </message>
     <message>
       <location filename="../../InitGui.py" line="4193"/>
       <source>Font size:</source>
-      <translation type="unfinished">Font size:</translation>
+      <translation>Tamaño de fuente:</translation>
     </message>
     <message>
       <location filename="../../InitGui.py" line="4231"/>
