@@ -2006,7 +2006,8 @@ def pieMenuStart():
                         contextWorkbench = getParameterGroup(pieName, "String", "ContextWorkbench")
                         activeWB = Gui.activeWorkbench().name()
                         activeWB = activeWB.split("Workbench")
-                        if contextWorkbench == activeWB[0]:
+
+                        if contextWorkbench == activeWB[0] or contextWorkbench == translate("ContextTab", "All Workbenches"):
                             globalContextPie = "True"
                             indexPie = current["Index"]
                 else:
@@ -2079,7 +2080,7 @@ def pieMenuStart():
                     contextWorkbench = None
                     contextWorkbench = getParameterGroup(pieName, "String", "ContextWorkbench")
 
-                    if contextWorkbench == activeWB[0] or contextWorkbench == None:
+                    if contextWorkbench == activeWB[0] or contextWorkbench == None or contextWorkbench == translate("ContextTab", "All Workbenches"):
                         immediateTrigger = getParameterGroup(pieName, "Bool", "ImmediateTriggerContext")
                         if immediateTrigger:
                             selectionTriggered = True
@@ -3124,11 +3125,22 @@ def pieMenuStart():
 
         contextWorkbench = getParameterGroup(cBox.currentText(), "String", "ContextWorkbench")
         wbList.append(contextWorkbench)
-        if 'None' not in wbList:
-            wbList.insert(0, 'None')
+        if "None" in wbList:
+            wbList.remove("None")
+
+        if translate('ContextTab', 'None (Disable)') not in wbList:
+            wbList.insert(0, translate('ContextTab', 'None (Disable)'))
+
+        if translate('ContextTab','All Workbenches') not in wbList:
+            wbList.insert(0,  translate('ContextTab','All Workbenches'))
+
+        notDuplicate = []
+        for i in wbList:
+            if i not in notDuplicate:
+                notDuplicate.append(i)
 
         comboContextWorkbench.clear()
-        comboContextWorkbench.addItems(wbList)
+        comboContextWorkbench.addItems(notDuplicate)
         index = comboContextWorkbench.findText(contextWorkbench)
         if index != -1:
             comboContextWorkbench.setCurrentIndex(index)
@@ -4942,7 +4954,7 @@ def pieMenuStart():
     settingContextGroup = QGroupBox(translate("GlobalSettingsTab", "Context"))
     settingContextGroup.setCheckable(True)
     
-    labelContextWorkbench = QtGui.QLabel(translate("ContextTab", "Set workbench for context"))
+    labelContextWorkbench = QtGui.QLabel(translate("ContextTab", "Set workbench for these contextual selection conditions"))
 
     comboContextWorkbench = QComboBox()
     comboContextWorkbench.setMinimumWidth(160)
