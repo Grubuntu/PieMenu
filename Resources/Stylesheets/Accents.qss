@@ -126,6 +126,16 @@ QToolButton#styleButtonMenu::menu-indicator {
     image: none;
 }
 
+QToolButton#stylebuttonPreselect {
+    background-color: transparent;
+    border: 1px solid transparent;
+    padding: 999px;
+}
+
+QToolButton#stylebuttonPreselect:hover {
+    padding: 1px;
+}
+
 
 /* ====================================================== */
 /*                     Other styles                       */
