@@ -27,7 +27,7 @@
 #
 
 global PIE_MENU_VERSION
-PIE_MENU_VERSION = "1.7"
+PIE_MENU_VERSION = "1.7.1"
 
 def pieMenuStart():
     """Main function that starts the Pie Menu."""
@@ -494,8 +494,18 @@ def pieMenuStart():
             ##################
             if event.type() == QtCore.QEvent.MouseButtonRelease:
                 if not self.menu.hasFocus():
-                    # print("not focus")
-                    self.menu.hide()
+                    print("not focus")
+                    try:
+                        # if fast spinbox is open, we do nothing with shortcuts
+                        if self.double_spinbox.isVisible() and self.double_spinbox.hasFocus():
+                            print("spinbox visible")
+                            # pass
+                        else:
+                            print("spinbox not visible and not focus")
+                            self.menu.hide()
+                    except:
+                        print("self.menu.hide")
+                        self.menu.hide()
             #############
             """Handle tool shortcut in PieMenus while preserving middle click functionality"""
             try:
