@@ -361,7 +361,8 @@ def pieMenuStart():
         offset_y = 0
 
 
-        def __init__(self, parent=mw):
+        def __init__(self, parent=None):
+        # def __init__(self, parent=mw):
             super().__init__()
             self.double_spinbox = None
             styleCurrentTheme = getStyle()
@@ -379,19 +380,26 @@ def pieMenuStart():
             self.radius = 100
             self.buttons = []
             self.buttonSize = 32
-            self.menu = QtGui.QMenu(mw)
+            # self.menu = QtGui.QMenu(mw)
+            self.menu = QtGui.QMenu()
+
             self.menuSize = 0
             self.menu.setObjectName("styleContainer")
             self.menu.setStyleSheet(styleCurrentTheme)
-            self.menu.setWindowFlags(self.menu.windowFlags() |
-                QtCore.Qt.FramelessWindowHint | Qt.NoDropShadowWindowHint)
+            # self.menu.setWindowFlags(self.menu.windowFlags() |
+                # QtCore.Qt.FramelessWindowHint | Qt.NoDropShadowWindowHint)
+            # self.menu.setAttribute(QtCore.Qt.WA_TranslucentBackground)
+            
+
+            ##############################################
+            self.menu.setWindowFlags(QtCore.Qt.FramelessWindowHint | Qt.NoDropShadowWindowHint)
             self.menu.setAttribute(QtCore.Qt.WA_TranslucentBackground)
 
             if compositingManager:
                 pass
             else:
                 self.menu.setAttribute(QtCore.Qt.WA_PaintOnScreen)
-            self.setFocus()
+            # self.setFocus()
 
 
         def show_menu(self):
@@ -483,6 +491,12 @@ def pieMenuStart():
 
 
         def eventFilter(self, obj, event):
+            ##################
+            if event.type() == QtCore.QEvent.MouseButtonRelease:
+                if not self.menu.hasFocus():
+                    # print("not focus")
+                    self.menu.hide()
+            #############
             """Handle tool shortcut in PieMenus while preserving middle click functionality"""
             try:
                 if checkboxRightClick.isChecked():
@@ -495,6 +509,7 @@ def pieMenuStart():
                         if event.button() == QtCore.Qt.RightButton:
                             self.timer.stop()
                             return False  # Laissez l'événement se propager normalement
+
             except:
                 None
 
@@ -719,17 +734,6 @@ def pieMenuStart():
             self.offset_x = 0
             self.offset_y = 0
 
-            # defaults values
-            valueRadius = 100
-            valueButton = 32
-            shape = "Pie"
-            num_per_row = 4
-            icon_spacing = 8
-            command_per_circle = 5
-            shortcutLabelSize = 8
-            number_of_circle = 1
-            buttonSize = valueButton
-
             try:
                 valueRadius = group.GetInt("Radius")
                 valueButton = group.GetInt("Button")
@@ -740,6 +744,24 @@ def pieMenuStart():
                 shortcutLabelSize = getParameterGroup(keyValue, "Int", "ShortcutLabelSize")
             except:
                 None
+
+            # defaults values
+            if not valueRadius:
+                valueRadius = 100
+            if not valueButton:
+                valueButton = 32
+            if not shape:
+                shape = "Pie"
+            if not num_per_row:
+                num_per_row = 4
+            if not icon_spacing:
+                icon_spacing = 8
+            if not command_per_circle:
+                command_per_circle = 5
+            if not shortcutLabelSize:
+                shortcutLabelSize = "8"
+            number_of_circle = 1
+            buttonSize = valueButton
 
             if paramGet.GetBool("ToolBar") or keyValue == "toolBarTab":
                 valueRadius = 100
@@ -1346,10 +1368,16 @@ def pieMenuStart():
                 for i in self.buttons:
                     i.setAttribute(QtCore.Qt.WA_PaintOnScreen)
 
+
         def hide(self):
             for i in self.buttons:
                 i.hide()
+            # self.menu.hide()
+            # print("none")
+            ###############
+            # self.menu.setParent(None)
             self.menu.hide()
+
 
         def showAtMouseInstance(self, keyValue=None, notKeyTriggered=False):
             nonlocal selectionTriggered
@@ -1393,8 +1421,15 @@ def pieMenuStart():
                     # lastPosX = pos.x()
                     # lastPosY = pos.y()
 
+                ######################
+                # parent = self.menu.parentWidget()
+                # print(parent)
+                # if parent != mw:
+                    # print("ici")
+                    # self.menu.setParent(mw)
                 self.menu.popup(QtCore.QPoint(mw.pos()))
                 self.menu.setGeometry(mw.geometry())
+
 
                 for i in self.buttons:
                     i.move(i.property("ButtonX") + pos.x() - i.width() / 2 + self.offset_x ,
@@ -1623,6 +1658,7 @@ def pieMenuStart():
             self.setMinimumSize(1000, 680)
             self.setModal(True)
 
+
         def customCloseEvent(self, event):
             # Caught close event to save parameters on disk
             App.saveParameter()
@@ -1654,6 +1690,7 @@ def pieMenuStart():
         pref.setText(translate("AccesoriesMenu", "Pie menu settings"))
         pref.setObjectName("PieMenu")
         pref.triggered.connect(onControl)
+
         try:
             import AccessoriesMenu
             AccessoriesMenu.addItem("PieMenu")
@@ -4556,7 +4593,7 @@ def pieMenuStart():
     labelWbForPieMenu = QtGui.QLabel(translate("PieMenuTab", "Workbench associated to this PieMenu:"))
     labelWbForPieMenu.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
 
-    comboWbForPieMenu = QComboBox()
+    comboWbForPieMenu = QtGui.QComboBox()
     comboWbForPieMenu.setMinimumWidth(160)
     comboWbForPieMenu.currentIndexChanged.connect(onWbForPieMenu)
 
@@ -4577,7 +4614,7 @@ def pieMenuStart():
     labelShape = QtGui.QLabel(translate("PieMenuTab", "Shape:"))
     labelShape.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
 
-    comboShape = QComboBox()
+    comboShape = QtGui.QComboBox()
     comboShape.setMinimumWidth(100)
     comboShape.currentIndexChanged.connect(setShape)
 
@@ -4956,7 +4993,7 @@ def pieMenuStart():
     
     labelContextWorkbench = QtGui.QLabel(translate("ContextTab", "Set workbench for these contextual selection conditions"))
 
-    comboContextWorkbench = QComboBox()
+    comboContextWorkbench = QtGui.QComboBox()
     comboContextWorkbench.setMinimumWidth(160)
     comboContextWorkbench.currentIndexChanged.connect(setContextWorkbench)
 
@@ -5161,7 +5198,7 @@ def pieMenuStart():
     labelTheme.setMinimumWidth(160)
     labelTheme.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
 
-    comboBoxTheme = QComboBox()
+    comboBoxTheme = QtGui.QComboBox()
     comboBoxTheme.setMinimumWidth(120)
     comboBoxTheme.currentIndexChanged.connect(setTheme)
 
