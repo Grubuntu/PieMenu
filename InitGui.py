@@ -371,6 +371,10 @@ def pieMenuStart():
             self.timer = QtCore.QTimer(self)
             self.timer.setSingleShot(True)
             self.timer.timeout.connect(self.show_menu)
+            
+            self.debounceTimer = QtCore.QTimer(self)
+            self.debounceTimer.setSingleShot(True)
+            self.debounceTimer.timeout.connect(self.install_filter)
 
             if not PieMenu.event_filter_installed:
                 app = QtGui.QGuiApplication.instance() or QtGui.QApplication([])
@@ -380,18 +384,12 @@ def pieMenuStart():
             self.radius = 100
             self.buttons = []
             self.buttonSize = 32
-            # self.menu = QtGui.QMenu(mw)
             self.menu = QtGui.QMenu()
 
             self.menuSize = 0
             self.menu.setObjectName("styleContainer")
             self.menu.setStyleSheet(styleCurrentTheme)
-            # self.menu.setWindowFlags(self.menu.windowFlags() |
-                # QtCore.Qt.FramelessWindowHint | Qt.NoDropShadowWindowHint)
-            # self.menu.setAttribute(QtCore.Qt.WA_TranslucentBackground)
-            
 
-            ##############################################
             self.menu.setWindowFlags(QtCore.Qt.FramelessWindowHint | Qt.NoDropShadowWindowHint)
             self.menu.setAttribute(QtCore.Qt.WA_TranslucentBackground)
 
@@ -399,14 +397,6 @@ def pieMenuStart():
                 pass
             else:
                 self.menu.setAttribute(QtCore.Qt.WA_PaintOnScreen)
-            # self.setFocus()
-
-
-        def show_menu(self):
-            if self.menu.isVisible():
-                self.menu.hide()
-            else:
-                actionKey.trigger()
 
         def stop_filter(self):
             app = QtGui.QGuiApplication.instance() or QtGui.QApplication([])
@@ -415,6 +405,12 @@ def pieMenuStart():
         def install_filter(self):
             app = QtGui.QGuiApplication.instance() or QtGui.QApplication([])
             app.installEventFilter(self)
+
+        def show_menu(self):
+            if self.menu.isVisible():
+                self.menu.hide()
+            else:
+                actionKey.trigger()
 
         def validation(self):
             docName = App.ActiveDocument.Name
@@ -491,23 +487,16 @@ def pieMenuStart():
 
 
         def eventFilter(self, obj, event):
-            ##################
+            """Handle mouse and keyboard events """
+
             if event.type() == QtCore.QEvent.MouseButtonRelease:
-                if not self.menu.hasFocus():
-                    print("not focus")
-                    try:
-                        # if fast spinbox is open, we do nothing with shortcuts
-                        if self.double_spinbox.isVisible() and self.double_spinbox.hasFocus():
-                            print("spinbox visible")
-                            # pass
-                        else:
-                            print("spinbox not visible and not focus")
-                            self.menu.hide()
-                    except:
-                        print("self.menu.hide")
+                if event.button() == QtCore.Qt.LeftButton:
+                    if self.menu.isActiveWindow():
+                        pass
+                    else:
                         self.menu.hide()
-            #############
-            """Handle tool shortcut in PieMenus while preserving middle click functionality"""
+                        return False
+
             try:
                 if checkboxRightClick.isChecked():
                     if event.type() == QtCore.QEvent.MouseButtonPress:
@@ -517,9 +506,13 @@ def pieMenuStart():
 
                     if event.type() == QtCore.QEvent.MouseButtonRelease:
                         if event.button() == QtCore.Qt.RightButton:
-                            self.timer.stop()
-                            return False  # Laissez l'événement se propager normalement
-
+                            if self.timer.isActive():
+                                self.timer.stop()
+                                self.debounceTimer.start(100)
+                                self.stop_filter()
+                                return False
+                            else:
+                                return True
             except:
                 None
 
@@ -1382,10 +1375,6 @@ def pieMenuStart():
         def hide(self):
             for i in self.buttons:
                 i.hide()
-            # self.menu.hide()
-            # print("none")
-            ###############
-            # self.menu.setParent(None)
             self.menu.hide()
 
 
@@ -1431,12 +1420,6 @@ def pieMenuStart():
                     # lastPosX = pos.x()
                     # lastPosY = pos.y()
 
-                ######################
-                # parent = self.menu.parentWidget()
-                # print(parent)
-                # if parent != mw:
-                    # print("ici")
-                    # self.menu.setParent(mw)
                 self.menu.popup(QtCore.QPoint(mw.pos()))
                 self.menu.setGeometry(mw.geometry())
 
