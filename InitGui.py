@@ -370,7 +370,7 @@ def pieMenuStart():
             self.timer = QtCore.QTimer(self)
             self.timer.setSingleShot(True)
             self.timer.timeout.connect(self.show_menu)
-            
+
             self.debounceTimer = QtCore.QTimer(self)
             self.debounceTimer.setSingleShot(True)
             self.debounceTimer.timeout.connect(self.install_filter)
@@ -388,7 +388,6 @@ def pieMenuStart():
             self.menuSize = 0
             self.menu.setObjectName("styleContainer")
             self.menu.setStyleSheet(styleCurrentTheme)
-
             self.menu.setWindowFlags(QtCore.Qt.FramelessWindowHint | Qt.NoDropShadowWindowHint)
             self.menu.setAttribute(QtCore.Qt.WA_TranslucentBackground)
 
