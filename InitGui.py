@@ -361,8 +361,7 @@ def pieMenuStart():
         offset_y = 0
 
 
-        def __init__(self, parent=None):
-        # def __init__(self, parent=mw):
+        def __init__(self, parent=mw):
             super().__init__()
             self.double_spinbox = None
             styleCurrentTheme = getStyle()
