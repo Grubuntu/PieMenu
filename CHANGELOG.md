@@ -1,5 +1,8 @@
 # CHANGELOG
 
+### 1.7.1
+Fix issue https://github.com/Grubuntu/PieMenu/issues/83 and some warnings about 'font size < 0'
+
 ### 1.7
 
 - Added Piemenu preview in Preferences
