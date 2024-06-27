@@ -1,5 +1,8 @@
 # CHANGELOG
 
+### 1.7.2
+Fix issue with the  display of the preselection button
+
 ### 1.7.1
 Fix issue https://github.com/Grubuntu/PieMenu/issues/83 and some warnings about 'font size < 0'
 

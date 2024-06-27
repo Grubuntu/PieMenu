@@ -27,7 +27,7 @@
 #
 
 global PIE_MENU_VERSION
-PIE_MENU_VERSION = "1.7.1"
+PIE_MENU_VERSION = "1.7.2"
 
 def pieMenuStart():
     """Main function that starts the Pie Menu."""
@@ -617,6 +617,8 @@ def pieMenuStart():
 
                         if charKey in listShortcutCode:
                             self.menu.hide()
+                            for i in self.buttons:
+                                i.hide()
                             event.accept()
                             j = 0
                             for i in listShortcutCode:
@@ -652,6 +654,8 @@ def pieMenuStart():
 
                         if charKey in listShortcutCode:
                             self.menu.hide()
+                            for i in self.buttons:
+                                i.hide()
                             event.accept()
                             j = 0
                             for i in listShortcutCode:
@@ -735,6 +739,15 @@ def pieMenuStart():
             self.offset_x = 0
             self.offset_y = 0
 
+            # defaults values
+            valueRadius = 100
+            valueButton = 32
+            shape = "Pie"
+            num_per_row = 4
+            icon_spacing = 8
+            command_per_circle = 5
+            shortcutLabelSize = "8"
+
             try:
                 valueRadius = group.GetInt("Radius")
                 valueButton = group.GetInt("Button")
@@ -746,21 +759,6 @@ def pieMenuStart():
             except:
                 None
 
-            # defaults values
-            if not valueRadius:
-                valueRadius = 100
-            if not valueButton:
-                valueButton = 32
-            if not shape:
-                shape = "Pie"
-            if not num_per_row:
-                num_per_row = 4
-            if not icon_spacing:
-                icon_spacing = 8
-            if not command_per_circle:
-                command_per_circle = 5
-            if not shortcutLabelSize:
-                shortcutLabelSize = "8"
             number_of_circle = 1
             buttonSize = valueButton
 
@@ -1175,7 +1173,7 @@ def pieMenuStart():
                     if displayPreselect:
                         # Preselection Arrow
                         buttonPreselect = HoverButton()
-                        buttonPreselect.setParent(self.menu)
+                        buttonPreselect.setParent(mw)
                         buttonPreselect.setObjectName("stylebuttonPreselect")
                         buttonPreselect.setStyleSheet(styleCurrentTheme)
                         buttonPreselect.setDefaultAction(commands[commands.index(i)])
@@ -1363,6 +1361,7 @@ def pieMenuStart():
             except :
                 None
 
+
             if compositingManager:
                 pass
             else:
@@ -1398,9 +1397,7 @@ def pieMenuStart():
 
             if windowShadow:
                 pos = mw.mapFromGlobal(QtGui.QCursor.pos())
-                
                 ## voir utilité du code suivant ?
-                
                 # if notKeyTriggered:
                     # if contextPhase:
                         # # special case treatment
@@ -1432,9 +1429,9 @@ def pieMenuStart():
                     i.repaint()
             else:
                 pos = QtGui.QCursor.pos()
-                
+
                 ## voir utilité du code suivant ?
-                
+
                 # if notKeyTriggered:
                     # if contextPhase:
                         # # special case treatment
@@ -1471,7 +1468,7 @@ def pieMenuStart():
             cssColorBottom = getCssColor(paramColorGet, "BackgroundColor3")
             gradient = True
             useBackgroundColorMid = False
-            
+
             if backgroundColorConfig != 0:
                 gradient = paramColorGet.GetBool("Gradient")
                 radialGradient = paramColorGet.GetBool("RadialGradient")
@@ -1996,7 +1993,6 @@ def pieMenuStart():
         global globalContextPie
         global globalIndexPie
         global indexPie
-        
         globalContextPie = False
         globalIndexPie = None
         indexPie = None
@@ -2307,7 +2303,7 @@ def pieMenuStart():
                 context = False
                 actions = []
                 getGuiToolButtonData(toolbar, actions, None, None)
-                
+
         # for toolbar preview in preferences settings
         elif keyValue == "toolBarTab":
             context = False
@@ -3179,12 +3175,12 @@ def pieMenuStart():
         group = getGroup()
         defWorkbench = comboWbForPieMenu.currentText()
         group.SetString("DefaultWorkbench", defWorkbench)
-        
+
     def setContextWorkbench():
         group = getGroup()
         contextWorkbench = comboContextWorkbench.currentText()
         group.SetString("ContextWorkbench", contextWorkbench)
-        
+
 
 
     def getPieName(wbName):
@@ -3889,9 +3885,9 @@ def pieMenuStart():
             # hide shortcuts in buttonListWidget
             buttonListWidget.setColumnHidden(0, True)
 
-        # generate list of existing toolBars 
+        # generate list of existing toolBars
         listToolBar = onListToolBar()
-        
+
         # set first element of listToolBar
         index = listToolBar.model().index(0, 0)
         if index.isValid():
@@ -4420,7 +4416,7 @@ def pieMenuStart():
         pieGroup = QtGui.QActionGroup(menu)
         pieGroup.setExclusive(True)
         pieGroup.triggered.connect(onPieGroup)
-        
+
         menuToolBar = QtGui.QMenu()
         menuToolBar.setObjectName("styleQuickMenuItem")
         menuToolBar.setTitle(translate("QuickMenu", "ToolBar"))
@@ -4981,7 +4977,7 @@ def pieMenuStart():
 
     settingContextGroup = QGroupBox(translate("GlobalSettingsTab", "Context"))
     settingContextGroup.setCheckable(True)
-    
+
     labelContextWorkbench = QtGui.QLabel(translate("ContextTab", "Set workbench for these contextual selection conditions"))
 
     comboContextWorkbench = QtGui.QComboBox()
