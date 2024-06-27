@@ -1175,7 +1175,7 @@ def pieMenuStart():
                     if displayPreselect:
                         # Preselection Arrow
                         buttonPreselect = HoverButton()
-                        buttonPreselect.setParent(self.menu)
+                        buttonPreselect.setParent(mw)
                         buttonPreselect.setObjectName("stylebuttonPreselect")
                         buttonPreselect.setStyleSheet(styleCurrentTheme)
                         buttonPreselect.setDefaultAction(commands[commands.index(i)])
