@@ -407,6 +407,8 @@ def pieMenuStart():
         def show_menu(self):
             if self.menu.isVisible():
                 self.menu.hide()
+                for i in self.buttons:
+                    i.hide()
             else:
                 actionKey.trigger()
 
@@ -493,6 +495,8 @@ def pieMenuStart():
                         pass
                     else:
                         self.menu.hide()
+                        for i in self.buttons:
+                            i.hide()
                         return False
 
             try:
@@ -535,6 +539,8 @@ def pieMenuStart():
 
                     if charKey in listShortcutCode:
                         self.menu.hide()
+                        for i in self.buttons:
+                            i.hide()
                         j = 0
                         for i in listShortcutCode:
                             if i == charKey:
@@ -548,6 +554,8 @@ def pieMenuStart():
                         if event.key() == QtGui.QKeySequence(globalShortcutKey):
                             if self.menu.isVisible():
                                 self.menu.hide()
+                                for i in self.buttons:
+                                    i.hide()
                                 flagVisi = True
                                 return True
                             else:
@@ -558,6 +566,8 @@ def pieMenuStart():
                             if event.key() == QtGui.QKeySequence(shortcut.key()):
                                 if self.menu.isVisible():
                                     self.menu.hide()
+                                    for i in self.buttons:
+                                        i.hide()
                                     event.accept()
                                     flagVisi = True
                                     return True
@@ -1515,6 +1525,8 @@ def pieMenuStart():
                 ## needed for tools shortcut
                 self.menu.popup(QtCore.QPoint(mw.pos()))
                 self.menu.hide()
+                for i in self.buttons:
+                    i.hide()
 
                 for i in self.buttons:
                     i.move(i.property("ButtonX") + posX - i.width() / 2 + self.offset_x ,
@@ -1554,6 +1566,8 @@ def pieMenuStart():
                 flagVisi = False
             else:
                 self.menu.hide()
+                for i in self.buttons:
+                    i.hide()
                 flagVisi = False
 
 
@@ -5012,7 +5026,7 @@ def pieMenuStart():
     listToolBar.setSortingEnabled(True)
     listToolBar.sortItems(QtCore.Qt.AscendingOrder)
     listToolBar.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-    listToolBar.setMinimumSize(QSize(385, 460));
+    listToolBar.setMinimumSize(QSize(385, 460))
     listToolBar.itemSelectionChanged.connect(showListToolBar)
 
     listToolBarLayout = QtGui.QVBoxLayout()
