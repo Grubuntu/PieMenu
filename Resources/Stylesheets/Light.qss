@@ -120,7 +120,6 @@ QToolButton#styleButtonMenu::menu-indicator {
 QToolButton#stylebuttonPreselect {
     background-color: transparent;
     border: 1px solid transparent;
-    padding: 999px;
 }
 
 QToolButton#stylebuttonPreselect:hover {
