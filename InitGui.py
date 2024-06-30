@@ -270,7 +270,6 @@ def pieMenuStart():
             else:
                 pass
 
-
         def onLeaveEvent(self, event):
             self.isMouseOver = False
             # set invisible icon for Preselect button on leave
@@ -407,8 +406,9 @@ def pieMenuStart():
             self.menuSize = 0
             self.menu.setObjectName("styleContainer")
             self.menu.setStyleSheet(styleCurrentTheme)
-            
-            self.menu.setWindowFlags(QtCore.Qt.FramelessWindowHint | Qt.NoDropShadowWindowHint)
+            # QtCore.Qt.WA_MacAlwaysShowToolWindow : needed to hide widget when FreeCad is minimized
+            self.menu.setWindowFlags(QtCore.Qt.FramelessWindowHint | Qt.NoDropShadowWindowHint | QtCore.Qt.WA_MacAlwaysShowToolWindow)
+
             self.menu.setAttribute(QtCore.Qt.WA_TranslucentBackground)
 
             if compositingManager:
@@ -1018,9 +1018,9 @@ def pieMenuStart():
                         button.setProperty("ButtonX", X)
                         button.setProperty("ButtonY", Y)
                         
-                        buttonPreselect.setProperty("ButtonX", (self.radius - 1 * buttonSize) *
+                        buttonPreselect.setProperty("ButtonX", (self.radius - 1.2 * buttonSize) *
                                            (math.cos(angle * num + angleStart)))
-                        buttonPreselect.setProperty("ButtonY", (self.radius - 1 * buttonSize) *
+                        buttonPreselect.setProperty("ButtonY", (self.radius - 1.2 * buttonSize) *
                                            (math.sin(angle * num + angleStart)))
 
                         iconLabel.setStyleSheet(styleCurrentTheme + iconMarging)
@@ -1205,8 +1205,8 @@ def pieMenuStart():
                         X_shortcut = (self.radius) * (math.cos(angle * num + angleStart)) + icon/2
                         Y_shortcut = (self.radius) * (math.sin(angle * num + angleStart)) + icon/2
 
-                        buttonPreselect.setProperty("ButtonX", (self.radius - 1 * buttonSize) * (math.cos(angle * num + angleStart)))
-                        buttonPreselect.setProperty("ButtonY", (self.radius - 1 * buttonSize) * (math.sin(angle * num + angleStart)))
+                        buttonPreselect.setProperty("ButtonX", (self.radius - 1.2 * buttonSize) * (math.cos(angle * num + angleStart)))
+                        buttonPreselect.setProperty("ButtonY", (self.radius - 1.2 * buttonSize) * (math.sin(angle * num + angleStart)))
 
                     if displayPreselect:
                         buttonPreselect.setParent(self.menu)
