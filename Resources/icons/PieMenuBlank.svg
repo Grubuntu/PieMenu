@@ -3,7 +3,7 @@
    viewBox="0 0 64 64"
    version="1.1"
    id="svg1"
-   sodipodi:docname="PieMenuArrowDown.svg"
+   sodipodi:docname="PieMenuBlank.svg"
    inkscape:version="1.3.2 (091e20e, 2023-11-25, custom)"
    width="64"
    height="64"
@@ -22,9 +22,9 @@
      inkscape:pageopacity="0.0"
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
-     inkscape:zoom="4.3835535"
-     inkscape:cx="71.859509"
-     inkscape:cy="42.545392"
+     inkscape:zoom="1.5371094"
+     inkscape:cx="223.79669"
+     inkscape:cy="256"
      inkscape:window-width="1920"
      inkscape:window-height="1001"
      inkscape:window-x="-9"
@@ -33,12 +33,7 @@
      inkscape:current-layer="svg1" />
   <!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
   <path
-     fill="#728abd"
-     d="m 28.470128,48.577325 c 1.952363,1.896899 5.122999,1.896899 7.075363,0 L 60.535728,24.297032 c 1.952363,-1.896901 1.952363,-4.977461 0,-6.874358 -1.952362,-1.8969 -5.122998,-1.8969 -7.075361,0 L 32,38.273376 10.539633,17.437852 c -1.9523622,-1.8969 -5.1229988,-1.8969 -7.0753611,0 -1.9523625,1.896897 -1.9523625,4.977459 0,6.874356 L 28.454509,48.592499 Z"
-     id="path1"
-     style="stroke-width:0.153956" />
-  <path
-     style="display:inline;fill:#000000;fill-opacity:0.00758535;stroke-width:0.150002"
+     style="fill:#000000;fill-opacity:0.00632109;stroke-width:0.144292"
      id="path2"
      sodipodi:type="arc"
      sodipodi:cx="32"
@@ -49,6 +44,5 @@
      sodipodi:end="6.2742921"
      sodipodi:open="true"
      sodipodi:arc-type="arc"
-     d="M 62,32 A 30,30 0 0 1 32.066699,61.999926 30,30 0 0 1 2.0002966,32.133398 30,30 0 0 1 31.799904,2.0006673 30,30 0 0 1 61.998814,31.733207"
-     inkscape:label="path2" />
+     d="M 62,32 A 30,30 0 0 1 32.066699,61.999926 30,30 0 0 1 2.0002966,32.133398 30,30 0 0 1 31.799904,2.0006673 30,30 0 0 1 61.998814,31.733207" />
 </svg>

@@ -1,5 +1,8 @@
 # CHANGELOG
 
+### 1.7.3
+Fix issue with the preselection buttons on hover
+
 ### 1.7.2
 Fix issue with the  display of the preselection button
 
