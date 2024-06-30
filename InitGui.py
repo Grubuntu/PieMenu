@@ -27,7 +27,7 @@
 #
 
 global PIE_MENU_VERSION
-PIE_MENU_VERSION = "1.7.2"
+PIE_MENU_VERSION = "1.7.3"
 
 def pieMenuStart():
     """Main function that starts the Pie Menu."""
@@ -44,7 +44,7 @@ def pieMenuStart():
     from PySide.QtWidgets import QApplication, QCheckBox, QComboBox, QDialog, QFileDialog, \
                 QGroupBox, QHBoxLayout, QLabel, QLineEdit, QListWidget, QListWidgetItem, \
                 QMessageBox, QPushButton, QVBoxLayout, QWidget
-    from PySide.QtGui import QKeyEvent, QFontMetrics, QKeySequence, QAction, QShortcut
+    from PySide.QtGui import QKeyEvent, QFontMetrics, QKeySequence, QAction, QShortcut, QTransform
     from PySide.QtCore import QPoint, QSize, Qt
 
 
@@ -120,6 +120,7 @@ def pieMenuStart():
     iconLeft = respath + "PieMenuLeft.svg"
     iconRight = respath + "PieMenuRight.svg"
     iconArrowDown = respath + "PieMenuArrowDown.svg"
+    iconBlank = respath + "PieMenuBlank.svg"
 
     sign = {
         "<": operator.lt,
@@ -246,7 +247,8 @@ def pieMenuStart():
             self.enterEventConnected = False
             self.isMouseOver = False
             self.leaveEvent = self.onLeaveEvent
-
+            self.baseIcon = None
+            self.hoverIcon = None
 
         def onHoverTimeout(self):
             """Handle hover timeout event."""
@@ -268,8 +270,13 @@ def pieMenuStart():
             else:
                 pass
 
+
         def onLeaveEvent(self, event):
             self.isMouseOver = False
+            # set invisible icon for Preselect button on leave
+            if self.baseIcon:
+                self.setIcon(self.baseIcon)
+                self.update()
 
         def enterEvent(self, event):
             global hoverDelay
@@ -281,6 +288,10 @@ def pieMenuStart():
             self.hoverTimer.start(hoverDelay)
             self.isMouseOver = True
 
+            # set a visible icon for Preselect button on hover
+            if self.hoverIcon:
+                self.setIcon(self.hoverIcon)
+                self.update()
 
         def mouseReleaseEvent(self, event):
             if self.isMouseOver and self.defaultAction().isEnabled():
@@ -301,6 +312,14 @@ def pieMenuStart():
                         pass
             else:
                 pass
+
+        def setBaseIcon(self, icon: QtGui.QIcon):
+            self.baseIcon = icon
+            self.setIcon(self.baseIcon)
+
+        def setHoverIcon(self, icon: QtGui.QIcon):
+            self.hoverIcon = icon
+            # self.setIcon(self.hoverIcon)
 
 
     class PieMenuSeparator():
@@ -388,6 +407,7 @@ def pieMenuStart():
             self.menuSize = 0
             self.menu.setObjectName("styleContainer")
             self.menu.setStyleSheet(styleCurrentTheme)
+            
             self.menu.setWindowFlags(QtCore.Qt.FramelessWindowHint | Qt.NoDropShadowWindowHint)
             self.menu.setAttribute(QtCore.Qt.WA_TranslucentBackground)
 
@@ -407,6 +427,8 @@ def pieMenuStart():
         def show_menu(self):
             if self.menu.isVisible():
                 self.menu.hide()
+                for i in self.buttons:
+                    i.hide()
             else:
                 actionKey.trigger()
 
@@ -486,7 +508,6 @@ def pieMenuStart():
 
         def eventFilter(self, obj, event):
             """Handle mouse and keyboard events """
-
             if event.type() == QtCore.QEvent.MouseButtonRelease:
                 if event.button() == QtCore.Qt.LeftButton:
                     if self.menu.isActiveWindow():
@@ -535,6 +556,8 @@ def pieMenuStart():
 
                     if charKey in listShortcutCode:
                         self.menu.hide()
+                        for i in self.buttons:
+                            i.hide()
                         j = 0
                         for i in listShortcutCode:
                             if i == charKey:
@@ -548,6 +571,8 @@ def pieMenuStart():
                         if event.key() == QtGui.QKeySequence(globalShortcutKey):
                             if self.menu.isVisible():
                                 self.menu.hide()
+                                for i in self.buttons:
+                                    i.hide()
                                 flagVisi = True
                                 return True
                             else:
@@ -558,6 +583,8 @@ def pieMenuStart():
                             if event.key() == QtGui.QKeySequence(shortcut.key()):
                                 if self.menu.isVisible():
                                     self.menu.hide()
+                                    for i in self.buttons:
+                                        i.hide()
                                     event.accept()
                                     flagVisi = True
                                     return True
@@ -902,6 +929,9 @@ def pieMenuStart():
                     button.setIconSize(QtCore.QSize(icon, icon))
                     button.setGeometry(0, 0, buttonSize, buttonSize)
 
+                    # Preselection Arrow
+                    buttonPreselect = HoverButton()
+
                     # modify style for display command name (only with Pie shape)
                     if displayCommandName and shape == "Pie":
                         # set minimum Y spacing at 1.2 * buttonSize
@@ -987,6 +1017,11 @@ def pieMenuStart():
 
                         button.setProperty("ButtonX", X)
                         button.setProperty("ButtonY", Y)
+                        
+                        buttonPreselect.setProperty("ButtonX", (self.radius - 1 * buttonSize) *
+                                           (math.cos(angle * num + angleStart)))
+                        buttonPreselect.setProperty("ButtonY", (self.radius - 1 * buttonSize) *
+                                           (math.sin(angle * num + angleStart)))
 
                         iconLabel.setStyleSheet(styleCurrentTheme + iconMarging)
                         button.setStyleSheet(styleCurrentTheme + radius + padding)
@@ -1170,29 +1205,33 @@ def pieMenuStart():
                         X_shortcut = (self.radius) * (math.cos(angle * num + angleStart)) + icon/2
                         Y_shortcut = (self.radius) * (math.sin(angle * num + angleStart)) + icon/2
 
+                        buttonPreselect.setProperty("ButtonX", (self.radius - 1 * buttonSize) * (math.cos(angle * num + angleStart)))
+                        buttonPreselect.setProperty("ButtonY", (self.radius - 1 * buttonSize) * (math.sin(angle * num + angleStart)))
+
                     if displayPreselect:
-                        # Preselection Arrow
-                        buttonPreselect = HoverButton()
-                        buttonPreselect.setParent(mw)
+                        buttonPreselect.setParent(self.menu)
                         buttonPreselect.setObjectName("stylebuttonPreselect")
+                        buttonPreselect.setAttribute(QtCore.Qt.WA_Hover)
                         buttonPreselect.setStyleSheet(styleCurrentTheme)
                         buttonPreselect.setDefaultAction(commands[commands.index(i)])
                         buttonPreselect.setToolTip("")
 
                         angle_total = angle * num + angleStart + math.pi*3/2
                         sizeRound = buttonSize * (abs(math.sin(angle_total)) + abs(math.cos(angle_total)))
+
                         buttonPreselect.setIconSize(QtCore.QSize(sizeRound, sizeRound))
                         rotation_angle = math.degrees(angle * num + angleStart) + 270
-
                         buttonPreselect.originalPixmap = QtGui.QPixmap(iconArrowDown)
-                        buttonPreselect.rotatedPixmap = rotate_pixmap(buttonPreselect.originalPixmap, rotation_angle)
-
-                        buttonPreselect.setIcon(QtGui.QIcon(buttonPreselect.rotatedPixmap))
                         buttonPreselect.setGeometry(0, 0, sizeRound, sizeRound)
-                        buttonPreselect.setProperty("ButtonX", (self.radius - 1.2*buttonSize) *
-                                           (math.cos(angle * num + angleStart)))
-                        buttonPreselect.setProperty("ButtonY", (self.radius- 1.2*buttonSize) *
-                                           (math.sin(angle * num + angleStart)))
+
+                        trans = QTransform()
+                        trans.rotate(rotation_angle)
+                        transformed_pixmap = buttonPreselect.originalPixmap.transformed(trans)
+
+                        blankIcon = QtGui.QPixmap(iconBlank)
+                        buttonPreselect.setBaseIcon(QtGui.QIcon(blankIcon))
+                        buttonPreselect.setHoverIcon(QtGui.QIcon(transformed_pixmap))
+
                         self.buttons.append(buttonPreselect)
 
                     self.buttons.append(button)
@@ -1515,6 +1554,8 @@ def pieMenuStart():
                 ## needed for tools shortcut
                 self.menu.popup(QtCore.QPoint(mw.pos()))
                 self.menu.hide()
+                for i in self.buttons:
+                    i.hide()
 
                 for i in self.buttons:
                     i.move(i.property("ButtonX") + posX - i.width() / 2 + self.offset_x ,
@@ -1554,6 +1595,8 @@ def pieMenuStart():
                 flagVisi = False
             else:
                 self.menu.hide()
+                for i in self.buttons:
+                    i.hide()
                 flagVisi = False
 
 
@@ -3820,7 +3863,7 @@ def pieMenuStart():
         reloadWorkbench()
 
         # we hide the custom toolbar
-        mw = FreeCADGui.getMainWindow()
+        mw = Gui.getMainWindow()
         for i in mw.findChildren(QtGui.QToolBar):
             if i.windowTitle() == 'PieMenuTB':
                 i.setVisible(False)
@@ -5012,7 +5055,7 @@ def pieMenuStart():
     listToolBar.setSortingEnabled(True)
     listToolBar.sortItems(QtCore.Qt.AscendingOrder)
     listToolBar.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-    listToolBar.setMinimumSize(QSize(385, 460));
+    listToolBar.setMinimumSize(QSize(385, 460))
     listToolBar.itemSelectionChanged.connect(showListToolBar)
 
     listToolBarLayout = QtGui.QVBoxLayout()
