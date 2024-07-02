@@ -3,7 +3,7 @@
 ### 1.7.4
 - Fix error message on hover in preview toolbartab
 - Fix flickering when multi selections (CTRL) on context mode
-- Fix submenus in sketcher edit mode
+- Fix submenus in sketcher edit mode : https://github.com/Grubuntu/PieMenu/issues/87
 
 ### 1.7.3
 Fix issue with the preselection buttons on hover
