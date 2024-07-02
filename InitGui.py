@@ -27,7 +27,7 @@
 #
 
 global PIE_MENU_VERSION
-PIE_MENU_VERSION = "1.7.3"
+PIE_MENU_VERSION = "1.7.4"
 
 def pieMenuStart():
     """Main function that starts the Pie Menu."""
@@ -355,7 +355,7 @@ def pieMenuStart():
 
         def GetResources(self):
             """Return a dictionary with data that will be used by the button or menu item."""
-            return {'Pixmap' : self.iconPath, 'MenuText':'PieMenu '+ self.keyValue, 'ToolTip': 'Piemenu '+ self.keyValue}
+            return {'Pixmap' : self.iconPath, 'MenuText':'PieMenu '+ self.keyValue, 'ToolTip': 'Piemenu '+ self.keyValue, 'CmdType' : 'ForEdit'}
 
         def Activated(self):
             """Run the following code when the command is activated (button press)."""
@@ -408,7 +408,6 @@ def pieMenuStart():
             self.menu.setStyleSheet(styleCurrentTheme)
             # QtCore.Qt.WA_MacAlwaysShowToolWindow : needed to hide widget when FreeCad is minimized
             self.menu.setWindowFlags(QtCore.Qt.FramelessWindowHint | Qt.NoDropShadowWindowHint | QtCore.Qt.WA_MacAlwaysShowToolWindow)
-
             self.menu.setAttribute(QtCore.Qt.WA_TranslucentBackground)
 
             if compositingManager:
@@ -427,8 +426,6 @@ def pieMenuStart():
         def show_menu(self):
             if self.menu.isVisible():
                 self.menu.hide()
-                for i in self.buttons:
-                    i.hide()
             else:
                 actionKey.trigger()
 
@@ -558,8 +555,6 @@ def pieMenuStart():
 
                     if charKey in listShortcutCode:
                         self.menu.hide()
-                        for i in self.buttons:
-                            i.hide()
                         j = 0
                         for i in listShortcutCode:
                             if i == charKey:
@@ -573,8 +568,6 @@ def pieMenuStart():
                         if event.key() == QtGui.QKeySequence(globalShortcutKey):
                             if self.menu.isVisible():
                                 self.menu.hide()
-                                for i in self.buttons:
-                                    i.hide()
                                 flagVisi = True
                                 return True
                             else:
@@ -585,8 +578,6 @@ def pieMenuStart():
                             if event.key() == QtGui.QKeySequence(shortcut.key()):
                                 if self.menu.isVisible():
                                     self.menu.hide()
-                                    for i in self.buttons:
-                                        i.hide()
                                     event.accept()
                                     flagVisi = True
                                     return True
@@ -646,8 +637,6 @@ def pieMenuStart():
 
                         if charKey in listShortcutCode:
                             self.menu.hide()
-                            for i in self.buttons:
-                                i.hide()
                             event.accept()
                             j = 0
                             for i in listShortcutCode:
@@ -683,8 +672,6 @@ def pieMenuStart():
 
                         if charKey in listShortcutCode:
                             self.menu.hide()
-                            for i in self.buttons:
-                                i.hide()
                             event.accept()
                             j = 0
                             for i in listShortcutCode:
@@ -707,6 +694,8 @@ def pieMenuStart():
                 if event.type() == QtCore.QEvent.KeyRelease and event.key() == QtCore.Qt.Key_Control:
                     enableContext = paramGet.GetBool("EnableContext")
                     if enableContext:
+                        self.debounceTimer.start(100)
+                        self.stop_filter()
                         listTopo()
 
             elif event.type() == QtCore.QEvent.Wheel:
@@ -775,7 +764,7 @@ def pieMenuStart():
             num_per_row = 4
             icon_spacing = 8
             command_per_circle = 5
-            shortcutLabelSize = "8"
+            shortcutLabelSize = 8
 
             try:
                 valueRadius = group.GetInt("Radius")
@@ -1216,7 +1205,7 @@ def pieMenuStart():
                         buttonPreselect.setAttribute(QtCore.Qt.WA_Hover)
                         buttonPreselect.setStyleSheet(styleCurrentTheme)
                         buttonPreselect.setDefaultAction(commands[commands.index(i)])
-                        buttonPreselect.setToolTip("")
+                        buttonPreselect.setToolTip(None)
 
                         angle_total = angle * num + angleStart + math.pi*3/2
                         sizeRound = buttonSize * (abs(math.sin(angle_total)) + abs(math.cos(angle_total)))
@@ -1231,6 +1220,7 @@ def pieMenuStart():
                         transformed_pixmap = buttonPreselect.originalPixmap.transformed(trans)
 
                         blankIcon = QtGui.QPixmap(iconBlank)
+                        buttonPreselect.setIcon(QtGui.QIcon(blankIcon))
                         buttonPreselect.setBaseIcon(QtGui.QIcon(blankIcon))
                         buttonPreselect.setHoverIcon(QtGui.QIcon(transformed_pixmap))
 
@@ -1261,6 +1251,7 @@ def pieMenuStart():
                                 shortcutLabel.setDefaultAction(commands[commands.index(i)])
                                 shortcutLabel.setToolButtonStyle(Qt.ToolButtonTextOnly)
                                 shortcutLabel.setText(chr(shortcutCode))
+                                shortcutLabel.setToolTip(None)
 
                                 listCommands.append(commands[commands.index(i)])
                                 listShortcutCode.append(chr(shortcutCode))
@@ -1556,8 +1547,6 @@ def pieMenuStart():
                 ## needed for tools shortcut
                 self.menu.popup(QtCore.QPoint(mw.pos()))
                 self.menu.hide()
-                for i in self.buttons:
-                    i.hide()
 
                 for i in self.buttons:
                     i.move(i.property("ButtonX") + posX - i.width() / 2 + self.offset_x ,
@@ -1597,8 +1586,6 @@ def pieMenuStart():
                 flagVisi = False
             else:
                 self.menu.hide()
-                for i in self.buttons:
-                    i.hide()
                 flagVisi = False
 
 
@@ -1695,8 +1682,9 @@ def pieMenuStart():
         def customCloseEvent(self, event):
             # Caught close event to save parameters on disk
             App.saveParameter()
-            super(PieMenuDialog, self).closeEvent(event)
             onBackToSettings()
+            super(PieMenuDialog, self).closeEvent(event)
+
 
     #### END Classes definitions ####
 
@@ -2405,11 +2393,11 @@ def pieMenuStart():
                 pass
             Gui.activateWorkbench(lastWorkbench.__class__.__name__)
 
+            triggerMode = getParameterGroup(text, "String", "TriggerMode")
+            hoverDelay = getParameterGroup(text, "Int", "HoverDelay")
+
         else:
             pass
-
-        triggerMode = getParameterGroup(text, "String", "TriggerMode")
-        hoverDelay = getParameterGroup(text, "Int", "HoverDelay")
 
         if not keyValue == "toolBarTab":
             PieMenuInstance.add_commands(actions, context, text)
@@ -4205,6 +4193,13 @@ def pieMenuStart():
         else:
             displayPreselect = False
             group.SetBool("DisplayPreselect", displayPreselect)
+
+        shortcutLabelSize = group.GetInt("ShortcutLabelSize")
+        if shortcutLabelSize:
+            pass
+        else:
+            shortcutLabelSize = False
+            group.SetInt("DisplayPreselect", shortcutLabelSize)
         contextList()
 
 
