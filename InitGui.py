@@ -27,7 +27,7 @@
 #
 
 global PIE_MENU_VERSION
-PIE_MENU_VERSION = "1.7.4"
+PIE_MENU_VERSION = "1.7.5"
 
 def pieMenuStart():
     """Main function that starts the Pie Menu."""
@@ -247,8 +247,6 @@ def pieMenuStart():
             self.enterEventConnected = False
             self.isMouseOver = False
             self.leaveEvent = self.onLeaveEvent
-            self.baseIcon = None
-            self.hoverIcon = None
 
         def onHoverTimeout(self):
             """Handle hover timeout event."""
@@ -272,10 +270,6 @@ def pieMenuStart():
 
         def onLeaveEvent(self, event):
             self.isMouseOver = False
-            # set invisible icon for Preselect button on leave
-            if self.baseIcon:
-                self.setIcon(self.baseIcon)
-                self.update()
 
         def enterEvent(self, event):
             global hoverDelay
@@ -286,11 +280,6 @@ def pieMenuStart():
             self.hoverTimer.stop()
             self.hoverTimer.start(hoverDelay)
             self.isMouseOver = True
-
-            # set a visible icon for Preselect button on hover
-            if self.hoverIcon:
-                self.setIcon(self.hoverIcon)
-                self.update()
 
         def mouseReleaseEvent(self, event):
             if self.isMouseOver and self.defaultAction().isEnabled():
@@ -312,13 +301,51 @@ def pieMenuStart():
             else:
                 pass
 
-        def setBaseIcon(self, icon: QtGui.QIcon):
+
+    class PreselectButton(QtGui.QToolButton):
+        """ Custom class : for preselect button """
+
+        def __init__(self, parent=None):
+            super(PreselectButton, self).__init__()
+            self.baseIcon = None
+            self.hoverIcon = None
+            self.leaveEvent = self.onLeaveEvent
+
+        def onLeaveEvent(self, event):
+            self.setIcon(self.baseIcon)
+            self.update()
+
+        def enterEvent(self, event):
+            self.setIcon(self.hoverIcon)
+            self.update()
+
+        def mouseReleaseEvent(self, event):
+            if self.defaultAction().isEnabled():
+                if not pieMenuDialog.isVisible():
+                    PieMenuInstance.hide()
+                    mw.setFocus()
+                    self.defaultAction().trigger()
+                    module = None
+                    try:
+                        docName = App.ActiveDocument.Name
+                        g = Gui.ActiveDocument.getInEdit()
+                        module = g.Module
+                        fonctionActive = g.Object
+
+                        if (module is not None and module != 'SketcherGui' and str(fonctionActive) in listSpinboxFeatures):
+                            PieMenuInstance.showAtMouse()
+                    except:
+                        pass
+            else:
+                pass
+
+        def setBaseIcon(self, icon: QtGui.QIcon()):
             self.baseIcon = icon
             self.setIcon(self.baseIcon)
 
-        def setHoverIcon(self, icon: QtGui.QIcon):
+
+        def setHoverIcon(self, icon: QtGui.QIcon()):
             self.hoverIcon = icon
-            # self.setIcon(self.hoverIcon)
 
 
     class PieMenuSeparator():
@@ -328,7 +355,9 @@ def pieMenuStart():
 
         def GetResources(self):
             """Return a dictionary with data that will be used by the button or menu item."""
-            return {'Pixmap' : iconAddSeparator, 'MenuText': translate('PieMenuTab', 'Separator'), 'ToolTip': translate('PieMenuTab', 'Separator for PieMenu ')}
+            return {'Pixmap' : iconAddSeparator,
+                     'MenuText': translate('PieMenuTab', 'Separator'), 
+                     'ToolTip': translate('PieMenuTab', 'Separator for PieMenu ')}
 
         def Activated(self):
             """Run the following code when the command is activated (button press)."""
@@ -355,7 +384,10 @@ def pieMenuStart():
 
         def GetResources(self):
             """Return a dictionary with data that will be used by the button or menu item."""
-            return {'Pixmap' : self.iconPath, 'MenuText':'PieMenu '+ self.keyValue, 'ToolTip': 'Piemenu '+ self.keyValue, 'CmdType' : 'ForEdit'}
+            return {'Pixmap' : self.iconPath,
+                'MenuText':'PieMenu '+ self.keyValue,
+                'ToolTip': 'Piemenu '+ self.keyValue,
+                'CmdType' : 'ForEdit'}
 
         def Activated(self):
             """Run the following code when the command is activated (button press)."""
@@ -507,7 +539,7 @@ def pieMenuStart():
             """Handle mouse and keyboard events """
             if event.type() == QtCore.QEvent.MouseButtonRelease:
                 if event.button() == QtCore.Qt.LeftButton:
-                    if self.menu.isActiveWindow():
+                    if self.menu.isActiveWindow() or pieMenuDialog.isVisible():
                         pass
                     else:
                         self.menu.hide()
@@ -921,7 +953,7 @@ def pieMenuStart():
                     button.setGeometry(0, 0, buttonSize, buttonSize)
 
                     # Preselection Arrow
-                    buttonPreselect = HoverButton()
+                    buttonPreselect = PreselectButton()
 
                     # modify style for display command name (only with Pie shape)
                     if displayCommandName and shape == "Pie":
@@ -1223,6 +1255,7 @@ def pieMenuStart():
                         buttonPreselect.setIcon(QtGui.QIcon(blankIcon))
                         buttonPreselect.setBaseIcon(QtGui.QIcon(blankIcon))
                         buttonPreselect.setHoverIcon(QtGui.QIcon(transformed_pixmap))
+                        
 
                         self.buttons.append(buttonPreselect)
 
@@ -1233,6 +1266,7 @@ def pieMenuStart():
                         button.setObjectName("styleSeparator")
                         button.setIcon(QtGui.QIcon(iconSeparator))
                         iconButton = QtGui.QIcon(iconSeparator)
+                        buttonPreselect.setVisible(False)
                         try:
                             iconLabel.setPixmap(iconButton.pixmap(QtCore.QSize(icon, icon)))
                         except:
@@ -1450,15 +1484,11 @@ def pieMenuStart():
                 self.menu.popup(QtCore.QPoint(mw.pos()))
                 self.menu.setGeometry(mw.geometry())
 
-
                 for i in self.buttons:
                     i.move(i.property("ButtonX") + pos.x() - i.width() / 2 + self.offset_x ,
                            i.property("ButtonY") + pos.y() - i.height() / 2 + self.offset_y)
-
-                    i.setVisible(True)
-
-                for i in self.buttons:
                     i.repaint()
+
             else:
                 pos = QtGui.QCursor.pos()
 
@@ -1486,7 +1516,6 @@ def pieMenuStart():
                           + (self.menuSize - i.size().width()) / 2 + self.offset_x,
                           i.property("ButtonY")
                           + (self.menuSize - i.size().height()) / 2 + self.offset_y)
-
                     i.setVisible(True)
 
                 self.menu.popup(QtCore.QPoint(pos.x() - self.menuSize / 2, pos.y() - self.menuSize / 2))
@@ -1555,7 +1584,6 @@ def pieMenuStart():
                     i.setAttribute(Qt.WA_Disabled, True)
                     i.setParent(showPiemenu)
                     # i.repaint()
-
                     # disable quickMenu and (central) closebutton
                     if i.objectName() == "styleButtonMenu" or i.objectName() == "styleMenuClose":
                         i.setEnabled(False)
