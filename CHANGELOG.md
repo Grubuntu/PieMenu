@@ -1,5 +1,8 @@
 # CHANGELOG
 
+### 1.7.5
+- Fix issue : when left click in PiemenuDialog, it hid the preview
+
 ### 1.7.4
 - Fix error message on hover in preview toolbartab
 - Fix flickering when multi selections (CTRL) on context mode
