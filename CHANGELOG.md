@@ -1,5 +1,8 @@
 # CHANGELOG
 
+### 1.7.6
+- Fix issue : PieMenu crash at launch with Freecad 0.22 Version above 38001 (https://github.com/Grubuntu/PieMenu/issues/89)
+  
 ### 1.7.5
 - Fix issue : when left click in PiemenuDialog, it hid the preview
 
