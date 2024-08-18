@@ -1,5 +1,9 @@
 # CHANGELOG
 
+### 1.8
+- Added import/export PieMenu settings
+- Clean some code
+  
 ### 1.7.6
 - Fix issue : PieMenu crash at launch with Freecad 0.22 Version above 38001 (https://github.com/Grubuntu/PieMenu/issues/89)
   
