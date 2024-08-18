@@ -3,7 +3,7 @@ PieMenu widget for FreeCAD
 
 Quick customizable menus for FreeCAD.
 
-### Version 1.8 new features:
+### Version 1.8 new feature:
 Add ability to export/import PieMenu settings.
 
 ![Capture d’écran (231)](https://github.com/user-attachments/assets/796c8694-5d5f-471f-8d68-06bb63b7053f)
