@@ -5330,6 +5330,11 @@ def pieMenuStart():
     doc_button.setIcon(QtGui.QIcon.fromTheme(iconDocumentation))
     doc_button.clicked.connect(documentationLink)
 
+    new_ui_test_button = QtGui.QPushButton("Test UI file")
+    new_ui_test_button.setIcon(QtGui.QIcon.fromTheme(iconPieMenuLogo))
+    new_ui_test_button.clicked.connect(lambda: PieMenuDialogTest().Activated())
+    # new_ui_test_button.clicked.connect(DialogTest)
+
     close_button = QtGui.QPushButton(translate("MainWindow", "Close"))
     close_button.setMaximumWidth(120)
 
@@ -5339,6 +5344,8 @@ def pieMenuStart():
     button_row_layout.addWidget(close_button, 0, alignment=QtCore.Qt.AlignCenter)
     button_row_layout.addStretch(1)
     button_row_layout.addWidget(doc_button, 0, alignment=QtCore.Qt.AlignRight)
+    button_row_layout.addStretch(1)
+    button_row_layout.addWidget(new_ui_test_button)
 
     button_layout = QtGui.QVBoxLayout()
     button_layout.addLayout(layoutInfoShortcut)
