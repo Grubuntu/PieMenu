@@ -29,6 +29,7 @@
 global PIE_MENU_VERSION
 PIE_MENU_VERSION = "1.8"
 
+
 def pieMenuStart():
     """Main function that starts the Pie Menu."""
     import os
@@ -49,17 +50,12 @@ def pieMenuStart():
     from PySide.QtCore import QSize, Qt
 
     translate = App.Qt.translate
-    def QT_TRANSLATE_NOOP(context, text):
-        return text
 
     # global variables
     path = locator.path()
-    respath = path + "/Resources/icons/"
-    respath = respath.replace("\\", "/")
-    stylepath = path + "/Resources/Stylesheets/"
-    stylepath = stylepath.replace("\\", "/")
-    transpath = path + "/Resources/translation/"
-    transpath = transpath.replace("\\", "/")
+    respath = os.path.join(path, "Resources", "icons")
+    stylepath = os.path.join(path, "Resources", "Stylesheets")
+    transpath = os.path.join(path, "Resources", "translation")
 
     # Add translations path
     Gui.addLanguagePath(transpath)
@@ -105,25 +101,26 @@ def pieMenuStart():
     loadedWorkbenches = paramWb.GetString("BackgroundAutoloadModules")
     loadedWorkbenches = loadedWorkbenches.split(",")
 
-    iconUp = respath + "PieMenuUp.svg"
-    iconDown = respath + "PieMenuDown.svg"
-    iconAdd = respath + "PieMenuAdd.svg"
-    iconRemove = respath + "PieMenuRemove.svg"
-    iconRename = respath + "PieMenuRename.svg"
-    iconReset = respath + "PieMenuReload.svg"
-    iconCopy = respath + "PieMenuCopy.svg"
-    iconRemoveCommand = respath + "PieMenuRemoveCommand.svg"
-    iconBackspace =  respath + "PieMenuBackspace.svg"
-    iconInfo =  respath + "PieMenuInfo.svg"
-    iconAddSeparator =  respath + "PieMenuAddSeparator.svg"
-    iconSeparator =  respath + "PieMenuSeparator.svg"
-    iconDocumentation = respath + "PieMenuDocumentation.svg"
-    iconPieMenuLogo = respath + "PieMenu_Logo.svg"
+    transpath = os.path.join(path, "Resources", "translation")
+    iconUp = os.path.join(respath, "PieMenuUp.svg")
+    iconDown = os.path.join(respath, "PieMenuDown.svg")
+    iconAdd = os.path.join(respath, "PieMenuAdd.svg")
+    iconRemove = os.path.join(respath, "PieMenuRemove.svg")
+    iconRename = os.path.join(respath, "PieMenuRename.svg")
+    iconReset = os.path.join(respath, "PieMenuReload.svg")
+    iconCopy = os.path.join(respath, "PieMenuCopy.svg")
+    iconRemoveCommand = os.path.join(respath, "PieMenuRemoveCommand.svg")
+    iconBackspace = os.path.join(respath, "PieMenuBackspace.svg")
+    iconInfo = os.path.join(respath, "PieMenuInfo.svg")
+    iconAddSeparator = os.path.join(respath, "PieMenuAddSeparator.svg")
+    iconSeparator = os.path.join(respath, "PieMenuSeparator.svg")
+    iconDocumentation = os.path.join(respath, "PieMenuDocumentation.svg")
+    iconPieMenuLogo = os.path.join(respath, "PieMenu_Logo.svg")
     iconDefault = QtGui.QApplication.style().standardIcon(QtGui.QStyle.StandardPixmap.SP_DialogApplyButton)
-    iconLeft = respath + "PieMenuLeft.svg"
-    iconRight = respath + "PieMenuRight.svg"
-    iconArrowDown = respath + "PieMenuArrowDown.svg"
-    iconBlank = respath + "PieMenuBlank.svg"
+    iconLeft = os.path.join(respath, "PieMenuLeft.svg")
+    iconRight = os.path.join(respath, "PieMenuRight.svg")
+    iconArrowDown = os.path.join(respath, "PieMenuArrowDown.svg")
+    iconBlank = os.path.join(respath, "PieMenuBlank.svg")
 
     sign = {
         "<": operator.lt,
@@ -1758,10 +1755,10 @@ def pieMenuStart():
     def getStyle():
         theme = paramGet.GetString("Theme")
         if theme == "":
-            theme = "Legacy" # default theme if new installation
-        stylesheet_path = f"{stylepath}{theme}.qss"
+            theme = "Legacy"  # default theme if new installation
+        stylesheet_path = f"{os.path.join(stylepath, theme)}.qss"
         if not os.path.exists(stylesheet_path):
-            stylesheet_path = f"{stylepath}Legacy.qss"
+            stylesheet_path = f"{os.path.join(stylepath, 'Legacy.qss')}"
             paramGet.SetString("Theme", "Legacy")
         with open(stylesheet_path, "r") as f:
             styleCurrentTheme = f.read()
