@@ -1694,6 +1694,59 @@ def pieMenuStart():
             super(PieMenuDialog, self).closeEvent(event)
 
 
+    # dummy class to invoke UI file
+
+    class PieMenuDialogTest:
+        def IsActive(self):
+            return True
+
+        def Activated(self):
+            ui_path = os.path.join(path, "Resources", "ui", "pieMenuDialog.ui")
+            self.dialog = Gui.PySideUic.loadUi(ui_path)
+
+            # Manually set icons to the buttons and connect signals
+
+            # Group PieMenu
+            self.dialog.buttonIconPieMenu.clicked.connect(onButtonIconPieMenu)
+            self.dialog.cBox.currentIndexChanged.connect(onPieChange)
+            self.dialog.buttonAddPieMenu.setIcon(QtGui.QIcon(iconAdd))
+            self.dialog.buttonAddPieMenu.clicked.connect(onButtonAddPieMenu)
+            self.dialog.buttonRemovePieMenu.setIcon(QtGui.QIcon(iconRemove))
+            self.dialog.buttonRemovePieMenu.clicked.connect(onButtonRemovePieMenu)
+            self.dialog.buttonRenamePieMenu.setIcon(QtGui.QIcon(iconRename))
+            self.dialog.buttonRenamePieMenu.clicked.connect(onButtonRenamePieMenu)
+            self.dialog.buttonCopyPieMenu.setIcon(QtGui.QIcon(iconCopy))
+            self.dialog.buttonCopyPieMenu.clicked.connect(onButtonCopyPieMenu)
+
+            self.dialog.resetContextButton.setIcon(QtGui.QIcon(iconReset))
+            self.dialog.deleteShortcutButton.setIcon(QtGui.QIcon(iconBackspace))
+            self.dialog.clearButton.setIcon(QtGui.QIcon(iconBackspace))
+            self.dialog.deleteGlobalShortcutButton.setIcon(QtGui.QIcon(iconBackspace))
+
+            # pieButtons widget
+            self.dialog.buttonAddSeparator.setIcon(QtGui.QIcon(iconAddSeparator))
+            self.dialog.buttonAddSeparator.clicked.connect(onButtonAddSeparator)
+            self.dialog.buttonRemoveCommand.setIcon(QtGui.QIcon(iconRemoveCommand))
+            self.dialog.buttonRemoveCommand.clicked.connect(onButtonRemoveCommand)
+            self.dialog.buttonUp.setIcon(QtGui.QIcon(iconUp))
+            self.dialog.buttonUp.clicked.connect(onButtonUp)
+            self.dialog.buttonDown.setIcon(QtGui.QIcon(iconDown))
+            self.dialog.buttonDown.clicked.connect(onButtonDown)
+
+            self.dialog.info_button.setIcon(QtGui.QIcon(iconInfo))
+            self.dialog.doc_button.setIcon(QtGui.QIcon(iconDocumentation))
+            self.dialog.buttonBackToSettings.setIcon(QtGui.QIcon(iconLeft))
+            self.dialog.buttonExistingToolBar.setIcon(QtGui.QIcon(iconRight))
+
+            # self.setWindowIcon(QtGui.QIcon(iconPieMenuLogo))
+            # self.dialog..setIcon(QtGui.QIcon(iconDefault))
+            # self.dialog..setIcon(QtGui.QIcon(iconArrowDown))
+            # self.dialog..setIcon(QtGui.QIcon(iconBlank))
+
+            # Manually set some properties to some elements
+
+            self.dialog.exec_()
+
     #### END Classes definitions ####
 
 
@@ -4621,7 +4674,6 @@ def pieMenuStart():
     #### MainWindow Preferences Dialog ####
     #### group PieMenu ####
     tabs = QtGui.QTabWidget()
-    tabToolBar = QtGui.QTabWidget()
 
     #### layout PieMenu Settings ####
     buttonIconPieMenu = QtGui.QToolButton()
@@ -5176,8 +5228,6 @@ def pieMenuStart():
     tabs.addTab(widgetContainer, translate("ToolsTab", "Tools"))
     tabs.addTab(contextTab, translate("ContextTab", "Context"))
     tabs.addTab(settingsTab, translate("GlobalSettingsTab", "Global settings"))
-
-    tabToolBar.addTab(toolBarTab, translate("ToolBarsTab", "ToolBars"))
 
     #### buttons actions list ####
     buttonAddSeparator = QtGui.QToolButton()
