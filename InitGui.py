@@ -29,37 +29,33 @@
 global PIE_MENU_VERSION
 PIE_MENU_VERSION = "1.8"
 
+
 def pieMenuStart():
     """Main function that starts the Pie Menu."""
-    import os
+    import datetime
     import math
     import operator
+    import os
     import platform
+    import shutil
+
     import FreeCAD as App
     import FreeCADGui as Gui
-    import PieMenuLocator as locator
-    import shutil
-    import datetime
     from FreeCAD import Units
     from PySide import QtCore, QtGui, QtWidgets
-    from PySide.QtWidgets import QCheckBox, QDialog, QFileDialog, \
-                QGroupBox, QHBoxLayout, QLabel, QLineEdit, QListWidgetItem, \
-                QMessageBox, QVBoxLayout, QWidget
-    from PySide.QtGui import QFontMetrics, QKeySequence, QShortcut, QTransform
     from PySide.QtCore import QSize, Qt
+    from PySide.QtGui import QFontMetrics, QKeySequence, QShortcut, QTransform
+    from PySide.QtWidgets import QCheckBox, QDialog, QFileDialog, QGroupBox, QHBoxLayout, QLabel, QLineEdit, QListWidgetItem, QMessageBox, QVBoxLayout, QWidget
+
+    import PieMenuLocator as locator
 
     translate = App.Qt.translate
-    def QT_TRANSLATE_NOOP(context, text):
-        return text
 
     # global variables
     path = locator.path()
-    respath = path + "/Resources/icons/"
-    respath = respath.replace("\\", "/")
-    stylepath = path + "/Resources/Stylesheets/"
-    stylepath = stylepath.replace("\\", "/")
-    transpath = path + "/Resources/translation/"
-    transpath = transpath.replace("\\", "/")
+    respath = os.path.join(path, "Resources", "icons")
+    stylepath = os.path.join(path, "Resources", "Stylesheets")
+    transpath = os.path.join(path, "Resources", "translation")
 
     # Add translations path
     Gui.addLanguagePath(transpath)
@@ -105,25 +101,26 @@ def pieMenuStart():
     loadedWorkbenches = paramWb.GetString("BackgroundAutoloadModules")
     loadedWorkbenches = loadedWorkbenches.split(",")
 
-    iconUp = respath + "PieMenuUp.svg"
-    iconDown = respath + "PieMenuDown.svg"
-    iconAdd = respath + "PieMenuAdd.svg"
-    iconRemove = respath + "PieMenuRemove.svg"
-    iconRename = respath + "PieMenuRename.svg"
-    iconReset = respath + "PieMenuReload.svg"
-    iconCopy = respath + "PieMenuCopy.svg"
-    iconRemoveCommand = respath + "PieMenuRemoveCommand.svg"
-    iconBackspace =  respath + "PieMenuBackspace.svg"
-    iconInfo =  respath + "PieMenuInfo.svg"
-    iconAddSeparator =  respath + "PieMenuAddSeparator.svg"
-    iconSeparator =  respath + "PieMenuSeparator.svg"
-    iconDocumentation = respath + "PieMenuDocumentation.svg"
-    iconPieMenuLogo = respath + "PieMenu_Logo.svg"
+    transpath = os.path.join(path, "Resources", "translation")
+    iconUp = os.path.join(respath, "PieMenuUp.svg")
+    iconDown = os.path.join(respath, "PieMenuDown.svg")
+    iconAdd = os.path.join(respath, "PieMenuAdd.svg")
+    iconRemove = os.path.join(respath, "PieMenuRemove.svg")
+    iconRename = os.path.join(respath, "PieMenuRename.svg")
+    iconReset = os.path.join(respath, "PieMenuReload.svg")
+    iconCopy = os.path.join(respath, "PieMenuCopy.svg")
+    iconRemoveCommand = os.path.join(respath, "PieMenuRemoveCommand.svg")
+    iconBackspace = os.path.join(respath, "PieMenuBackspace.svg")
+    iconInfo = os.path.join(respath, "PieMenuInfo.svg")
+    iconAddSeparator = os.path.join(respath, "PieMenuAddSeparator.svg")
+    iconSeparator = os.path.join(respath, "PieMenuSeparator.svg")
+    iconDocumentation = os.path.join(respath, "PieMenuDocumentation.svg")
+    iconPieMenuLogo = os.path.join(respath, "PieMenu_Logo.svg")
     iconDefault = QtGui.QApplication.style().standardIcon(QtGui.QStyle.StandardPixmap.SP_DialogApplyButton)
-    iconLeft = respath + "PieMenuLeft.svg"
-    iconRight = respath + "PieMenuRight.svg"
-    iconArrowDown = respath + "PieMenuArrowDown.svg"
-    iconBlank = respath + "PieMenuBlank.svg"
+    iconLeft = os.path.join(respath, "PieMenuLeft.svg")
+    iconRight = os.path.join(respath, "PieMenuRight.svg")
+    iconArrowDown = os.path.join(respath, "PieMenuArrowDown.svg")
+    iconBlank = os.path.join(respath, "PieMenuBlank.svg")
 
     sign = {
         "<": operator.lt,
@@ -1697,6 +1694,59 @@ def pieMenuStart():
             super(PieMenuDialog, self).closeEvent(event)
 
 
+    # dummy class to invoke UI file
+
+    class PieMenuDialogTest:
+        def IsActive(self):
+            return True
+
+        def Activated(self):
+            ui_path = os.path.join(path, "Resources", "ui", "pieMenuDialog.ui")
+            self.dialog = Gui.PySideUic.loadUi(ui_path)
+
+            # Manually set icons to the buttons and connect signals
+
+            # Group PieMenu
+            self.dialog.buttonIconPieMenu.clicked.connect(onButtonIconPieMenu)
+            self.dialog.cBox.currentIndexChanged.connect(onPieChange)
+            self.dialog.buttonAddPieMenu.setIcon(QtGui.QIcon(iconAdd))
+            self.dialog.buttonAddPieMenu.clicked.connect(onButtonAddPieMenu)
+            self.dialog.buttonRemovePieMenu.setIcon(QtGui.QIcon(iconRemove))
+            self.dialog.buttonRemovePieMenu.clicked.connect(onButtonRemovePieMenu)
+            self.dialog.buttonRenamePieMenu.setIcon(QtGui.QIcon(iconRename))
+            self.dialog.buttonRenamePieMenu.clicked.connect(onButtonRenamePieMenu)
+            self.dialog.buttonCopyPieMenu.setIcon(QtGui.QIcon(iconCopy))
+            self.dialog.buttonCopyPieMenu.clicked.connect(onButtonCopyPieMenu)
+
+            self.dialog.resetContextButton.setIcon(QtGui.QIcon(iconReset))
+            self.dialog.deleteShortcutButton.setIcon(QtGui.QIcon(iconBackspace))
+            self.dialog.clearButton.setIcon(QtGui.QIcon(iconBackspace))
+            self.dialog.deleteGlobalShortcutButton.setIcon(QtGui.QIcon(iconBackspace))
+
+            # pieButtons widget
+            self.dialog.buttonAddSeparator.setIcon(QtGui.QIcon(iconAddSeparator))
+            self.dialog.buttonAddSeparator.clicked.connect(onButtonAddSeparator)
+            self.dialog.buttonRemoveCommand.setIcon(QtGui.QIcon(iconRemoveCommand))
+            self.dialog.buttonRemoveCommand.clicked.connect(onButtonRemoveCommand)
+            self.dialog.buttonUp.setIcon(QtGui.QIcon(iconUp))
+            self.dialog.buttonUp.clicked.connect(onButtonUp)
+            self.dialog.buttonDown.setIcon(QtGui.QIcon(iconDown))
+            self.dialog.buttonDown.clicked.connect(onButtonDown)
+
+            self.dialog.info_button.setIcon(QtGui.QIcon(iconInfo))
+            self.dialog.doc_button.setIcon(QtGui.QIcon(iconDocumentation))
+            self.dialog.buttonBackToSettings.setIcon(QtGui.QIcon(iconLeft))
+            self.dialog.buttonExistingToolBar.setIcon(QtGui.QIcon(iconRight))
+
+            # self.setWindowIcon(QtGui.QIcon(iconPieMenuLogo))
+            # self.dialog..setIcon(QtGui.QIcon(iconDefault))
+            # self.dialog..setIcon(QtGui.QIcon(iconArrowDown))
+            # self.dialog..setIcon(QtGui.QIcon(iconBlank))
+
+            # Manually set some properties to some elements
+
+            self.dialog.exec_()
+
     #### END Classes definitions ####
 
 
@@ -1758,10 +1808,10 @@ def pieMenuStart():
     def getStyle():
         theme = paramGet.GetString("Theme")
         if theme == "":
-            theme = "Legacy" # default theme if new installation
-        stylesheet_path = f"{stylepath}{theme}.qss"
+            theme = "Legacy"  # default theme if new installation
+        stylesheet_path = f"{os.path.join(stylepath, theme)}.qss"
         if not os.path.exists(stylesheet_path):
-            stylesheet_path = f"{stylepath}Legacy.qss"
+            stylesheet_path = f"{os.path.join(stylepath, 'Legacy.qss')}"
             paramGet.SetString("Theme", "Legacy")
         with open(stylesheet_path, "r") as f:
             styleCurrentTheme = f.read()
@@ -4624,7 +4674,6 @@ def pieMenuStart():
     #### MainWindow Preferences Dialog ####
     #### group PieMenu ####
     tabs = QtGui.QTabWidget()
-    tabToolBar = QtGui.QTabWidget()
 
     #### layout PieMenu Settings ####
     buttonIconPieMenu = QtGui.QToolButton()
@@ -5180,8 +5229,6 @@ def pieMenuStart():
     tabs.addTab(contextTab, translate("ContextTab", "Context"))
     tabs.addTab(settingsTab, translate("GlobalSettingsTab", "Global settings"))
 
-    tabToolBar.addTab(toolBarTab, translate("ToolBarsTab", "ToolBars"))
-
     #### buttons actions list ####
     buttonAddSeparator = QtGui.QToolButton()
     buttonAddSeparator.setIcon(QtGui.QIcon(iconAddSeparator))
@@ -5283,6 +5330,11 @@ def pieMenuStart():
     doc_button.setIcon(QtGui.QIcon.fromTheme(iconDocumentation))
     doc_button.clicked.connect(documentationLink)
 
+    new_ui_test_button = QtGui.QPushButton("Test UI file")
+    new_ui_test_button.setIcon(QtGui.QIcon.fromTheme(iconPieMenuLogo))
+    new_ui_test_button.clicked.connect(lambda: PieMenuDialogTest().Activated())
+    # new_ui_test_button.clicked.connect(DialogTest)
+
     close_button = QtGui.QPushButton(translate("MainWindow", "Close"))
     close_button.setMaximumWidth(120)
 
@@ -5292,6 +5344,8 @@ def pieMenuStart():
     button_row_layout.addWidget(close_button, 0, alignment=QtCore.Qt.AlignCenter)
     button_row_layout.addStretch(1)
     button_row_layout.addWidget(doc_button, 0, alignment=QtCore.Qt.AlignRight)
+    button_row_layout.addStretch(1)
+    button_row_layout.addWidget(new_ui_test_button)
 
     button_layout = QtGui.QVBoxLayout()
     button_layout.addLayout(layoutInfoShortcut)
