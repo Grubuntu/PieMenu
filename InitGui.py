@@ -31,26 +31,24 @@ PIE_MENU_VERSION = "1.8.1"
 
 def pieMenuStart():
     """Main function that starts the Pie Menu."""
-    import os
+    import datetime
     import math
     import operator
+    import os
     import platform
+    import shutil
+
     import FreeCAD as App
     import FreeCADGui as Gui
-    import PieMenuLocator as locator
-    import shutil
-    import datetime
     from FreeCAD import Units
     from PySide import QtCore, QtGui, QtWidgets
-    from PySide.QtWidgets import QCheckBox, QDialog, QFileDialog, \
-                QGroupBox, QHBoxLayout, QLabel, QLineEdit, QListWidgetItem, \
-                QMessageBox, QVBoxLayout, QWidget
-    from PySide.QtGui import QFontMetrics, QKeySequence, QShortcut, QTransform
     from PySide.QtCore import QSize, Qt
+    from PySide.QtGui import QFontMetrics, QKeySequence, QShortcut, QTransform
+    from PySide.QtWidgets import QCheckBox, QDialog, QFileDialog, QGroupBox, QHBoxLayout, QLabel, QLineEdit, QListWidgetItem, QMessageBox, QVBoxLayout, QWidget
+
+    import PieMenuLocator as locator
 
     translate = App.Qt.translate
-    def QT_TRANSLATE_NOOP(context, text):
-        return text
 
     # global variables
     path = locator.path()
