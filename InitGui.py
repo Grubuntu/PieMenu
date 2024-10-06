@@ -29,6 +29,7 @@
 global PIE_MENU_VERSION
 PIE_MENU_VERSION = "1.8.1"
 
+
 def pieMenuStart():
     """Main function that starts the Pie Menu."""
     import datetime
@@ -52,12 +53,9 @@ def pieMenuStart():
 
     # global variables
     path = locator.path()
-    respath = path + "/Resources/icons/"
-    respath = respath.replace("\\", "/")
-    stylepath = path + "/Resources/Stylesheets/"
-    stylepath = stylepath.replace("\\", "/")
-    transpath = path + "/Resources/translation/"
-    transpath = transpath.replace("\\", "/")
+    respath = os.path.join(path, "Resources", "icons")
+    stylepath = os.path.join(path, "Resources", "Stylesheets")
+    transpath = os.path.join(path, "Resources", "translation")
 
     # Add translations path
     Gui.addLanguagePath(transpath)
@@ -67,6 +65,7 @@ def pieMenuStart():
     global globalShortcutKey
     global shortcutList
     global flagVisi
+                      
     global hoverDelay
     global listCommands
     global listShortcutCode
@@ -76,6 +75,7 @@ def pieMenuStart():
     globalShortcutKey = "TAB"
     shortcutList = []
     flagVisi = False
+                         
     hoverDelay = 100
     listCommands = []
     listShortcutCode = []
@@ -101,25 +101,26 @@ def pieMenuStart():
     loadedWorkbenches = paramWb.GetString("BackgroundAutoloadModules")
     loadedWorkbenches = loadedWorkbenches.split(",")
 
-    iconUp = respath + "PieMenuUp.svg"
-    iconDown = respath + "PieMenuDown.svg"
-    iconAdd = respath + "PieMenuAdd.svg"
-    iconRemove = respath + "PieMenuRemove.svg"
-    iconRename = respath + "PieMenuRename.svg"
-    iconReset = respath + "PieMenuReload.svg"
-    iconCopy = respath + "PieMenuCopy.svg"
-    iconRemoveCommand = respath + "PieMenuRemoveCommand.svg"
-    iconBackspace =  respath + "PieMenuBackspace.svg"
-    iconInfo =  respath + "PieMenuInfo.svg"
-    iconAddSeparator =  respath + "PieMenuAddSeparator.svg"
-    iconSeparator =  respath + "PieMenuSeparator.svg"
-    iconDocumentation = respath + "PieMenuDocumentation.svg"
-    iconPieMenuLogo = respath + "PieMenu_Logo.svg"
+    transpath = os.path.join(path, "Resources", "translation")
+    iconUp = os.path.join(respath, "PieMenuUp.svg")
+    iconDown = os.path.join(respath, "PieMenuDown.svg")
+    iconAdd = os.path.join(respath, "PieMenuAdd.svg")
+    iconRemove = os.path.join(respath, "PieMenuRemove.svg")
+    iconRename = os.path.join(respath, "PieMenuRename.svg")
+    iconReset = os.path.join(respath, "PieMenuReload.svg")
+    iconCopy = os.path.join(respath, "PieMenuCopy.svg")
+    iconRemoveCommand = os.path.join(respath, "PieMenuRemoveCommand.svg")
+    iconBackspace = os.path.join(respath, "PieMenuBackspace.svg")
+    iconInfo = os.path.join(respath, "PieMenuInfo.svg")
+    iconAddSeparator = os.path.join(respath, "PieMenuAddSeparator.svg")
+    iconSeparator = os.path.join(respath, "PieMenuSeparator.svg")
+    iconDocumentation = os.path.join(respath, "PieMenuDocumentation.svg")
+    iconPieMenuLogo = os.path.join(respath, "PieMenu_Logo.svg")
     iconDefault = QtGui.QApplication.style().standardIcon(QtGui.QStyle.StandardPixmap.SP_DialogApplyButton)
-    iconLeft = respath + "PieMenuLeft.svg"
-    iconRight = respath + "PieMenuRight.svg"
-    iconArrowDown = respath + "PieMenuArrowDown.svg"
-    iconBlank = respath + "PieMenuBlank.svg"
+    iconLeft = os.path.join(respath, "PieMenuLeft.svg")
+    iconRight = os.path.join(respath, "PieMenuRight.svg")
+    iconArrowDown = os.path.join(respath, "PieMenuArrowDown.svg")
+    iconBlank = os.path.join(respath, "PieMenuBlank.svg")
 
     sign = {
         "<": operator.lt,
@@ -1693,6 +1694,59 @@ def pieMenuStart():
             super(PieMenuDialog, self).closeEvent(event)
 
 
+                                   
+
+                            
+                           
+                       
+
+                            
+                                                                               
+                                                       
+
+                                                                   
+
+                           
+                                                                              
+                                                                     
+                                                                      
+                                                                            
+                                                                            
+                                                                                  
+                                                                            
+                                                                                  
+                                                                        
+                                                                              
+
+                                                                          
+                                                                                
+                                                                       
+                                                                                      
+
+                               
+                                                                                 
+                                                                                
+                                                                                   
+                                                                                  
+                                                             
+                                                            
+                                                                 
+                                                                
+
+                                                                  
+                                                                          
+                                                                           
+                                                                             
+
+                                                              
+                                                            
+                                                              
+                                                          
+
+                                                           
+
+                               
+
     #### END Classes definitions ####
 
 
@@ -1754,14 +1808,17 @@ def pieMenuStart():
     def getStyle():
         theme = paramGet.GetString("Theme")
         if theme == "":
-            theme = "Legacy" # default theme if new installation
-        stylesheet_path = f"{stylepath}{theme}.qss"
+            theme = "Legacy"  # default theme if new installation
+        stylesheet_path = f"{os.path.join(stylepath, theme)}.qss"
         if not os.path.exists(stylesheet_path):
-            stylesheet_path = f"{stylepath}Legacy.qss"
+            stylesheet_path = f"{os.path.join(stylepath, 'Legacy.qss')}"
             paramGet.SetString("Theme", "Legacy")
+
         with open(stylesheet_path, "r") as f:
             styleCurrentTheme = f.read()
-        styleCurrentTheme = styleCurrentTheme.replace("pieMenuQss:", stylepath)
+        qssPath = stylepath + "\\"
+        styleCurrentTheme = styleCurrentTheme.replace("pieMenuQss:", qssPath.replace("\\", "/"))
+
         # Get FreeCAD ThemeAccentColors
         ThemeAccentColor1_hex = getCssColor(paramAccentsGet, "ThemeAccentColor1")
         ThemeAccentColor2_hex = getCssColor(paramAccentsGet, "ThemeAccentColor2")
@@ -2266,6 +2323,7 @@ def pieMenuStart():
 
 
     def updateCommands(keyValue=None, context=False):
+                                  
         # keyValue = None > Global shortcut
         # keyValue != None > Custom shortcut
         global triggerMode
@@ -2415,6 +2473,7 @@ def pieMenuStart():
         mode = 2: read from ContextPie parameter
         If it doesn't exists return default PieMenu group
         """
+                                  
         if mode == 2:
             try:
                 text = paramGet.GetString("ContextPie").decode("UTF-8")
@@ -2717,11 +2776,15 @@ def pieMenuStart():
 
     def onPieChange():
         """ Update values for all settings """
+                          
+
         buttonList()
         toolList()
         setDefaults()
         getCheckContext()
+                                                                                    
         getShortcutList()
+                                             
 
         iconPath = getParameterGroup(cBox.currentText(), "String", "IconPath")
         defaultPie = getParameterGlobal("String", "CurrentPie")
@@ -2754,6 +2817,8 @@ def pieMenuStart():
         else:
             checkboxDefaultPie.setChecked(False)
         checkboxDefaultPie.blockSignals(False)
+
+                                         
         cBox.setItemIcon(index, iconDefault)
 
         onContextWorkbench()
@@ -2765,6 +2830,8 @@ def pieMenuStart():
         checkboxDisplayCommandName.blockSignals(True)
         checkboxDisplayCommandName.setChecked(displayCommandName)
         checkboxDisplayCommandName.blockSignals(False)
+
+                                                                                            
         checkboxDisplayPreselect.blockSignals(True)
         checkboxDisplayPreselect.setChecked(displayPreselect)
         checkboxDisplayPreselect.blockSignals(False)
@@ -2779,7 +2846,40 @@ def pieMenuStart():
         shortcutLineEdit.setText(shortcutKey)
         labelShortcut.setText(translate("PieMenuTab", "Current shortcut: ") + shortcutKey)
         settingContextGroup.setChecked(contextPieMenu)
+                                                                                         
+                                                           
+
+                                            
+                      
+
+                                                                                         
+                                                                                             
+
+                         
+                                                                                         
+
+                                                                                                       
+                                                                                    
+                                   
+
+                                                           
+                                                           
+
+                                                                                           
+                                                                                                         
+
+                                                                              
+                          
+                                                            
+             
+                                                                   
+
+                                                 
+                                                                                                                   
+                                                  
+
         infoShortcut.setText('')
+                            
 
 
     def inputTextDialog(title):
@@ -3144,6 +3244,12 @@ def pieMenuStart():
         if index != -1:
             comboWbForPieMenu.setCurrentIndex(index)
         comboWbForPieMenu.blockSignals(False)
+
+
+                          
+                                
+                                                          
+                           
 
 
     def getContextWorkbench():
@@ -5267,6 +5373,11 @@ def pieMenuStart():
     doc_button.setIcon(QtGui.QIcon.fromTheme(iconDocumentation))
     doc_button.clicked.connect(documentationLink)
 
+                                                          
+                                                                      
+                                                                               
+                                                    
+
     close_button = QtGui.QPushButton(translate("MainWindow", "Close"))
     close_button.setMaximumWidth(120)
 
@@ -5276,6 +5387,8 @@ def pieMenuStart():
     button_row_layout.addWidget(close_button, 0, alignment=QtCore.Qt.AlignCenter)
     button_row_layout.addStretch(1)
     button_row_layout.addWidget(doc_button, 0, alignment=QtCore.Qt.AlignRight)
+                                   
+                                                   
 
     button_layout = QtGui.QVBoxLayout()
     button_layout.addLayout(layoutInfoShortcut)
