@@ -1,5 +1,6 @@
 # CHANGELOG
-### 1.8.1
+### 1.9
+- Use join() method from path module (as WIP-UIFile)
 - Fix issue : https://github.com/Grubuntu/PieMenu/issues/94
 - Fix some useless code
 
