@@ -24,4 +24,7 @@ import os
 
 def path():
     """Return module path location."""
-    return os.path.dirname(__file__)
+    # return os.path.dirname(__file__)
+    module_path = os.path.dirname(os.path.realpath(__file__))
+    return os.path.normpath(module_path)
+
