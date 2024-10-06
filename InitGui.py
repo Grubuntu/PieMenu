@@ -27,7 +27,7 @@
 #
 
 global PIE_MENU_VERSION
-PIE_MENU_VERSION = "1.8"
+PIE_MENU_VERSION = "1.8.1"
 
 def pieMenuStart():
     """Main function that starts the Pie Menu."""
@@ -69,7 +69,6 @@ def pieMenuStart():
     global globalShortcutKey
     global shortcutList
     global flagVisi
-    global triggerMode
     global hoverDelay
     global listCommands
     global listShortcutCode
@@ -79,7 +78,6 @@ def pieMenuStart():
     globalShortcutKey = "TAB"
     shortcutList = []
     flagVisi = False
-    triggerMode = "Press"
     hoverDelay = 100
     listCommands = []
     listShortcutCode = []
@@ -2270,7 +2268,6 @@ def pieMenuStart():
 
 
     def updateCommands(keyValue=None, context=False):
-        indexList = getIndexList()
         # keyValue = None > Global shortcut
         # keyValue != None > Custom shortcut
         global triggerMode
@@ -2373,7 +2370,7 @@ def pieMenuStart():
 
         if text:
             toolList = None
-
+            indexList = getIndexList()
             for i in indexList:
                 a = str(i)
                 try:
@@ -2420,7 +2417,6 @@ def pieMenuStart():
         mode = 2: read from ContextPie parameter
         If it doesn't exists return default PieMenu group
         """
-        indexList = getIndexList()
         if mode == 2:
             try:
                 text = paramGet.GetString("ContextPie").decode("UTF-8")
@@ -2437,6 +2433,7 @@ def pieMenuStart():
 
         # Iterate over the available groups on indexList
         # to find the group stored on `text` var
+        indexList = getIndexList()
         for i in indexList:
             a = str(i)
             try:
@@ -2722,82 +2719,69 @@ def pieMenuStart():
 
     def onPieChange():
         """ Update values for all settings """
-        global triggerMode
-
         buttonList()
         toolList()
         setDefaults()
         getCheckContext()
-        shortcutKey = getParameterGroup(cBox.currentText(), "String", "ShortcutKey")
         getShortcutList()
-        shortcutLineEdit.setText(shortcutKey)
 
+        iconPath = getParameterGroup(cBox.currentText(), "String", "IconPath")
         defaultPie = getParameterGlobal("String", "CurrentPie")
+        index = cBox.findText(defaultPie)
+        shape = getShape(cBox.currentText())
+        numColumn = getParameterGroup(cBox.currentText(), "Int", "NumColumn")
+        iconSpacing = getParameterGroup(cBox.currentText(), "Int", "IconSpacing")
+        commandPerCircle = getParameterGroup(cBox.currentText(), "Int", "CommandPerCircle")
+        displayCommandName = getParameterGroup(cBox.currentText(), "Bool", "DisplayCommand")
+        displayPreselect = getParameterGroup(cBox.currentText(), "Bool", "DisplayPreselect")
+        triggerMode = getParameterGroup(cBox.currentText(), "String", "TriggerMode")
+        triggerContext = getParameterGroup(cBox.currentText(), "Bool", "ImmediateTriggerContext")
+        hoverDelay = getParameterGroup(cBox.currentText(), "Int", "HoverDelay")
+        enableShortcut = getParameterGroup(cBox.currentText(), "Bool", "EnableShorcut")
+        displayShortcut = getParameterGroup(cBox.currentText(), "Bool", "DisplayShorcut")
+        shortcutLabelSize = getParameterGroup(cBox.currentText(), "Int", "ShortcutLabelSize")
+        shortcutKey = getParameterGroup(cBox.currentText(), "String", "ShortcutKey")
+        globalKeyToggle = getParameterGlobal("Bool", "GlobalKeyToggle")
+
+        contextPieMenu = getCheckContext()
+
+        if iconPath != "":
+            buttonIconPieMenu.setIcon(QtGui.QIcon(iconPath))
+        else:
+            buttonIconPieMenu.setIcon(QtGui.QIcon(iconPieMenuLogo))
+
         checkboxDefaultPie.blockSignals(True)
         if defaultPie == cBox.currentText():
             checkboxDefaultPie.setChecked(True)
         else:
             checkboxDefaultPie.setChecked(False)
         checkboxDefaultPie.blockSignals(False)
-
-        index = cBox.findText(defaultPie)
         cBox.setItemIcon(index, iconDefault)
 
-        globalShortcutLineEdit.setText(globalShortcutKey)
-        labelShortcut.setText(translate("PieMenuTab", "Current shortcut: ") + shortcutKey)
-        labelGlobalShortcut.setText(translate("GlobalSettingsTab", "Global shortcut: ") \
-            + globalShortcutKey)
-
-        displayCommandName = getParameterGroup(cBox.currentText(), "Bool", "DisplayCommand")
+        onContextWorkbench()
+        setWbForPieMenu()
+        onShape(shape)
+        spinNumColumn.setValue(numColumn)
+        spinIconSpacing.setValue(iconSpacing)
+        spinCommandPerCircle.setValue(commandPerCircle)
         checkboxDisplayCommandName.blockSignals(True)
         checkboxDisplayCommandName.setChecked(displayCommandName)
         checkboxDisplayCommandName.blockSignals(False)
-
-        displayPreselect = getParameterGroup(cBox.currentText(), "Bool", "DisplayPreselect")
         checkboxDisplayPreselect.blockSignals(True)
         checkboxDisplayPreselect.setChecked(displayPreselect)
         checkboxDisplayPreselect.blockSignals(False)
-
-        enableShortcut = getParameterGroup(cBox.currentText(), "Bool", "EnableShorcut")
-        toolShortcutGroup.setChecked(enableShortcut)
-        buttonListWidget.setColumnHidden(0, not enableShortcut)
-
-        contextPieMenu = getCheckContext()
-        settingContextGroup.setChecked(contextPieMenu)
-        displayShortcut = getParameterGroup(cBox.currentText(), "Bool", "DisplayShorcut")
-        checkboxDisplayShortcut.setChecked(displayShortcut)
-
-        shape = getShape(cBox.currentText())
-        onShape(shape)
-
-        spinNumColumn.setValue(getParameterGroup(cBox.currentText(), "Int", "NumColumn"))
-        spinIconSpacing.setValue(getParameterGroup(cBox.currentText(), "Int", "IconSpacing"))
-
-        setWbForPieMenu()
-        checkboxGlobalKeyToggle.setChecked(getParameterGlobal("Bool", "GlobalKeyToggle"))
-
-        spinCommandPerCircle.setValue(getParameterGroup(cBox.currentText(), "Int", "CommandPerCircle"))
-        triggerMode = getParameterGroup(cBox.currentText(), "String", "TriggerMode")
         setTriggerMode(triggerMode)
-
         radioButtonPress.setChecked(triggerMode == "Press")
         radioButtonHover.setChecked(triggerMode == "Hover")
-
-        spinHoverDelay.setValue(getParameterGroup(cBox.currentText(), "Int", "HoverDelay"))
-        spinShortcutLabelSize.setValue(getParameterGroup(cBox.currentText(), "Int", "ShortcutLabelSize"))
-
-        iconPath = getParameterGroup(cBox.currentText(), "String", "IconPath")
-        if iconPath != "":
-            buttonIconPieMenu.setIcon(QtGui.QIcon(iconPath))
-        else:
-            buttonIconPieMenu.setIcon(QtGui.QIcon(iconPieMenuLogo))
-
-        checkboxTriggerContext.blockSignals(True)
-        checkboxTriggerContext.setChecked(getParameterGroup(cBox.currentText(), "Bool", "ImmediateTriggerContext"))
-        checkboxTriggerContext.blockSignals(False)
-
+        spinHoverDelay.setValue(hoverDelay)
+        toolShortcutGroup.setChecked(enableShortcut)
+        buttonListWidget.setColumnHidden(0, not enableShortcut)
+        checkboxDisplayShortcut.setChecked(displayShortcut)
+        spinShortcutLabelSize.setValue(shortcutLabelSize)
+        shortcutLineEdit.setText(shortcutKey)
+        labelShortcut.setText(translate("PieMenuTab", "Current shortcut: ") + shortcutKey)
+        settingContextGroup.setChecked(contextPieMenu)
         infoShortcut.setText('')
-        onContextWorkbench()
 
 
     def inputTextDialog(title):
@@ -3150,7 +3134,8 @@ def pieMenuStart():
                 wbList.remove(item)
                 wbAlreadySet.remove(item)
 
-        defWorkbench = getWbForPieMenu()
+        group = getGroup(mode=0)
+        defWorkbench = group.GetString("DefaultWorkbench")
         wbList.append(defWorkbench)
         if 'None' not in wbList:
             wbList.insert(0, 'None')
@@ -3161,12 +3146,6 @@ def pieMenuStart():
         if index != -1:
             comboWbForPieMenu.setCurrentIndex(index)
         comboWbForPieMenu.blockSignals(False)
-
-
-    def getWbForPieMenu():
-        group = getGroup(mode=0)
-        defWorkbench = group.GetString("DefaultWorkbench")
-        return defWorkbench
 
 
     def getContextWorkbench():
@@ -4591,11 +4570,18 @@ def pieMenuStart():
     #### Preferences dialog ####
     def onControl():
         """Initializes the preferences dialog."""
-        keyValue = None
-        try:
-            keyValue = paramGet.GetString("CurrentPie").decode("UTF-8")
-        except AttributeError:
-            keyValue = paramGet.GetString("CurrentPie")
+        #### https://github.com/Grubuntu/PieMenu/issues/94
+        wb = Gui.activeWorkbench()
+        wbName = wb.name()
+        wbName = wbName.replace("Workbench", "")
+        keyValue = getPieName(wbName)
+
+        if keyValue == None:
+            try:
+                keyValue = paramGet.GetString("CurrentPie").decode("UTF-8")
+            except AttributeError:
+                keyValue = paramGet.GetString("CurrentPie")
+        ####
         cBoxUpdate(keyValue)
 
         buttonList()
