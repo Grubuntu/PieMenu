@@ -1,4 +1,7 @@
 # CHANGELOG
+### 1.8.1
+- Fix issue : https://github.com/Grubuntu/PieMenu/issues/94
+- Fix some useless code
 
 ### 1.8
 - Added import/export PieMenu settings
