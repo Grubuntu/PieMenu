@@ -29,7 +29,6 @@
 global PIE_MENU_VERSION
 PIE_MENU_VERSION = "1.9"
 
-
 def pieMenuStart():
     """Main function that starts the Pie Menu."""
     import datetime
@@ -66,7 +65,6 @@ def pieMenuStart():
     global globalShortcutKey
     global shortcutList
     global flagVisi
-                      
     global hoverDelay
     global listCommands
     global listShortcutCode
@@ -82,7 +80,6 @@ def pieMenuStart():
     listCommands = []
     listShortcutCode = []
     flagShortcutOverride = False
-
     firstLoad = True
 
     selectionTriggered = False
@@ -384,15 +381,6 @@ def pieMenuStart():
         def __init__(self, keyValue, iconPath=None):
             self.iconPath = iconPieMenuLogo
             self.keyValue = keyValue
-                                
-                                                                                      
-                                       
-                                             
-                                                   
-                      
-                                                                                          
-                 
-                                        
 
         def GetResources(self):
             """Return a dictionary with data that will be used by the button or menu item."""
@@ -1468,24 +1456,6 @@ def pieMenuStart():
 
             if windowShadow:
                 pos = mw.mapFromGlobal(QtGui.QCursor.pos())
-                                                  
-                                     
-                                      
-                                                  
-                                                
-                                                        
-                               
-                                                
-                                                
-                                            
-                                            
-                           
-                                            
-                                            
-                       
-                                        
-                                        
-
                 self.menu.popup(QtCore.QPoint(mw.pos()))
                 self.menu.setGeometry(mw.geometry())
 
@@ -1496,26 +1466,6 @@ def pieMenuStart():
 
             else:
                 pos = QtGui.QCursor.pos()
-
-                                                  
-
-                                     
-                                      
-                                                  
-                                                
-                                                        
-                               
-                                                
-                                                
-                                            
-                                            
-                           
-                                            
-                                            
-                       
-                                        
-                                        
-
                 for i in self.buttons:
                     i.move(i.property("ButtonX")
                           + (self.menuSize - i.size().width()) / 2 + self.offset_x,
@@ -1715,59 +1665,6 @@ def pieMenuStart():
             window_icons.close()
             super(PieMenuDialog, self).closeEvent(event)
 
-
-                                   
-
-                            
-                           
-                       
-
-                            
-                                                                               
-                                                       
-
-                                                                   
-
-                           
-                                                                              
-                                                                     
-                                                                      
-                                                                            
-                                                                            
-                                                                                  
-                                                                            
-                                                                                  
-                                                                        
-                                                                              
-
-                                                                          
-                                                                                
-                                                                       
-                                                                                      
-
-                               
-                                                                                 
-                                                                                
-                                                                                   
-                                                                                  
-                                                             
-                                                            
-                                                                 
-                                                                
-
-                                                                  
-                                                                          
-                                                                           
-                                                                             
-
-                                                              
-                                                            
-                                                              
-                                                          
-
-                                                           
-
-                               
 
     #### END Classes definitions ####
 
@@ -2109,12 +2006,12 @@ def pieMenuStart():
     def closeButton(buttonSize=32):
         """Style the close button."""
         icon = iconSize(buttonSize)
-        radius = radiusSize(buttonSize + 4) ##### + 4 car probleme de bouton pas rond !
+        radius = radiusSize(buttonSize)
         button = QtGui.QToolButton()
         button.setObjectName("styleMenuClose")
         button.setProperty("ButtonX", 0) # +, right
         button.setProperty("ButtonY", 0) # +, down
-        # button.setGeometry(0, 0, buttonSize, buttonSize)
+        button.setGeometry(0, 0, buttonSize, buttonSize)
         button.setIconSize(QtCore.QSize(icon, icon))
         styleCurrentTheme = getStyle()
         button.setStyleSheet(styleCurrentTheme + radius)
@@ -2365,7 +2262,6 @@ def pieMenuStart():
             if i == "":
                 pass
             elif i in actionMap:
-                                                 
                 actions.append(actionMap[i])
             else:
                 workbench = extractWorkbench(i)
@@ -2374,17 +2270,6 @@ def pieMenuStart():
                     pass
                 else:
                     wbName = workbench_map.get(workbench, workbench + "Workbench")
-                                   
-                                             
-                                            
-                                           
-                                                               
-                                                  
-                                                    
-                                           
-                                         
-                                                  
-                                                  
                     try:
                         Gui.activateWorkbench(wbName)
                     except:
@@ -2440,22 +2325,9 @@ def pieMenuStart():
                     for i in workbenches:
                         # rule out special cases
                         if i is None or i == "Std":
-                                                        
-                                                     
                             pass
                         else:
                             wbName = workbench_map.get(i, i + "Workbench")
-                                           
-                                          
-                                         
-                                                   
-                                               
-                                                 
-                                           
-                                        
-                                                 
-                                           
-                                               
                         if (i + "Workbench") not in loadedWorkbenches:
                             try:
                                 Gui.activateWorkbench(wbName)
@@ -2639,7 +2511,6 @@ def pieMenuStart():
             toolList = toolList.split(".,.")
         else:
             toolList = []
-                                           
 
         actionMapAll = getGuiActionMapAll()
         lastWorkbench = Gui.activeWorkbench()
@@ -2657,17 +2528,6 @@ def pieMenuStart():
                             pass
                         else:
                             wbName = workbench_map.get(workbench, workbench + "Workbench")
-                                           
-                                                     
-                                                    
-                                                   
-                                                          
-                                                            
-                                                                 
-                                                   
-                                                 
-                                                          
-                                                          
                             try:
                                 Gui.activateWorkbench(wbName)
                                 loadedWorkbenches.append(workbench)
@@ -2887,15 +2747,11 @@ def pieMenuStart():
 
     def onPieChange():
         """ Update values for all settings """
-                          
-
         buttonList()
         toolList()
         setContextConditions()
         getCheckContext()
-                                                                                    
         getShortcutList()
-                                             
 
         iconPath = getParameterGroup(cBox.currentText(), "String", "IconPath")
         defaultPie = getParameterGlobal("String", "CurrentPie")
@@ -2918,8 +2774,6 @@ def pieMenuStart():
         contextPieMenu = getCheckContext()
 
         icon = getIconPieMenu(iconPath)
-                                                            
-             
         buttonIconPieMenu.setIcon(QtGui.QIcon(icon))
 
         checkboxDefaultPie.blockSignals(True)
@@ -2929,7 +2783,6 @@ def pieMenuStart():
             checkboxDefaultPie.setChecked(False)
         checkboxDefaultPie.blockSignals(False)
 
-                                         
         cBox.setItemIcon(index, iconDefault)
 
         onContextWorkbench()
@@ -2941,8 +2794,6 @@ def pieMenuStart():
         checkboxDisplayCommandName.blockSignals(True)
         checkboxDisplayCommandName.setChecked(displayCommandName)
         checkboxDisplayCommandName.blockSignals(False)
-
-                                                                                            
         checkboxDisplayPreselect.blockSignals(True)
         checkboxDisplayPreselect.setChecked(displayPreselect)
         checkboxDisplayPreselect.blockSignals(False)
@@ -2957,40 +2808,7 @@ def pieMenuStart():
         shortcutLineEdit.setText(shortcutKey)
         labelShortcut.setText(translate("PieMenuTab", "Current shortcut: ") + shortcutKey)
         settingContextGroup.setChecked(contextPieMenu)
-                                                                                         
-                                                           
-
-                                            
-                      
-
-                                                                                         
-                                                                                             
-
-                         
-                                                                                         
-
-                                                                                                       
-                                                                                    
-                                   
-
-                                                           
-                                                           
-
-                                                                                           
-                                                                                                         
-
-                                                                              
-                          
-                                                            
-             
-                                                                   
-
-                                                 
-                                                                                                                   
-                                                  
-
         infoShortcut.setText('')
-                            
 
 
     def inputTextDialog(title):
@@ -3380,18 +3198,6 @@ def pieMenuStart():
         comboWbForPieMenu.blockSignals(False)
 
 
-                          
-                                
-                                                          
-                           
-
-
-                              
-                                
-                                                              
-                               
-
-
     def onContextWorkbench():
         """ Handle when a workbench is set to a PieMenu in context tab """
         comboContextWorkbench.blockSignals(True)
@@ -3768,31 +3574,6 @@ def pieMenuStart():
         else:
             paramGet.SetBool("RightClickTrigger", False)
             spinDelayRightClick.setEnabled(False)
-
-
-                              
-                                           
-                                                                                                                                                                                      
-
-                     
-                                      
-                               
-                          
-                    
-                                                                        
-                                      
-                                                        
-                                                 
-                                                          
-                                                          
-                                                                     
-
-                                                                                                          
-                                                                        
-
-                                  
-                             
-                      
 
 
     def onContext(state):
@@ -4470,71 +4251,6 @@ def pieMenuStart():
                 groupContext.SetInt("ObjectValue", 10)
                 objectValue = 10
         objectSpin.setValue(objectValue)
-
-                                                              
-                            
-                
-             
-                                     
-                                                                 
-
-                                            
-                       
-                
-             
-                             
-                                               
-                                        
-
-                                            
-                       
-                
-             
-                            
-                                               
-                                        
-
-                                        
-                 
-                
-             
-                         
-                                           
-
-                                                    
-                       
-                
-             
-                                 
-                                                       
-
-                                               
-                      
-                
-             
-                            
-                                                  
-
-                                                        
-                          
-                
-             
-                                  
-                                                           
-
-                                                            
-                            
-                
-             
-                                    
-                                                               
-
-                                                             
-                             
-                
-             
-                                     
-                                                               
         contextList()
 
 
@@ -4713,7 +4429,7 @@ def pieMenuStart():
 
 
     ### Begin QuickMenu  Def ###
-    def quickMenu(buttonSize=28):
+    def quickMenu(buttonSize=20):
         """Build and style the QuickMenu button."""
 
 
@@ -5027,7 +4743,6 @@ def pieMenuStart():
     buttonIconPieMenu.clicked.connect(onButtonIconPieMenu)
 
     #### layout PieMenu Settings ####
-
     cBox = QtGui.QComboBox()
     cBox.setMinimumHeight(28)
     cBox.currentIndexChanged.connect(onPieChange)
@@ -5678,11 +5393,6 @@ def pieMenuStart():
     doc_button.setIcon(QtGui.QIcon.fromTheme(iconDocumentation))
     doc_button.clicked.connect(documentationLink)
 
-    # new_ui_test_button = QtGui.QPushButton("Test UI file")
-    # new_ui_test_button.setIcon(QtGui.QIcon.fromTheme(iconPieMenuLogo))
-    # new_ui_test_button.clicked.connect(lambda: PieMenuDialogTest().Activated())
-    # new_ui_test_button.clicked.connect(DialogTest)
-
     close_button = QtGui.QPushButton(translate("MainWindow", "Close"))
     close_button.setMaximumWidth(120)
 
@@ -5692,8 +5402,6 @@ def pieMenuStart():
     button_row_layout.addWidget(close_button, 0, alignment=QtCore.Qt.AlignCenter)
     button_row_layout.addStretch(1)
     button_row_layout.addWidget(doc_button, 0, alignment=QtCore.Qt.AlignRight)
-    # button_row_layout.addStretch(1)
-    # button_row_layout.addWidget(new_ui_test_button)
 
     button_layout = QtGui.QVBoxLayout()
     button_layout.addLayout(layoutInfoShortcut)
