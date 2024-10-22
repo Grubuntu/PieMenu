@@ -4409,9 +4409,13 @@ def pieMenuStart():
                         row += 1
 
             window_icons.setParent(pieMenuDialog)
-            windowWidth = pieMenuTab.width() + 10
-            windowHeight = pieMenuTab.height() + 42
-            window_icons.setFixedSize(windowWidth, windowHeight)
+            window_icons.setWindowTitle(translate("PieMenuTab", "Choose Icon"))
+            window_icons.setWindowFlags(QtCore.Qt.Window)
+
+            pieMenuDialogPos = pieMenuDialog.pos()
+            posX = pieMenuDialogPos.x() + pieMenuDialog.width()/2 - pieMenuDialog.width()/4
+            posY = pieMenuDialogPos.y() + pieMenuDialog.height()/3
+            window_icons.setGeometry(posX, posY, pieMenuDialog.width()/2 , pieMenuDialog.height()/2)
             window_icons.show()
 
 
@@ -4707,10 +4711,6 @@ def pieMenuStart():
 
     ### Button set Icon ####
     window_icons = QtGui.QWidget()
-    window_icons.setFixedSize(400, 440)
-    window_icons.move(10, 76)
-    window_icons.setAutoFillBackground(True)
-    window_icons.setBackgroundRole(QtGui.QPalette.Window)
 
     grid_layout = QtGui.QGridLayout()
     grid_widget = QtGui.QWidget()
