@@ -1,4 +1,7 @@
 # CHANGELOG
+### 1.9
+- Added the ability to use FreeCAD's built-in icons for PieMenus (https://github.com/Grubuntu/PieMenu/issues/97)
+
 ### 1.8.1
 - Use join() method from path module (as WIP-UIFile)
 - Fix issue : https://github.com/Grubuntu/PieMenu/issues/94
