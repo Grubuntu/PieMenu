@@ -27,7 +27,7 @@
 #
 
 global PIE_MENU_VERSION
-PIE_MENU_VERSION = "1.9"
+PIE_MENU_VERSION = "1.9.1"
 
 def pieMenuStart():
     """Main function that starts the Pie Menu."""
@@ -4416,11 +4416,25 @@ def pieMenuStart():
             window_icons.setWindowTitle(translate("PieMenuTab", "Choose Icon"))
             window_icons.setWindowFlags(QtCore.Qt.Window)
 
-            pieMenuDialogPos = pieMenuDialog.pos()
-            posX = pieMenuDialogPos.x() + pieMenuDialog.width()/2 - pieMenuDialog.width()/4
-            posY = pieMenuDialogPos.y() + pieMenuDialog.height()/3
-            window_icons.setGeometry(posX, posY, pieMenuDialog.width()/2 , pieMenuDialog.height()/2)
-            window_icons.show()
+
+            if platform.system() == "Linux":
+                print("ici")
+                pieMenuDialogPos = pieMenuDialog.pos()
+                window_icons.setAutoFillBackground(True)
+                posX = pieMenuDialogPos.x() - pieMenuDialog.width()/5
+                posY = pieMenuDialogPos.y()
+                window_icons.setGeometry(posX, posY, pieMenuDialog.width()/2 , pieMenuDialog.height()/2)
+                window_icons.show()
+ 
+ 
+            else:
+                print("là")
+                window_icons.setWindowFlags(QtCore.Qt.Window)
+                pieMenuDialogPos = pieMenuDialog.pos()
+                posX = pieMenuDialogPos.x() + pieMenuDialog.width()/2 - pieMenuDialog.width()/4
+                posY = pieMenuDialogPos.y() + pieMenuDialog.height()/3
+                window_icons.setGeometry(posX, posY, pieMenuDialog.width()/2 , pieMenuDialog.height()/2)
+                window_icons.show()
 
 
     def window_icons_close():
