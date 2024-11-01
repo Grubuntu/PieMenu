@@ -1,4 +1,7 @@
 # CHANGELOG
+### 1.9.1
+- Fix window_icon that appears under the dialog window on Linux system
+
 ### 1.9
 - Added the ability to use FreeCAD's built-in icons for PieMenus (https://github.com/Grubuntu/PieMenu/issues/97)
 

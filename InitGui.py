@@ -27,7 +27,7 @@
 #
 
 global PIE_MENU_VERSION
-PIE_MENU_VERSION = "1.9"
+PIE_MENU_VERSION = "1.9.1"
 
 def pieMenuStart():
     """Main function that starts the Pie Menu."""
@@ -4382,45 +4382,44 @@ def pieMenuStart():
 
     def onButtonIconPieMenu():
         """ Create and show the list of available icons for PieMenu icon """
-        if window_icons.isVisible():
-            window_icons_close()
-        else:
-            row, col = 0, 0
-            icons_list = getAllActions()
+        row, col = 0, 0
+        icons_list = getAllActions()
 
-            # add default icon PieMenuLogo at beginning of the list
-            buttonIcon = QtGui.QToolButton()
-            buttonIcon.setIcon(QtGui.QIcon(iconPieMenuLogo))
-            buttonIcon.setIconSize(QtCore.QSize(24, 24))
-            buttonIcon.setObjectName("styleButtonMenu")
-            buttonIcon.setToolTip("Default PieMenuLogo")
-            grid_layout.addWidget(buttonIcon, row, col)
-            buttonIcon.clicked.connect(partial(onIconClicked, iconPieMenuLogo))
-            col += 1
+        # add default icon PieMenuLogo at beginning of the list
+        buttonIcon = QtGui.QToolButton()
+        buttonIcon.setIcon(QtGui.QIcon(iconPieMenuLogo))
+        buttonIcon.setIconSize(QtCore.QSize(24, 24))
+        buttonIcon.setObjectName("styleButtonMenu")
+        buttonIcon.setToolTip("Default PieMenuLogo")
+        grid_layout.addWidget(buttonIcon, row, col)
+        buttonIcon.clicked.connect(partial(onIconClicked, iconPieMenuLogo))
+        col += 1
 
-            for action in icons_list:
-                if action.data() is not None and isinstance(action.data(), str):
-                    buttonIcon = QtGui.QToolButton()
-                    buttonIcon.setIcon(QtGui.QIcon(action.icon()))
-                    buttonIcon.setIconSize(QtCore.QSize(24, 24))
-                    buttonIcon.setObjectName("styleButtonMenu")
-                    buttonIcon.setToolTip(action.data())
-                    grid_layout.addWidget(buttonIcon, row, col)
-                    buttonIcon.clicked.connect(partial(onIconClicked, action.data()))
-                    col += 1
-                    if col >= 8:
-                        col = 0
-                        row += 1
+        for action in icons_list:
+            if action.data() is not None and isinstance(action.data(), str):
+                buttonIcon = QtGui.QToolButton()
+                buttonIcon.setIcon(QtGui.QIcon(action.icon()))
+                buttonIcon.setIconSize(QtCore.QSize(24, 24))
+                buttonIcon.setObjectName("styleButtonMenu")
+                buttonIcon.setToolTip(action.data())
+                grid_layout.addWidget(buttonIcon, row, col)
+                buttonIcon.clicked.connect(partial(onIconClicked, action.data()))
+                col += 1
+                if col >= 8:
+                    col = 0
+                    row += 1
 
-            window_icons.setParent(pieMenuDialog)
-            window_icons.setWindowTitle(translate("PieMenuTab", "Choose Icon"))
-            window_icons.setWindowFlags(QtCore.Qt.Window)
+        window_icons.setParent(pieMenuDialog)
+        window_icons.setWindowTitle(translate("PieMenuTab", "Choose Icon"))
+        window_icons.setWindowFlags(QtCore.Qt.Window | QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.X11BypassWindowManagerHint)
+        
+        window_icons.setWindowModality(QtCore.Qt.ApplicationModal)
 
-            pieMenuDialogPos = pieMenuDialog.pos()
-            posX = pieMenuDialogPos.x() + pieMenuDialog.width()/2 - pieMenuDialog.width()/4
-            posY = pieMenuDialogPos.y() + pieMenuDialog.height()/3
-            window_icons.setGeometry(posX, posY, pieMenuDialog.width()/2 , pieMenuDialog.height()/2)
-            window_icons.show()
+        pieMenuDialogPos = pieMenuDialog.pos()
+        posX = pieMenuDialogPos.x() + pieMenuDialog.width()/2 - pieMenuDialog.width()/4
+        posY = pieMenuDialogPos.y() + pieMenuDialog.height()/3
+        window_icons.setGeometry(posX, posY, pieMenuDialog.width()/2 , pieMenuDialog.height()/2)
+        window_icons.show()
 
 
     def window_icons_close():
