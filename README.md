@@ -3,10 +3,10 @@ PieMenu widget for FreeCAD
 
 Quick customizable menus for FreeCAD.
 
-### Version 1.8 new feature:
-Add ability to export/import PieMenu settings.
+### Version 1.9 new feature:
+Add ability to choose an icon from the FreeCAD icons.
 
-![Capture d’écran (231)](https://github.com/user-attachments/assets/796c8694-5d5f-471f-8d68-06bb63b7053f)
+![Capture d’écran (258)](https://github.com/user-attachments/assets/881c37d0-704c-473a-9dc7-d7e465c2e5dc)
 
 
 # Presentation: PieMenu is a customizable menu, providing quick access to FreeCAD tools via keyboard shortcuts. You can choose from multiple shapes, themes, customize tools and shortcuts, and much more... 
@@ -298,7 +298,7 @@ Enable and display them (or only enable them without displaying). You can set th
 
 ![Capture d’écran (175)](https://github.com/Grubuntu/PieMenu/assets/56045316/fe63f92f-84ea-49c7-8c2c-f805434f8614)
 
-### Version 1.6 new features :
+### Oher features :
 
 - Ability to set icon for each PieMenu:
   
@@ -318,13 +318,9 @@ Enable and display them (or only enable them without displaying). You can set th
 #### (Try it at your own risk: this may cause unexpected behaviour depending on the mouse settings (CAD, Blender, OpenScad etc) 
 ![Capture d’écran (202)](https://github.com/Grubuntu/PieMenu/assets/56045316/798d5c8d-e09d-499c-b5bb-5645b322b7b3)
 
-### Version 1.7 new features:
-
 - Added Piemenu preview in Preferences : We can now easily adjust the PieMenus settings thanks to the immediate display of the PieMenu in the settings window.
 
-
 ![Capture d’écran (223)](https://github.com/Grubuntu/PieMenu/assets/56045316/70de42e6-e34e-4d51-907d-f53cdf007c98)
-
 
 
 - Introduction of context immediate trigger:
@@ -346,4 +342,8 @@ You can set a single workbench in which the context will be triggered:
 - New interface for adding existing FreeCAD's toolbars:
 
 ![Capture d’écran (221)](https://github.com/Grubuntu/PieMenu/assets/56045316/313185d9-cb42-4656-9abe-3228e7aff3fc)
+
+Add ability to export/import PieMenu settings.
+
+![Capture d’écran (231)](https://github.com/user-attachments/assets/796c8694-5d5f-471f-8d68-06bb63b7053f)
 
