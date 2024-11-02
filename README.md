@@ -300,7 +300,7 @@ Enable and display them (or only enable them without displaying). You can set th
 
 ### Version 1.6 new features :
 
-- Ability to set icon for each PieMenu (FreeCAD must be restarted for the new icon to take effect correctly.):
+- Ability to set icon for each PieMenu:
   
 ![Capture d’écran (200)](https://github.com/Grubuntu/PieMenu/assets/56045316/0bab416c-444a-41e5-9302-0a6d14c344d9)
 
