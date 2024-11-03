@@ -5236,7 +5236,7 @@ def pieMenuStart():
     settingContextGroup.layout().addLayout(triggerContextLayout)
     settingContextGroup.toggled.connect(lambda state: onCheckContext(state))
 
-    contextTabLayout.insertWidget(1, settingContextGroup)
+    contextTabLayout.insertWidget(0, settingContextGroup)
     contextTabLayout.addStretch(1)
 
     #### Tab ToolBar ####
@@ -5373,10 +5373,10 @@ def pieMenuStart():
 
     #### Main Layout####
     vSplitter = QtGui.QSplitter()
-    vSplitter.insertWidget(1, tabs)
-    vSplitter.insertWidget(2, toolBarTab)
-    vSplitter.insertWidget(3, pieButtons)
-    vSplitter.insertWidget(4, showPiemenu)
+    vSplitter.insertWidget(0, tabs)
+    vSplitter.insertWidget(1, toolBarTab)
+    vSplitter.insertWidget(2, pieButtons)
+    vSplitter.insertWidget(3, showPiemenu)
 
     preferencesWidget = QtGui.QWidget()
     preferencesLayout = QtGui.QVBoxLayout()
@@ -5568,12 +5568,12 @@ def pieMenuStart():
     layoutGlobalShortcut.addWidget(assignGlobalShortcutButton)
     layoutGlobalShortcut.addWidget(deleteGlobalShortcutButton)
 
-    settingsTabLayout.insertWidget(1, globalSettingsGroup)
-    settingsTabLayout.insertWidget(2, experimentalGroup)
-    settingsTabLayout.insertWidget(3, exportGroup)
+    settingsTabLayout.insertWidget(0, globalSettingsGroup)
+    settingsTabLayout.insertWidget(1, experimentalGroup)
+    settingsTabLayout.insertWidget(2, exportGroup)
     settingsTabLayout.addStretch(1)
-    settingsTabLayout.insertSpacing(4, 42)
-    settingsTabLayout.insertLayout(5, layoutGlobalShortcut)
+    settingsTabLayout.insertSpacing(3, 42)
+    settingsTabLayout.insertLayout(4, layoutGlobalShortcut)
 
     # Create a fake command in FreeCAD to handle the PieMenu Separator
     Gui.addCommand('Std_PieMenuSeparator', PieMenuSeparator())
