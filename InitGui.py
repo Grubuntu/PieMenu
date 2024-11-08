@@ -866,7 +866,6 @@ def pieMenuStart():
             elif shape == "RainbowUp":
                 if commandNumber == 1:
                     angle = 0
-                    buttonSize = self.buttonSize
                 else:
                     angle =  math.pi / (commandNumber-1)
                 angleStart = 3 * math.pi / 2 - (angle*(commandNumber+1))/2
@@ -956,10 +955,6 @@ def pieMenuStart():
                 listCommands = []
                 global listShortcutCode
                 listShortcutCode = []
-
-                def rotate_pixmap(pixmap, angle):
-                    transform = QtGui.QTransform().rotate(angle)
-                    return pixmap.transformed(transform, Qt.SmoothTransformation)
 
                 for i in commands:
                     """ show PieMenu in Edit Feature and in Sketcher """
@@ -1326,7 +1321,6 @@ def pieMenuStart():
                     num = num + 1
 
             buttonQuickMenu = quickMenu()
-            # if checkboxQuickMenu.checkState() == QtCore.Qt.Checked:
             if checkboxQuickMenu.isChecked():
                 buttonQuickMenu.setParent(self.menu)
                 self.buttons.append(buttonQuickMenu)
@@ -2845,6 +2839,8 @@ def pieMenuStart():
         shortcutLineEdit.setText(shortcutKey)
         labelShortcut.setText(translate("PieMenuTab", "Current shortcut: ") + shortcutKey)
         settingContextGroup.setChecked(contextPieMenu)
+        checkboxTriggerContext.setChecked(triggerContext)
+        checkboxGlobalKeyToggle.setChecked(globalKeyToggle)
         infoShortcut.setText('')
 
 
