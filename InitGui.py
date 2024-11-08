@@ -31,14 +31,15 @@
 # fix : ajout d'outils ajoute pleins de commandes ! onToolListWidget : if i.checkState() == QtCore.Qt.Checked:
 # fix : toolbars : getGuiToolButtonData( : recuperer la version de qt comme variable globale ??
 # fix : setting showquickmenu is broken : checkboxQuickMenu.checkState() == QtCore.Qt.Checked
+# fix problem in createpie (add onpiechange())
+# fix : context mode à corriger
+# fix : probleme de mise ajour du parmaetre immediate trigger
 #
-#
-#
+# fix : setting globalcontext comportement bizarre !
+
 # TO DO :
-# context mode à corriger
-# à tester sous Mac et Linux : self.menu.setAttribute(QtCore.Qt.WA_MacAlwaysShowToolWindow)
-#  probleme de mise ajour du parmaetre immediate trigger
-# setting globalcontext comportement bizarre !
+
+# à tester sous Mac et Linux :self.menu.setAttribute(QtCore.Qt.WA_MacAlwaysShowToolWindow)
 #
 
 
@@ -2942,6 +2943,8 @@ def pieMenuStart():
 
             createNestedPieMenus()
             reloadWorkbench()
+            ### fix https://github.com/Grubuntu/PieMenu/issues/102
+            onPieChange()
 
         return paramIndexGet.GetGroup(indexNumber)
 
@@ -3103,12 +3106,15 @@ def pieMenuStart():
 
     def copyIndexParams(grpOrg, grpCopy):
         """ Copy value in parameters """
+        #### TO DO : ajouter les paramètres manquants !
         valButOrg = grpOrg.GetInt("Button")
         valRadOrg = grpOrg.GetInt("Radius")
+        valShapeOrg = grpOrg.GetString("Shape")
         tbOrg = grpOrg.GetString("ToolList")
         grpCopy.SetInt("Button", valButOrg)
         grpCopy.SetInt("Radius", valRadOrg)
         grpCopy.SetString("ToolList", tbOrg)
+        grpCopy.SetString("Shape", valShapeOrg)
 
 
     def copyContextParams(grpOrg, grpCopy):
