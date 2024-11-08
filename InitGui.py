@@ -25,23 +25,6 @@
 # http://forum.freecadweb.org/
 # http://www.freecadweb.org/wiki/index.php?title=Code_snippets
 #
-# Qt6 adaptation : a tester aussi sur Qt5
-# fix : modifiers de raccourcis
-# fix : keyValue == False in updateCommands()
-# fix : ajout d'outils ajoute pleins de commandes ! onToolListWidget : if i.checkState() == QtCore.Qt.Checked:
-# fix : toolbars : getGuiToolButtonData( : recuperer la version de qt comme variable globale ??
-# fix : setting showquickmenu is broken : checkboxQuickMenu.checkState() == QtCore.Qt.Checked
-# fix problem in createpie (add onpiechange())
-# fix : context mode à corriger
-# fix : probleme de mise ajour du parmaetre immediate trigger
-#
-# fix : setting globalcontext comportement bizarre !
-
-# TO DO :
-
-# à tester sous Mac et Linux :self.menu.setAttribute(QtCore.Qt.WA_MacAlwaysShowToolWindow)
-#
-
 
 
 global PIE_MENU_VERSION
@@ -99,8 +82,6 @@ def pieMenuStart():
     listShortcutCode = []
     flagShortcutOverride = False
     firstLoad = True
-
-    # selectionTriggered = False
     contextPhase = False
 
     paramPath = "User parameter:BaseApp/PieMenu"
@@ -471,10 +452,11 @@ def pieMenuStart():
             self.menuSize = 0
             self.menu.setObjectName("styleContainer")
             self.menu.setStyleSheet(styleCurrentTheme)
-            # QtCore.Qt.WA_MacAlwaysShowToolWindow : needed to hide widget when FreeCad is minimized
-            # self.menu.setWindowFlags(QtCore.Qt.FramelessWindowHint | Qt.NoDropShadowWindowHint | QtCore.Qt.WA_MacAlwaysShowToolWindow)
-            self.menu.setWindowFlags(QtCore.Qt.FramelessWindowHint | Qt.NoDropShadowWindowHint)
-            self.menu.setAttribute(QtCore.Qt.WA_MacAlwaysShowToolWindow)
+
+            flags = QtCore.Qt.FramelessWindowHint | QtCore.Qt.NoDropShadowWindowHint
+            self.menu.setWindowFlags(flags)
+            self.menu.setAttribute(QtCore.Qt.WA_DeleteOnClose)
+
             self.menu.setAttribute(QtCore.Qt.WA_TranslucentBackground)
 
             if compositingManager:
@@ -771,6 +753,12 @@ def pieMenuStart():
                     self.double_spinbox.setProperty("singleStep", step)
                 except:
                     None
+                    
+            """ Filtrer les événements pour détecter la minimisation """
+            if obj == self.mw and event.type() == QtCore.QEvent.WindowStateChange:
+                # Vérifier si la fenêtre principale est minimisée
+                if self.mw.isMinimized():
+                    self.menu.hide()
             return False
 
 
@@ -871,7 +859,6 @@ def pieMenuStart():
             if shape == "Pie":
                 if commandNumber == 1:
                     angle = 0
-                    # buttonSize = self.buttonSize
                 else:
                     angle = 2 * math.pi / commandNumber
                 angleStart = 3 * math.pi / 2 - angle
@@ -1475,7 +1462,7 @@ def pieMenuStart():
             enableContext = paramGet.GetBool("EnableContext")
 
             if contextPhase:
-                if keyValue == False or keyValue is None:
+                if not keyValue or keyValue is None:
                     sel = Gui.Selection.getSelectionEx()
                     if not sel:
                         self.hide()
@@ -1957,7 +1944,7 @@ def pieMenuStart():
         """ Update PieMenu icon after change it """
         indexList = getIndexList()
         lastWorkbench = Gui.activeWorkbench()
-        workbenches = FreeCADGui.listWorkbenches()
+        workbenches = Gui.listWorkbenches()
         global loadedWorkbenches
 
         for i in indexList:
@@ -1986,7 +1973,7 @@ def pieMenuStart():
             except:
                 None
 
-            all_actions = FreeCADGui.getMainWindow().findChildren(QtGui.QAction)
+            all_actions = Gui.getMainWindow().findChildren(QtGui.QAction)
 
             for action in all_actions:
                 if action.data() == iconPath:
@@ -2147,8 +2134,6 @@ def pieMenuStart():
     def listTopo():
         """ Handle conditions to trigger context mode """
         nonlocal contextPhase
-        # enableContext = paramGet.GetBool("EnableContext")
-        # if enableContext:
         module = None
         try:
             g = Gui.ActiveDocument.getInEdit()
@@ -2195,7 +2180,6 @@ def pieMenuStart():
                     paramGet.SetString("ContextPie", pieName)
                 contextPhase = True
 
-                # updateCommands(keyValue=None, context=True)
                 PieMenuInstance.hide()
 
                 activeWB = Gui.activeWorkbench().name()
@@ -2334,7 +2318,7 @@ def pieMenuStart():
         global hoverDelay
         global loadedWorkbenches
 
-        if keyValue is None or keyValue == False:
+        if not keyValue or keyValue is None:
             # context
             if context:
                 try:
@@ -2943,7 +2927,6 @@ def pieMenuStart():
 
             createNestedPieMenus()
             reloadWorkbench()
-            ### fix https://github.com/Grubuntu/PieMenu/issues/102
             onPieChange()
 
         return paramIndexGet.GetGroup(indexNumber)
@@ -3106,7 +3089,6 @@ def pieMenuStart():
 
     def copyIndexParams(grpOrg, grpCopy):
         """ Copy value in parameters """
-        #### TO DO : ajouter les paramètres manquants !
         valButOrg = grpOrg.GetInt("Button")
         valRadOrg = grpOrg.GetInt("Radius")
         valShapeOrg = grpOrg.GetString("Shape")
@@ -4393,7 +4375,7 @@ def pieMenuStart():
                 param.SetString("IconPath", objIcon)
 
         commandName = 'Std_PieMenu_' + cBox.currentText()
-        all_actions = FreeCADGui.getMainWindow().findChildren(QtGui.QAction)
+        all_actions = Gui.getMainWindow().findChildren(QtGui.QAction)
 
         for action in all_actions:
             if action.data() == commandName:
@@ -4728,7 +4710,7 @@ def pieMenuStart():
         wbName = wbName.replace("Workbench", "")
         keyValue = getPieName(wbName)
 
-        if keyValue == None:
+        if keyValue is None:
             try:
                 keyValue = paramGet.GetString("CurrentPie").decode("UTF-8")
             except AttributeError:
