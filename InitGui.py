@@ -26,8 +26,9 @@
 # http://www.freecadweb.org/wiki/index.php?title=Code_snippets
 #
 
+
 global PIE_MENU_VERSION
-PIE_MENU_VERSION = "1.9.1"
+PIE_MENU_VERSION = "1.9.2"
 
 def pieMenuStart():
     """Main function that starts the Pie Menu."""
@@ -81,8 +82,6 @@ def pieMenuStart():
     listShortcutCode = []
     flagShortcutOverride = False
     firstLoad = True
-
-    selectionTriggered = False
     contextPhase = False
 
     paramPath = "User parameter:BaseApp/PieMenu"
@@ -234,16 +233,31 @@ def pieMenuStart():
             shortcutsAssigned = getAssignedShortcut()
             compareAndDisplayWarning(shortcutsAssigned, currentShortcut)
 
+
         def get_modifier_text(self, modifiers):
+            # Dictionnaire des modificateurs
             modifier_names = {
                 Qt.ControlModifier: 'CTRL',
                 Qt.AltModifier: 'ALT',
                 Qt.ShiftModifier: 'SHIFT',
-                Qt.MetaModifier: 'META',
-                Qt.Key_Tab: 'TAB'
+                Qt.MetaModifier: 'META'
             }
-            modifier_text = '+'.join([modifier_names[modifier] \
-                for modifier in modifier_names if modifiers & modifier])
+
+            # Si aucun modificateur n'est présent, retourner une chaîne vide
+            if modifiers == Qt.KeyboardModifier.NoModifier:
+                return ""
+
+            # Construction du texte pour les modificateurs actifs
+            modifier_text = '+'.join(
+                modifier_names[modifier]
+                for modifier in modifier_names
+                if modifiers & modifier
+            )
+
+            # Gestion de Qt.Key_Tab si nécessaire
+            if modifiers == Qt.Key_Tab:
+                modifier_text += '+TAB' if modifier_text else 'TAB'
+
             return modifier_text
 
 
@@ -391,7 +405,7 @@ def pieMenuStart():
 
         def Activated(self):
             """Run the following code when the command is activated (button press)."""
-            PieMenuInstance.showAtMouse(self.keyValue, notKeyTriggered=False)
+            PieMenuInstance.showAtMouse(self.keyValue)
 
         def IsActive(self):
             """Return True when the command should be active or False when it should be disabled (greyed)."""
@@ -438,8 +452,11 @@ def pieMenuStart():
             self.menuSize = 0
             self.menu.setObjectName("styleContainer")
             self.menu.setStyleSheet(styleCurrentTheme)
-            # QtCore.Qt.WA_MacAlwaysShowToolWindow : needed to hide widget when FreeCad is minimized
-            self.menu.setWindowFlags(QtCore.Qt.FramelessWindowHint | Qt.NoDropShadowWindowHint | QtCore.Qt.WA_MacAlwaysShowToolWindow)
+
+            flags = QtCore.Qt.FramelessWindowHint | QtCore.Qt.NoDropShadowWindowHint
+            self.menu.setWindowFlags(flags)
+            self.menu.setAttribute(QtCore.Qt.WA_DeleteOnClose)
+
             self.menu.setAttribute(QtCore.Qt.WA_TranslucentBackground)
 
             if compositingManager:
@@ -736,6 +753,12 @@ def pieMenuStart():
                     self.double_spinbox.setProperty("singleStep", step)
                 except:
                     None
+                    
+            """ Filtrer les événements pour détecter la minimisation """
+            if obj == self.mw and event.type() == QtCore.QEvent.WindowStateChange:
+                # Vérifier si la fenêtre principale est minimisée
+                if self.mw.isMinimized():
+                    self.menu.hide()
             return False
 
 
@@ -836,7 +859,6 @@ def pieMenuStart():
             if shape == "Pie":
                 if commandNumber == 1:
                     angle = 0
-                    # buttonSize = self.buttonSize
                 else:
                     angle = 2 * math.pi / commandNumber
                 angleStart = 3 * math.pi / 2 - angle
@@ -1304,7 +1326,8 @@ def pieMenuStart():
                     num = num + 1
 
             buttonQuickMenu = quickMenu()
-            if checkboxQuickMenu.checkState():
+            # if checkboxQuickMenu.checkState() == QtCore.Qt.Checked:
+            if checkboxQuickMenu.isChecked():
                 buttonQuickMenu.setParent(self.menu)
                 self.buttons.append(buttonQuickMenu)
             else:
@@ -1434,23 +1457,26 @@ def pieMenuStart():
             self.menu.hide()
 
 
-        def showAtMouseInstance(self, keyValue=None, notKeyTriggered=False):
-            nonlocal selectionTriggered
+        def showAtMouseInstance(self, keyValue=None):
             nonlocal contextPhase
-
             enableContext = paramGet.GetBool("EnableContext")
 
-            if contextPhase and keyValue is None:
-                sel = Gui.Selection.getSelectionEx()
-                if not sel:
-                    self.hide()
-                    contextPhase = False
-                    updateCommands()
-                elif not enableContext:
-                    self.hide()
-                    updateCommands()
-                else:
-                    updateCommands(keyValue, context=True)
+            if contextPhase:
+                if not keyValue or keyValue is None:
+                    sel = Gui.Selection.getSelectionEx()
+                    if not sel:
+                        self.hide()
+                        contextPhase = False
+                        updateCommands()
+                    elif not enableContext:
+                        self.hide()
+                        updateCommands()
+                    else:
+                        try:
+                            keyValue = paramGet.GetString("ContextPie").decode("UTF-8")
+                        except AttributeError:
+                            keyValue = paramGet.GetString("ContextPie")
+                        updateCommands(keyValue, context=True)
             else:
                 updateCommands(keyValue)
 
@@ -1476,7 +1502,7 @@ def pieMenuStart():
                 self.menu.popup(QtCore.QPoint(pos.x() - self.menuSize / 2, pos.y() - self.menuSize / 2))
 
 
-        def showPiemenuPreview(self, keyValue=None, notKeyTriggered=False):
+        def showPiemenuPreview(self, keyValue=None):
             """ Preview of PieMenu in widgetTable on Preferences Tab """
             # get BackgroundColor value in parameters, if 0 then we have a fresh install
             backgroundColorConfig = paramColorGet.GetUnsigned("BackgroundColor")
@@ -1557,11 +1583,11 @@ def pieMenuStart():
                 self.menu.popup(QtCore.QPoint(posX - self.menuSize / 2, posY - self.menuSize / 2))
 
 
-        def showAtMouse(self, keyValue=None, notKeyTriggered=False):
+        def showAtMouse(self, keyValue=None):
             global flagVisi
 
             if not flagVisi:
-                self.showAtMouseInstance(keyValue, notKeyTriggered)
+                self.showAtMouseInstance(keyValue)
                 flagVisi = False
             else:
                 self.menu.hide()
@@ -1845,7 +1871,7 @@ def pieMenuStart():
             shortcut = QShortcut(QKeySequence(shortcutKey), mw)
             namePie = namePie.split("PieMenu_")[1]
             shortcut.activated.connect(lambda keyValue=namePie: \
-                PieMenuInstance.showAtMouse(keyValue=keyValue, notKeyTriggered=False))
+                PieMenuInstance.showAtMouse(keyValue=keyValue))
             shortcut.setEnabled(True)
         return shortcutList
 
@@ -1918,7 +1944,7 @@ def pieMenuStart():
         """ Update PieMenu icon after change it """
         indexList = getIndexList()
         lastWorkbench = Gui.activeWorkbench()
-        workbenches = FreeCADGui.listWorkbenches()
+        workbenches = Gui.listWorkbenches()
         global loadedWorkbenches
 
         for i in indexList:
@@ -1947,7 +1973,7 @@ def pieMenuStart():
             except:
                 None
 
-            all_actions = FreeCADGui.getMainWindow().findChildren(QtGui.QAction)
+            all_actions = Gui.getMainWindow().findChildren(QtGui.QAction)
 
             for action in all_actions:
                 if action.data() == iconPath:
@@ -2107,70 +2133,67 @@ def pieMenuStart():
 
     def listTopo():
         """ Handle conditions to trigger context mode """
-        enableContext = paramGet.GetBool("EnableContext")
-        if enableContext:
-            module = None
-            try:
-                g = Gui.ActiveDocument.getInEdit()
-                module = g.Module
-            except:
-                pass
+        nonlocal contextPhase
+        module = None
+        try:
+            g = Gui.ActiveDocument.getInEdit()
+            module = g.Module
+        except:
+            pass
 
-            if module is None or module == "SketcherGui":
-                nonlocal selectionTriggered
-                nonlocal contextPhase
-                sel = Gui.Selection.getSelectionEx()
-                vertexes = 0
-                edges = 0
-                faces = 0
-                objects = 0
-                allList = []
-                for i in sel:
-                    if not i.SubElementNames:
-                        objects = objects + 1
-                    else:
-                        for a in i.SubElementNames:
-                            allList.append(a)
-                for i in allList:
-                    if i.startswith('Vertex') or i.startswith('RootPoint'):
-                        vertexes = vertexes + 1
-                    elif i.startswith('Edge'):
-                        edges = edges + 1
-                    elif i.startswith('Face'):
-                        faces = faces + 1
-                    else:
-                        pass
-                pieIndex = getContextPie(vertexes,
-                                         edges,
-                                         faces,
-                                         objects)
-
-                if pieIndex:
-                    try:
-                        pieName = paramIndexGet.GetString(pieIndex).decode("UTF-8")
-                    except AttributeError:
-                        pieName = paramIndexGet.GetString(pieIndex)
-                    try:
-                        paramGet.SetString("ContextPie", pieName.encode("UTF-8"))
-                    except TypeError:
-                        paramGet.SetString("ContextPie", pieName)
-                    contextPhase = True
-
-                    # updateCommands(keyValue=None, context=True)
-                    PieMenuInstance.hide()
-
-                    activeWB = Gui.activeWorkbench().name()
-                    activeWB = activeWB.split("Workbench")
-                    contextWorkbench = None
-                    contextWorkbench = getParameterGroup(pieName, "String", "ContextWorkbench")
-
-                    if contextWorkbench == activeWB[0] or contextWorkbench is None or contextWorkbench == translate("ContextTab", "All Workbenches"):
-                        immediateTrigger = getParameterGroup(pieName, "Bool", "ImmediateTriggerContext")
-                        if immediateTrigger:
-                            selectionTriggered = True
-                            PieMenuInstance.showAtMouse(notKeyTriggered=True)
+        if module is None or module == "SketcherGui":
+            # nonlocal contextPhase
+            sel = Gui.Selection.getSelectionEx()
+            vertexes = 0
+            edges = 0
+            faces = 0
+            objects = 0
+            allList = []
+            for i in sel:
+                if not i.SubElementNames:
+                    objects = objects + 1
+                else:
+                    for a in i.SubElementNames:
+                        allList.append(a)
+            for i in allList:
+                if i.startswith('Vertex') or i.startswith('RootPoint'):
+                    vertexes = vertexes + 1
+                elif i.startswith('Edge'):
+                    edges = edges + 1
+                elif i.startswith('Face'):
+                    faces = faces + 1
                 else:
                     pass
+            pieIndex = getContextPie(vertexes,
+                                     edges,
+                                     faces,
+                                     objects)
+
+            if pieIndex:
+                try:
+                    pieName = paramIndexGet.GetString(pieIndex).decode("UTF-8")
+                except AttributeError:
+                    pieName = paramIndexGet.GetString(pieIndex)
+                try:
+                    paramGet.SetString("ContextPie", pieName.encode("UTF-8"))
+                except TypeError:
+                    paramGet.SetString("ContextPie", pieName)
+                contextPhase = True
+
+                PieMenuInstance.hide()
+
+                activeWB = Gui.activeWorkbench().name()
+                activeWB = activeWB.split("Workbench")
+                contextWorkbench = None
+                contextWorkbench = getParameterGroup(pieName, "String", "ContextWorkbench")
+
+                if contextWorkbench == activeWB[0] or contextWorkbench is None or contextWorkbench == translate("ContextTab", "All Workbenches"):
+                    immediateTrigger = getParameterGroup(pieName, "Bool", "ImmediateTriggerContext")
+                    if immediateTrigger:
+                        PieMenuInstance.showAtMouse()
+            else:
+                contextPhase = False
+        return contextPhase
 
 
     def addObserver():
@@ -2249,9 +2272,20 @@ def pieMenuStart():
 
     def getGuiToolButtonData(idToolBar, actions, commands, workbenches):
         actionMapAll = getGuiActionMapAll()
+
+        qt_version = QtCore.qVersion()
+        qt_major_version = int(qt_version.split('.')[0])
+
         for i in actionMapAll:
             action = actionMapAll[i]
-            for widgets in action.associatedWidgets():
+            
+            if qt_major_version >= 6:
+                # for Qt6
+                associated_items = action.associatedObjects()
+            else:
+                # for Qt5
+                associated_items = action.associatedWidgets()
+            for widgets in associated_items:
                 if widgets.windowTitle() == idToolBar:
                     getActionData(action, actions, commands, workbenches)
 
@@ -2278,14 +2312,13 @@ def pieMenuStart():
 
 
     def updateCommands(keyValue=None, context=False):
-                                  
         # keyValue = None > Global shortcut
         # keyValue != None > Custom shortcut
         global triggerMode
         global hoverDelay
         global loadedWorkbenches
 
-        if keyValue is None:
+        if not keyValue or keyValue is None:
             # context
             if context:
                 try:
@@ -2582,7 +2615,7 @@ def pieMenuStart():
         buttonListWidget.blockSignals(False)
 
         showPiemenu.hide()
-        PieMenuInstance.showPiemenuPreview(keyValue=cBox.currentText(), notKeyTriggered=False)
+        PieMenuInstance.showPiemenuPreview(keyValue=cBox.currentText())
         showPiemenu.show()
 
 
@@ -2894,6 +2927,7 @@ def pieMenuStart():
 
             createNestedPieMenus()
             reloadWorkbench()
+            onPieChange()
 
         return paramIndexGet.GetGroup(indexNumber)
 
@@ -3057,10 +3091,12 @@ def pieMenuStart():
         """ Copy value in parameters """
         valButOrg = grpOrg.GetInt("Button")
         valRadOrg = grpOrg.GetInt("Radius")
+        valShapeOrg = grpOrg.GetString("Shape")
         tbOrg = grpOrg.GetString("ToolList")
         grpCopy.SetInt("Button", valButOrg)
         grpCopy.SetInt("Radius", valRadOrg)
         grpCopy.SetString("ToolList", tbOrg)
+        grpCopy.SetString("Shape", valShapeOrg)
 
 
     def copyContextParams(grpOrg, grpCopy):
@@ -3269,7 +3305,7 @@ def pieMenuStart():
             if key == "toolBarTab":
                 PieMenuInstance.showPiemenuPreview("toolBarTab")
             else:
-                PieMenuInstance.showPiemenuPreview(keyValue=cBox.currentText(), notKeyTriggered=False)
+                PieMenuInstance.showPiemenuPreview(keyValue=cBox.currentText())
             showPiemenu.show()
         except:
             None
@@ -3563,7 +3599,7 @@ def pieMenuStart():
 
     def onShowQuickMenu(state):
         """ Set visibility of Quickmenu """
-        if state == Qt.Checked:
+        if state == 2:
             paramGet.SetBool("ShowQuickMenu", True)
         else:
             paramGet.SetBool("ShowQuickMenu", False)
@@ -3572,7 +3608,7 @@ def pieMenuStart():
 
     def onRightClickTrigger(state):
         """ Set right click trigger """
-        if state == Qt.Checked:
+        if state == 2:
             paramGet.SetBool("RightClickTrigger", True)
             spinDelayRightClick.setEnabled(True)
         else:
@@ -3582,7 +3618,7 @@ def pieMenuStart():
 
     def onContext(state):
         """ Set context mode activation """
-        if state == Qt.Checked:
+        if state == 2:
             paramGet.SetBool("EnableContext", True)
         else:
             paramGet.SetBool("EnableContext", False)
@@ -3685,7 +3721,6 @@ def pieMenuStart():
         """ Handle list of tool in tool list widget """
         text = cBox.currentText()
         items = []
-
         for index in range(toolListWidget.count()):
             items.append(toolListWidget.item(index))
 
@@ -3693,7 +3728,7 @@ def pieMenuStart():
         checkListOff = []
 
         for i in items:
-            if i.checkState():
+            if i.checkState() == QtCore.Qt.Checked:
                 checkListOn.append(i.data(QtCore.Qt.UserRole))
             else:
                 checkListOff.append(i.data(QtCore.Qt.UserRole))
@@ -3720,7 +3755,6 @@ def pieMenuStart():
         for i in checkListOn:
             if i not in toolList:
                 toolList.append(i)
-
             else:
                 pass
 
@@ -3729,6 +3763,7 @@ def pieMenuStart():
                 toolList.remove(i)
             else:
                 pass
+
         for i in indexList:
             a = str(i)
             try:
@@ -3737,7 +3772,7 @@ def pieMenuStart():
                 pie = paramIndexGet.GetString(a)
             if pie == text:
                 group = paramIndexGet.GetGroup(a)
-                toolList = group.SetString("ToolList", ".,.".join(toolList))
+                group.SetString("ToolList", ".,.".join(toolList))
             else:
                 pass
         buttonList()
@@ -3985,7 +4020,7 @@ def pieMenuStart():
                 msg.setText(translate("GlobalSettingsTab", "PieMenu settings exported successfully."))
                 msg.setWindowTitle(translate("GlobalSettingsTab", "Information"))
                 msg.setStandardButtons(QMessageBox.Ok)
-                msg.exec_()
+                msg.exec()
 
             except Exception as e:
                 print(f"Error exporting settings: {str(e)}")
@@ -4008,7 +4043,7 @@ def pieMenuStart():
         msg.setWindowTitle(translate("GlobalSettingsTab", "Backup user settings"))
         msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
         msg.setDefaultButton(QMessageBox.Yes)
-        response = msg.exec_()
+        response = msg.exec()
 
         if response == QMessageBox.Yes:
             if not os.path.exists(backupDir):
@@ -4023,7 +4058,7 @@ def pieMenuStart():
                 msg.setInformativeText(translate("GlobalSettingsTab", "Click OK to select the file to import PieMenu settings."))
                 msg.setWindowTitle(translate("GlobalSettingsTab", "Successful backup"))
                 msg.setStandardButtons(QMessageBox.Ok)
-                msg.exec_()
+                msg.exec()
 
                 file, _ = QFileDialog.getOpenFileName(None, translate("ImportSettingsWindow", "Import PieMenu settings from a file"), "" , "XML (*.FCParam)")
 
@@ -4043,7 +4078,7 @@ def pieMenuStart():
                         nowButton.setText(translate("RestartFreeCADWindow","Now"))
                         laterButton = msg.button(QMessageBox.No)
                         laterButton.setText(translate("RestartFreeCADWindow","Later"))
-                        response = msg.exec_()
+                        response = msg.exec()
 
                         if response == QMessageBox.Yes:
                             """Shuts down and restarts FreeCAD"""
@@ -4340,7 +4375,7 @@ def pieMenuStart():
                 param.SetString("IconPath", objIcon)
 
         commandName = 'Std_PieMenu_' + cBox.currentText()
-        all_actions = FreeCADGui.getMainWindow().findChildren(QtGui.QAction)
+        all_actions = Gui.getMainWindow().findChildren(QtGui.QAction)
 
         for action in all_actions:
             if action.data() == commandName:
@@ -4504,7 +4539,7 @@ def pieMenuStart():
                 text = pieGroup.checkedAction().text()
                 paramGet.SetString("CurrentPie", text)
             PieMenuInstance.hide()
-            PieMenuInstance.showAtMouse(notKeyTriggered=True)
+            PieMenuInstance.showAtMouse()
 
 
         def onMenuToolBar():
@@ -4591,7 +4626,7 @@ def pieMenuStart():
                 toolbar_desc = toolbar_desc + ': ' + sender.data()
                 paramGet.SetString("ToolBar", toolbar_desc)
                 PieMenuInstance.hide()
-                PieMenuInstance.showAtMouse(notKeyTriggered=True)
+                PieMenuInstance.showAtMouse()
 
 
         def onPrefButton():
@@ -4675,7 +4710,7 @@ def pieMenuStart():
         wbName = wbName.replace("Workbench", "")
         keyValue = getPieName(wbName)
 
-        if keyValue == None:
+        if keyValue is None:
             try:
                 keyValue = paramGet.GetString("CurrentPie").decode("UTF-8")
             except AttributeError:

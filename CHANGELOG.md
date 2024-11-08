@@ -1,4 +1,16 @@
 # CHANGELOG
+
+### 1.9.2
+- Qt6 fix : pressing the global shortcut no longer opens PieMenu
+- Qt6 fix : modifiers shortcut were broken
+- Qt6 fix : keyValue == False in updateCommands()
+ -Qt6 fix : function onToolListWidget() were broken, setting showquickmenu were broken
+- Qt6 fix : workbenches toolbars were broken
+- Qt6 fix : context mode and setting globalcontext were instable
+- Qt6 fix : add eventfilter to catch "minimize event", remove WA_MacAlwaysShowToolWindow : not supported in the same way in Qt5
+- Fix : setting immediate trigger
+- Fix :problem in createpie (add onpiechange()) to update values after create a new PieMenu
+
 ### 1.9.1
 - Fix window_icon that appears under the dialog window on Linux system
 
