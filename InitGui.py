@@ -28,7 +28,7 @@
 
 
 global PIE_MENU_VERSION
-PIE_MENU_VERSION = "1.9.2"
+PIE_MENU_VERSION = "1.9.3"
 
 def pieMenuStart():
     """Main function that starts the Pie Menu."""
