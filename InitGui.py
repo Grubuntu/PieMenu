@@ -455,7 +455,6 @@ def pieMenuStart():
 
             flags = QtCore.Qt.FramelessWindowHint | QtCore.Qt.NoDropShadowWindowHint
             self.menu.setWindowFlags(flags)
-            self.menu.setAttribute(QtCore.Qt.WA_DeleteOnClose)
 
             self.menu.setAttribute(QtCore.Qt.WA_TranslucentBackground)
 
@@ -3083,42 +3082,6 @@ def pieMenuStart():
         return "-1"
 
 
-    def copyIndexParams(grpOrg, grpCopy):
-        """ Copy value in parameters """
-        valButOrg = grpOrg.GetInt("Button")
-        valRadOrg = grpOrg.GetInt("Radius")
-        valShapeOrg = grpOrg.GetString("Shape")
-        tbOrg = grpOrg.GetString("ToolList")
-        grpCopy.SetInt("Button", valButOrg)
-        grpCopy.SetInt("Radius", valRadOrg)
-        grpCopy.SetString("ToolList", tbOrg)
-        grpCopy.SetString("Shape", valShapeOrg)
-
-
-    def copyContextParams(grpOrg, grpCopy):
-        """ Copy context values in parameters """
-        grpCntOrg = grpOrg.GetGroup("Context")
-        grpCntCopy = grpCopy.GetGroup("Context")
-        enabledOrg = grpCntOrg.GetBool("Enabled")
-        vtxSgnOrg = grpCntOrg.GetString("VertexSign")
-        vtxValOrg = grpCntOrg.GetInt("VertexValue")
-        edgSgnOrg = grpCntOrg.GetString("EdgeSign")
-        edgValOrg = grpCntOrg.GetInt("EdgeValue")
-        fceSgnOrg = grpCntOrg.GetString("FaceSign")
-        fceValOrg = grpCntOrg.GetInt("FaceValue")
-        objSgnOrg = grpCntOrg.GetString("ObjectSign")
-        objValOrg = grpCntOrg.GetInt("ObjectValue")
-        grpCntCopy.SetBool("Enabled", enabledOrg)
-        grpCntCopy.SetString("VertexSign", vtxSgnOrg)
-        grpCntCopy.SetInt("VertexValue", vtxValOrg)
-        grpCntCopy.SetString("EdgeSign", edgSgnOrg)
-        grpCntCopy.SetInt("EdgeValue", edgValOrg)
-        grpCntCopy.SetString("FaceSign", fceSgnOrg)
-        grpCntCopy.SetInt("FaceValue", fceValOrg)
-        grpCntCopy.SetString("ObjectSign", objSgnOrg)
-        grpCntCopy.SetInt("ObjectValue", objValOrg)
-
-
     def onButtonCopyPieMenu():
         """ Dialog for copy PieMenu """
         text, ok = inputTextDialog(translate("PieMenuTab", "Copy menu"))
@@ -3159,8 +3122,12 @@ def pieMenuStart():
             indexCopy = str(indexCopy)
             grpOrg = paramIndexGet.GetGroup(indexOrg)
             grpCopy = paramIndexGet.GetGroup(indexCopy)
-            copyIndexParams(grpOrg, grpCopy)
-            copyContextParams(grpOrg, grpCopy)
+            grpOrg.CopyTo(grpCopy)
+            grpCopy.SetString("ShortcutKey", "") # clear shortcutkey
+
+            grpCntOrg = grpOrg.GetGroup("Context")
+            grpCntCopy = grpCopy.GetGroup("Context")
+            grpCntOrg.CopyTo(grpCntCopy)
 
             try:
                 paramIndexGet.SetString(indexCopy, text.encode('UTF-8'))
@@ -4700,7 +4667,6 @@ def pieMenuStart():
     #### Preferences dialog ####
     def onControl():
         """Initializes the preferences dialog."""
-        #### https://github.com/Grubuntu/PieMenu/issues/94
         wb = Gui.activeWorkbench()
         wbName = wb.name()
         wbName = wbName.replace("Workbench", "")

@@ -2,8 +2,8 @@
 <package format="1" xmlns="https://wiki.freecad.org/Package_Metadata">
   <name>PieMenu</name>
   <description>The PieMenu module is a tool to accelerate and simplify your workflow in usage of FreeCAD.</description>
-  <version>1.9.2</version>
-  <date>2024-11-08</date>
+  <version>1.9.3</version>
+  <date>2024-11-10</date>
   <maintainer>Grubuntu</maintainer>
   <license file="LICENSE">LGPL-2.1-or-later</license>
   <url type="repository" branch="master">https://github.com/Grubuntu/PieMenu</url>
