@@ -1,4 +1,7 @@
 # CHANGELOG
+### 1.9.3
+Fix copy PieMenu not duplicate all parameters https://github.com/Grubuntu/PieMenu/issues/104
+Partially fix (https://github.com/Grubuntu/PieMenu/issues/106)
 
 ### 1.9.2
 - Qt6 fix : pressing the global shortcut no longer opens PieMenu
