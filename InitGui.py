@@ -28,7 +28,7 @@
 
 
 global PIE_MENU_VERSION
-PIE_MENU_VERSION = "1.9.3"
+PIE_MENU_VERSION = "1.9.4"
 
 def pieMenuStart():
     """Main function that starts the Pie Menu."""
@@ -478,8 +478,12 @@ def pieMenuStart():
                 actionKey.trigger()
 
         def validation(self):
-            docName = App.ActiveDocument.Name
-            Gui.getDocument(docName).resetEdit()
+            # workaround to fix https://github.com/Grubuntu/PieMenu/issues/106
+            # https://forum.freecad.org/viewtopic.php?t=92023
+            # run an other command in Sketcher:  
+            Gui.runCommand('Sketcher_ConstrainParallel',0)
+            # to avoid that 'Sketcher_CompDimensionTools' being activated before resetEdit()
+            Gui.ActiveDocument.resetEdit()
             App.ActiveDocument.recompute()
             PieMenuInstance.hide()
 
@@ -2581,7 +2585,7 @@ def pieMenuStart():
                 actionItem.setIcon(actionMapAll[i].icon())
                 actionItem.setToolTip(actionMapAll[i].toolTip())
                 # prevent user to write something in list
-                actionItem.setFlags(QtCore.Qt.ItemIsEnabled)
+                # actionItem.setFlags(QtCore.Qt.ItemIsEnabled)
                 shortcutItem = QtWidgets.QTableWidgetItem()
                 # prevent user to select shortcut in list
                 shortcutItem.setFlags(QtCore.Qt.ItemIsEnabled)
@@ -3802,62 +3806,109 @@ def pieMenuStart():
 
 
     def onButtonUp():
-        """ Move up the tool in the list """
-        currentIndex = buttonListWidget.currentRow()
-        if currentIndex != 0:
-            item_first_column = buttonListWidget.takeItem(currentIndex, 0)
-            item_second_column = buttonListWidget.takeItem(currentIndex, 1)
+        """ Move up the selected tools in the list """
+        selected_ranges = buttonListWidget.selectedRanges()
+                             
+                                                                          
+                                                                           
 
-            buttonListWidget.removeRow(currentIndex)
-            buttonListWidget.insertRow(currentIndex - 1)
+        if not selected_ranges:
+            return
 
-            buttonListWidget.setItem(currentIndex, 0, item_first_column)
-            buttonListWidget.setItem(currentIndex - 1, 1, item_second_column)
+        selected_rows = set()
+        for selection in selected_ranges:
+            for row in range(selection.topRow(), selection.bottomRow() + 1):
+                selected_rows.add(row)
 
-            buttonList2ToolList(buttonListWidget)
-            buttonList()
-            buttonListWidget.setCurrentCell(currentIndex - 1, 1)
+        selected_rows = sorted(selected_rows)
+
+        if 0 in selected_rows:
+            return
+
+        for row in selected_rows:
+            item_first_column = buttonListWidget.takeItem(row, 0)
+            item_second_column = buttonListWidget.takeItem(row, 1)
+
+            buttonListWidget.removeRow(row)
+            buttonListWidget.insertRow(row - 1)
+            buttonListWidget.setItem(row - 1, 0, item_first_column)
+            buttonListWidget.setItem(row - 1, 1, item_second_column)
+
+        buttonList2ToolList(buttonListWidget)
+        buttonList()
+
+        for row in selected_rows:
+            buttonListWidget.setRangeSelected(QtGui.QTableWidgetSelectionRange(row - 1, 0, row - 1, 1), True)
 
 
     def onButtonDown():
-        """ Move down the tool in the list """
-        currentIndex = buttonListWidget.currentRow()
+        """ Move down the selected tools in the list """
+        selected_ranges = buttonListWidget.selectedRanges()
+
+        if not selected_ranges:
+            return
+
+        selected_rows = set()
+        for selection in selected_ranges:
+            for row in range(selection.topRow(), selection.bottomRow() + 1):
+                selected_rows.add(row)
+
+        selected_rows = sorted(selected_rows, reverse=True)
         rowCount = buttonListWidget.rowCount()
-        if currentIndex < rowCount - 1:
-            item_first_column = buttonListWidget.takeItem(currentIndex, 0)
-            item_second_column = buttonListWidget.takeItem(currentIndex, 1)
+                                       
+                                                                          
+                                                                           
 
-            buttonListWidget.removeRow(currentIndex)
-            buttonListWidget.insertRow(currentIndex + 1)
+        if rowCount - 1 in selected_rows:
+            return
 
-            buttonListWidget.setItem(currentIndex, 0, item_first_column)
-            buttonListWidget.setItem(currentIndex + 1, 1, item_second_column)
+        for row in selected_rows:
+            item_first_column = buttonListWidget.takeItem(row, 0)
+            item_second_column = buttonListWidget.takeItem(row, 1)
 
-            buttonList2ToolList(buttonListWidget)
-            buttonList()
-            buttonListWidget.setCurrentCell(currentIndex + 1, 1)
+            buttonListWidget.removeRow(row)
+            buttonListWidget.insertRow(row + 1)
+            buttonListWidget.setItem(row + 1, 0, item_first_column)
+            buttonListWidget.setItem(row + 1, 1, item_second_column)
+
+        buttonList2ToolList(buttonListWidget)
+        buttonList()
+
+        for row in selected_rows:
+            buttonListWidget.setRangeSelected(QtGui.QTableWidgetSelectionRange(row + 1, 0, row + 1, 1), True)
 
 
     def onButtonRemoveCommand():
-        """ Remove the tool from the list """
-        currentIndex = buttonListWidget.currentRow()
-        rowCount = buttonListWidget.rowCount()
+        """ Remove selected tools from the list """
+        selected_ranges = buttonListWidget.selectedRanges()
+        if not selected_ranges:
+            return
 
-        if rowCount > 0 and 0 <= currentIndex < rowCount:
+        rows_to_remove = set()
+        for selection in selected_ranges:
+            for row in range(selection.topRow(), selection.bottomRow() + 1):
+                rows_to_remove.add(row)
+
+        for row in sorted(rows_to_remove, reverse=True):
             items = []
             for column in range(buttonListWidget.columnCount()):
-                item = buttonListWidget.takeItem(currentIndex, column)
+                item = buttonListWidget.takeItem(row, column)
                 items.append(item)
 
-            buttonListWidget.removeRow(currentIndex)
+            buttonListWidget.removeRow(row)
 
-            buttonListWidget.setFocus()
-            buttonList2ToolList(buttonListWidget)
-            buttonList()
-            toolList()
-            if currentIndex != 0:
-                buttonListWidget.setCurrentCell(currentIndex - 1, 1)
+        buttonListWidget.setFocus()
+        buttonList2ToolList(buttonListWidget)
+        buttonList()
+        toolList()
+                                 
+                                                                    
 
+        if rows_to_remove:
+            last_removed_row = max(rows_to_remove)
+            new_index = last_removed_row - len(rows_to_remove)
+            if new_index >= 0:
+                buttonListWidget.setCurrentCell(new_index, 1)
 
     def onButtonAddSeparator():
         """ Handle separator for PieMenus """
@@ -5346,6 +5397,7 @@ def pieMenuStart():
     buttonListWidget.horizontalHeader().setMinimumSectionSize(60)
     buttonListWidget.horizontalHeader().setStretchLastSection(True)
 
+    buttonListWidget.setSelectionMode(QtGui.QAbstractItemView.ExtendedSelection)
     pieButtons = QtGui.QWidget()
     pieButtonsLayout = QtGui.QVBoxLayout()
     pieButtons.setLayout(pieButtonsLayout)
