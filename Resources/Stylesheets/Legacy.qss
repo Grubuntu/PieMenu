@@ -1,6 +1,8 @@
 /* PieMenu widget stylesheet for FreeCAD */
 /* Copyright (C) 2024 Pgilfernandez @ FreeCAD */
 
+/* Reset CSS Values*/
+* {margin:0;}
 
 /* ====================================================== */
 /*                 Normal pie button style                */
@@ -79,7 +81,7 @@ QToolButton#styleMenuClose::menu-indicator {
 /* Used for fillet/chamfer fast radius setting (and probably others) */
 
 QComboBox#styleCombo {
-    background-color: transparent   ;
+    background-color: transparent;
     border: 1px solid transparent;
 }
 
