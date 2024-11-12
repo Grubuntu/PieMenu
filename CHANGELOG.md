@@ -1,6 +1,6 @@
 # CHANGELOG
 ### 1.9.5
-- Fix [#109] : circular central button was not circular with the Opentheme theme
+- Fix https://github.com/Grubuntu/PieMenu/issues/109 : circular central button was not circular with the Opentheme theme
   
 ### 1.9.4
 - Fix [#106] : FreeCAD crash when we quit Sketcher with PieMenu validation button and 'Sketcher_Dimension'/'Sketcher_CompDimensionTools' is active
