@@ -3,7 +3,7 @@
 - Fix [#109] : circular central button was not circular with the Opentheme theme
   
 ### 1.9.4
-Fix [#106] : FreeCAD crash when we quit Sketcher with PieMenu validation button and 'Sketcher_Dimension'/'Sketcher_CompDimensionTools' is active
+- Fix [#106] : FreeCAD crash when we quit Sketcher with PieMenu validation button and 'Sketcher_Dimension'/'Sketcher_CompDimensionTools' is active
 Added ability to move or delete severals command at the same time in list tools : [#105](https://github.com/Grubuntu/PieMenu/issues/105)
 
 ### 1.9.3
