@@ -1961,8 +1961,16 @@ def pieMenuStart():
                 workbench = extractWorkbench(icon)
                 wbName = workbench_map.get(workbench, workbench + "Workbench")
                 if wbName in workbenches and wbName not in loadedWorkbenches:
-                    message = translate("MainWindow", f"PieMenu needs to load {wbName} to access icon resources. To avoid this message, please consider enabling auto-load for this workbench in FreeCAD's settings.")
-                    QtGui.QMessageBox.information(None, translate("MainWindow", "Workbench Loading"), message, QtGui.QMessageBox.Ok)
+                    message = translate(
+                        "MainWindow",
+                        "PieMenu needs to load {} to access icon resources. To avoid this message, please consider enabling auto-load for this workbench in FreeCAD's settings.",
+                    ).format(wbName)
+                    QtGui.QMessageBox.information(
+                        None,
+                        translate("MainWindow", "Workbench Loading"),
+                        message,
+                        QtGui.QMessageBox.Ok,
+                    )
 
                     Gui.activateWorkbench(wbName)
                     loadedWorkbenches.append(wbName)
