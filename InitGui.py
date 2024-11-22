@@ -26,9 +26,8 @@
 # http://www.freecadweb.org/wiki/index.php?title=Code_snippets
 #
 
-
 global PIE_MENU_VERSION
-PIE_MENU_VERSION = "1.9.5"
+PIE_MENU_VERSION = "1.10"
 
 def pieMenuStart():
     """Main function that starts the Pie Menu."""
@@ -71,11 +70,13 @@ def pieMenuStart():
     global listShortcutCode
     global flagShortcutOverride
     global firstLoad
+    global sortOrder
 
     shortcutKey = ""
     globalShortcutKey = "TAB"
     shortcutList = []
     flagVisi = False
+    sortOrder = QtCore.Qt.AscendingOrder
 
     hoverDelay = 100
     listCommands = []
@@ -166,7 +167,8 @@ def pieMenuStart():
             "Asm4": "Assembly4Workbench",
             "a2p": "A2plusWorkbench",
             "Materials": "MaterialWorkbench",
-            "FCGear": "GearWorkbench"
+            "FCGear": "GearWorkbench",
+            "FreeCAD": "Std"
             }
 
     #### Classes definition ####
@@ -399,8 +401,8 @@ def pieMenuStart():
         def GetResources(self):
             """Return a dictionary with data that will be used by the button or menu item."""
             return {'Pixmap' : self.iconPath,
-                'MenuText':'PieMenu '+ self.keyValue,
-                'ToolTip': 'Piemenu '+ self.keyValue,
+                'MenuText': self.keyValue,
+                'ToolTip': self.keyValue,
                 'CmdType' : 'ForEdit'}
 
         def Activated(self):
@@ -756,7 +758,6 @@ def pieMenuStart():
                     self.double_spinbox.setProperty("singleStep", step)
                 except:
                     None
-                    
             """ Filtrer les événements pour détecter la minimisation """
             if obj == self.mw and event.type() == QtCore.QEvent.WindowStateChange:
                 # Vérifier si la fenêtre principale est minimisée
@@ -790,14 +791,9 @@ def pieMenuStart():
             if keyValue is not None:
                 indexList = getIndexList()
                 for i in indexList:
-                    a = str(i)
-                    try:
-                        pie = paramIndexGet.GetString(a).decode("UTF-8")
-                    except AttributeError:
-                        pie = paramIndexGet.GetString(a)
-
+                    pie = getParamIndex(str(i))
                     if pie == keyValue:
-                        group = paramIndexGet.GetGroup(a)
+                        group = paramIndexGet.GetGroup(str(i))
                     else:
                         pass
             elif context:
@@ -1469,10 +1465,7 @@ def pieMenuStart():
                         self.hide()
                         updateCommands()
                     else:
-                        try:
-                            keyValue = paramGet.GetString("ContextPie").decode("UTF-8")
-                        except AttributeError:
-                            keyValue = paramGet.GetString("ContextPie")
+                        keyValue = getParam("ContextPie")
                         updateCommands(keyValue, context=True)
             else:
                 updateCommands(keyValue)
@@ -1693,6 +1686,24 @@ def pieMenuStart():
 
 
     ### BEGIN Functions Def ####
+    def getParamIndex(name):
+        """ Get parameter from User parameter:BaseApp/PieMenu/Index """
+        try:
+            value = paramIndexGet.GetString(name).decode("UTF-8")
+        except AttributeError:
+            value = paramIndexGet.GetString(name)
+        return value
+
+
+    def getParam(name):
+        """ Get parameter from User parameter:BaseApp/PieMenu """
+        try:
+            value = paramGet.GetString(name).decode("UTF-8")
+        except AttributeError:
+            value = paramGet.GetString(name)
+        return value
+
+
     def addAccessoriesMenu():
         if mw.property("eventLoop"):
             startAM = False
@@ -1791,16 +1802,10 @@ def pieMenuStart():
         parameter = ""
 
         if keyValue is None:
-            try:
-                keyValue = paramGet.GetString("CurrentPie").decode("UTF-8")
-            except AttributeError:
-                keyValue = paramGet.GetString("CurrentPie")
+            keyValue = getParam("CurrentPie")
         indexList = getIndexList()
         for i in indexList:
-            try:
-                pieName = paramIndexGet.GetString(str(i)).decode("UTF-8")
-            except AttributeError:
-                pieName = paramIndexGet.GetString(str(i))
+            pieName = getParamIndex(str(i))
             if pieName == keyValue:
                 param = paramIndexGet.GetGroup(str(i))
                 if paramType=="String":
@@ -1818,11 +1823,7 @@ def pieMenuStart():
         """ Set parameter in settings, paramType = "String", "Int", "Bool" """
         indexList = getIndexList()
         for i in indexList:
-            a = str(i)
-            try:
-                pieName = paramIndexGet.GetString(a).decode("UTF-8")
-            except AttributeError:
-                pieName = paramIndexGet.GetString(a)
+            pieName = getParamIndex(str(i))
             if pieName == keyValue:
                 param = paramIndexGet.GetGroup(str(i))
                 if paramType=="String":
@@ -1881,11 +1882,7 @@ def pieMenuStart():
             spinHoverDelay.setEnabled(True)
         indexList = getIndexList()
         for i in indexList:
-            a = str(i)
-            try:
-                pieName = paramIndexGet.GetString(a).decode("UTF-8")
-            except AttributeError:
-                pieName = paramIndexGet.GetString(a)
+            pieName = getParamIndex(str(i))
             if pieName == cBox.currentText():
                 param = paramIndexGet.GetGroup(str(i))
                 param.SetString("TriggerMode", triggerMode)
@@ -1914,17 +1911,13 @@ def pieMenuStart():
         """ Create a freeCAD command in order to use it as PieMenu """
         indexList = getIndexList()
         for i in indexList:
-            a = str(i)
-            try:
-                pie = paramIndexGet.GetString(a).decode("UTF-8")
-            except AttributeError:
-                pie = paramIndexGet.GetString(a)
-
+            pie = getParamIndex(str(i))
             iconPath = getParameterGroup(pie, "String", "IconPath")
             if iconPath == "":
                 iconPath = iconPieMenuLogo
 
-            Gui.addCommand('Std_PieMenu_' + pie, NestedPieMenu(pie, iconPath))
+            Gui.addCommand('PieMenu_' + pie, NestedPieMenu(pie, iconPath))
+
 
             globaltoolbar = App.ParamGet('User parameter:BaseApp/Workbench/Global/Toolbar/Custom_PieMenu')
 
@@ -1934,7 +1927,8 @@ def pieMenuStart():
             else:
                 globaltoolbar.SetString('Name','PieMenuTB')
 
-            globaltoolbar.SetString('Std_PieMenu_' + pie,'FreeCAD')
+            globaltoolbar.SetString('PieMenu_' + pie,'FreeCAD')
+
 
 
     def updateIconsPieMenus():
@@ -1945,17 +1939,12 @@ def pieMenuStart():
         global loadedWorkbenches
 
         for i in indexList:
-            a = str(i)
-            try:
-                pie = paramIndexGet.GetString(a).decode("UTF-8")
-            except AttributeError:
-                pie = paramIndexGet.GetString(a)
-
+            pie = getParamIndex(str(i))
             iconPath = getParameterGroup(pie, "String", "IconPath")
             if iconPath == "":
                 iconPath = iconPieMenuLogo
             icon = getIconPieMenu(iconPath)
-            namePie = 'Std_PieMenu_' + pie
+            namePie = 'PieMenu_' + pie
 
             try:
                 workbench = extractWorkbench(icon)
@@ -1983,7 +1972,6 @@ def pieMenuStart():
             for action in all_actions:
                 if action.data() == iconPath:
                     icon = action.icon()
-                    
             for action in all_actions:
                 if action.data() == namePie:
                     action.setIcon(QtGui.QIcon(icon))
@@ -2060,12 +2048,11 @@ def pieMenuStart():
         contextAll.clear()
         indexList = getIndexList()
         for i in indexList:
-            a = str(i)
-            group = paramIndexGet.GetGroup(a)
+            group = paramIndexGet.GetGroup(str(i))
             groupContext = group.GetGroup("Context")
             if groupContext.GetBool("Enabled"):
                 current = {}
-                current["Index"] = a
+                current["Index"] = str(i)
                 current["VertexSign"] = groupContext.GetString("VertexSign")
                 current["VertexValue"] = groupContext.GetInt("VertexValue")
 
@@ -2114,10 +2101,7 @@ def pieMenuStart():
                     globalIndexPie = current["Index"]
 
                     if globalIndexPie:
-                        try:
-                            pieName = paramIndexGet.GetString(globalIndexPie).decode("UTF-8")
-                        except AttributeError:
-                            pieName = paramIndexGet.GetString(globalIndexPie)
+                        pieName = getParamIndex(globalIndexPie)
                         contextWorkbench = None
                         contextWorkbench = getParameterGroup(pieName, "String", "ContextWorkbench")
                         activeWB = Gui.activeWorkbench().name()
@@ -2175,10 +2159,7 @@ def pieMenuStart():
                                      objects)
 
             if pieIndex:
-                try:
-                    pieName = paramIndexGet.GetString(pieIndex).decode("UTF-8")
-                except AttributeError:
-                    pieName = paramIndexGet.GetString(pieIndex)
+                pieName = getParamIndex(pieIndex)
                 try:
                     paramGet.SetString("ContextPie", pieName.encode("UTF-8"))
                 except TypeError:
@@ -2326,10 +2307,7 @@ def pieMenuStart():
         if not keyValue or keyValue is None:
             # context
             if context:
-                try:
-                    text = paramGet.GetString("ContextPie").decode("UTF-8")
-                except AttributeError:
-                    text = paramGet.GetString("ContextPie")
+                text = getParam("ContextPie")
 
             # workbench
             elif not paramGet.GetBool("ToolBar"):
@@ -2341,10 +2319,7 @@ def pieMenuStart():
 
                 # current Pie
                 if text is None:
-                    try:
-                        text = paramGet.GetString("CurrentPie").decode("UTF-8")
-                    except AttributeError:
-                        text = paramGet.GetString("CurrentPie")
+                    text = getParam("CurrentPie")
             # else:
                 # text = keyValue
                 context = False
@@ -2409,13 +2384,9 @@ def pieMenuStart():
             toolList = None
             indexList = getIndexList()
             for i in indexList:
-                a = str(i)
-                try:
-                    pie = paramIndexGet.GetString(a).decode("UTF-8")
-                except AttributeError:
-                    pie = paramIndexGet.GetString(a)
+                pie = getParamIndex(str(i))
                 if pie == text:
-                    group = paramIndexGet.GetGroup(a)
+                    group = paramIndexGet.GetGroup(str(i))
                     toolList = group.GetString("ToolList")
                 else:
                     pass
@@ -2456,15 +2427,9 @@ def pieMenuStart():
         """
                                   
         if mode == 2:
-            try:
-                text = paramGet.GetString("ContextPie").decode("UTF-8")
-            except AttributeError:
-                text = paramGet.GetString("ContextPie")
+            text = getParam("ContextPie")
         elif mode == 1:
-            try:
-                text = paramGet.GetString("CurrentPie").decode("UTF-8")
-            except AttributeError:
-                text = paramGet.GetString("CurrentPie")
+            text = getParam("CurrentPie")
         else:
             text = cBox.currentText()
         group = None
@@ -2473,14 +2438,9 @@ def pieMenuStart():
         # to find the group stored on `text` var
         indexList = getIndexList()
         for i in indexList:
-            a = str(i)
-            try:
-                pie = paramIndexGet.GetString(a).decode("UTF-8")
-            except AttributeError:
-                pie = paramIndexGet.GetString(a)
-
+            pie = getParamIndex(str(i))
             if pie == text:
-                group = paramIndexGet.GetGroup(a)
+                group = paramIndexGet.GetGroup(str(i))
             else:
                 pass
         if group:
@@ -2530,17 +2490,12 @@ def pieMenuStart():
 
 
     def buttonList():
-        text = cBox.currentText()
         indexList = getIndexList()
 
         for i in indexList:
-            a = str(i)
-            try:
-                pie = paramIndexGet.GetString(a).decode("UTF-8")
-            except AttributeError:
-                pie = paramIndexGet.GetString(a)
-            if pie == text:
-                group = paramIndexGet.GetGroup(a)
+            pie = getParamIndex(str(i))
+            if pie == cBox.currentText():
+                group = paramIndexGet.GetGroup(str(i))
                 toolList = group.GetString("ToolList")
             else:
                 pass
@@ -2592,8 +2547,6 @@ def pieMenuStart():
                 actionItem.setData(QtCore.Qt.UserRole, i)
                 actionItem.setIcon(actionMapAll[i].icon())
                 actionItem.setToolTip(actionMapAll[i].toolTip())
-                # prevent user to write something in list
-                # actionItem.setFlags(QtCore.Qt.ItemIsEnabled)
                 shortcutItem = QtWidgets.QTableWidgetItem()
                 # prevent user to select shortcut in list
                 shortcutItem.setFlags(QtCore.Qt.ItemIsEnabled)
@@ -2625,19 +2578,15 @@ def pieMenuStart():
 
 
     def cBoxUpdate(index=None):
-        try:
-            currentPie = paramGet.GetString("CurrentPie").decode("UTF-8")
-        except AttributeError:
-            currentPie = paramGet.GetString("CurrentPie")
+        currentPie = getParam("CurrentPie")
 
         pieList = []
         indexList = getIndexList()
         for i in indexList:
-            a = str(i)
             try:
-                pieList.append(paramIndexGet.GetString(a).decode("UTF-8"))
+                pieList.append(paramIndexGet.GetString(str(i)).decode("UTF-8"))
             except AttributeError:
-                pieList.append(paramIndexGet.GetString(a))
+                pieList.append(paramIndexGet.GetString(str(i)))
         duplicates = []
         for i in pieList:
             if i == currentPie:
@@ -2894,8 +2843,7 @@ def pieMenuStart():
         pieList = []
         indexList = getIndexList()
         for i in indexList:
-            a = str(i)
-            pieList.append(paramIndexGet.GetString(a))
+            pieList.append(paramIndexGet.GetString(str(i)))
         if text.encode('UTF-8') in pieList:
             pass
         elif not text:
@@ -2949,22 +2897,12 @@ def pieMenuStart():
 
     def onButtonRemovePieMenu():
         """ Remove PieMenu """
-        try:
-            currentPie = paramGet.GetString("CurrentPie").decode("UTF-8")
-        except AttributeError:
-            currentPie = paramGet.GetString("CurrentPie")
-        try:
-            contextPie = paramGet.GetString("ContextPie").decode("UTF-8")
-        except AttributeError:
-            contextPie = paramGet.GetString("ContextPie")
+        currentPie = getParam("CurrentPie")
+        contextPie = getParam("ContextPie")
 
         indexList = getIndexList()
         for i in indexList:
-            a = str(i)
-            try:
-                pie = paramIndexGet.GetString(a).decode("UTF-8")
-            except AttributeError:
-                pie = paramIndexGet.GetString(a)
+            pie = getParamIndex(str(i))
             if pie == cBox.currentText():
                 indexList.remove(i)
 
@@ -2977,11 +2915,11 @@ def pieMenuStart():
 
                 paramIndexGet.SetString("IndexList", ".,.".join(indexList))
 
-                paramIndexGet.RemGroup(a)
-                paramIndexGet.RemString(a)
+                paramIndexGet.RemGroup(str(i))
+                paramIndexGet.RemString(str(i))
 
                 globaltoolbar = App.ParamGet('User parameter:BaseApp/Workbench/Global/Toolbar/Custom_PieMenu')
-                globaltoolbar.RemString('Std_PieMenu_' + pie)
+                globaltoolbar.RemString('PieMenu_' + pie)
 
                 # special case treatment
                 if pie == currentPie:
@@ -2995,10 +2933,8 @@ def pieMenuStart():
 
                 # remove nested_menu in toollist
                 for i in indexList:
-                    a = str(i)
                     toolListe = None
-
-                    group = paramIndexGet.GetGroup(a)
+                    group = paramIndexGet.GetGroup(str(i))
                     toolListe = group.GetString("ToolList")
 
                     if toolListe:
@@ -3006,7 +2942,7 @@ def pieMenuStart():
                     else:
                         toolListe = []
 
-                    stringToFind = 'Std_PieMenu_' + pie
+                    stringToFind = 'PieMenu_' + pie
 
                     if (stringToFind) in toolListe:
                         toolListe.remove(stringToFind)
@@ -3030,21 +2966,14 @@ def pieMenuStart():
         if not ok:
             return
         indexList = getIndexList()
-        try:
-            currentPie = paramGet.GetString("CurrentPie").decode("UTF-8")
-        except AttributeError:
-            currentPie = paramGet.GetString("CurrentPie")
+        currentPie = getParam("CurrentPie")
         for i in indexList:
-            a = str(i)
-            try:
-                pie = paramIndexGet.GetString(a).decode("UTF-8")
-            except AttributeError:
-                pie = paramIndexGet.GetString(a)
+            pie = getParamIndex(str(i))
             if pie == cBox.currentText():
                 try:
-                    paramIndexGet.SetString(a, text.encode('UTF-8'))
+                    paramIndexGet.SetString(str(i), text.encode('UTF-8'))
                 except TypeError:
-                    paramIndexGet.SetString(a, text)
+                    paramIndexGet.SetString(str(i), text)
                 if pie == currentPie:
                     try:
                         paramGet.SetString("CurrentPie", text.encode('UTF-8'))
@@ -3055,10 +2984,9 @@ def pieMenuStart():
 
                 # rename nested_menu in toollist
                 for i in indexList:
-                    a = str(i)
                     toolListe = None
 
-                    group = paramIndexGet.GetGroup(a)
+                    group = paramIndexGet.GetGroup(str(i))
                     toolListe = group.GetString("ToolList")
 
                     if toolListe:
@@ -3066,17 +2994,17 @@ def pieMenuStart():
                     else:
                         toolListe = []
 
-                    stringToFind = 'Std_PieMenu_' + pie
+                    stringToFind = 'PieMenu_' + pie
 
                     if (stringToFind) in toolListe:
                         index = toolListe.index(stringToFind)
-                        toolListe[index] = 'Std_PieMenu_' + text
+                        toolListe[index] = 'PieMenu_' + text
                         toolListe = group.SetString("ToolList", ".,.".join(toolListe))
 
         globaltoolbar = App.ParamGet('User parameter:BaseApp/Workbench/Global/Toolbar/Custom_PieMenu')
-        globaltoolbar.RemString('Std_PieMenu_' + pie)
-        Gui.addCommand('Std_PieMenu_' + text, NestedPieMenu(text))
-        globaltoolbar.SetString('Std_PieMenu_' + text, 'FreeCAD')
+        globaltoolbar.RemString('PieMenu_' + pie)
+        Gui.addCommand('PieMenu_' + text, NestedPieMenu(text))
+        globaltoolbar.SetString('PieMenu_' + text, 'FreeCAD')
 
         reloadWorkbench()
         toolList()
@@ -3087,10 +3015,9 @@ def pieMenuStart():
         """ Get the index through list of PieMenus in parameter """
         indexList = getIndexList()
         for i in indexList:
-            a = str(i)
-            indexName = paramIndexGet.GetString(a)
+            indexName = paramIndexGet.GetString(str(i))
             if indexName == currentMenuName:
-                return a
+                return str(i)
         return "-1"
 
 
@@ -3105,8 +3032,7 @@ def pieMenuStart():
         pieList = []
         indexList = getIndexList()
         for i in indexList:
-            a = str(i)
-            pieList.append(paramIndexGet.GetString(a))
+            pieList.append(paramIndexGet.GetString(str(i)))
 
         if text.encode('UTF-8') in pieList:
             pass
@@ -3179,8 +3105,7 @@ def pieMenuStart():
         indexList = getIndexList()
         wbAlreadySet = []
         for i in indexList:
-            a = str(i)
-            group = paramIndexGet.GetGroup(a)
+            group = paramIndexGet.GetGroup(str(i))
             defWb  = group.GetString("DefaultWorkbench")
             if defWb != 'None':
                 wbAlreadySet.append(defWb)
@@ -3261,12 +3186,8 @@ def pieMenuStart():
         text = None
         indexList = getIndexList()
         for i in indexList:
-            a = str(i)
-            try:
-                pie = paramIndexGet.GetString(a).decode("UTF-8")
-            except AttributeError:
-                pie = paramIndexGet.GetString(a)
-            group = paramIndexGet.GetGroup(a)
+            pie = getParamIndex(str(i))
+            group = paramIndexGet.GetGroup(str(i))
             defWb  = group.GetString("DefaultWorkbench")
             if defWb == wbName:
                 text = pie
@@ -3381,11 +3302,7 @@ def pieMenuStart():
     def getShape(keyValue=None):
         """ Get value of shape of current PieMenu """
         if keyValue is None:
-            try:
-                keyValue = paramGet.GetString("CurrentPie").decode("UTF-8")
-            except AttributeError:
-                keyValue = paramGet.GetString("CurrentPie")
-
+            keyValue = getParam("CurrentPie")
         group = getGroup()
         shape = group.GetString("Shape")
 
@@ -3414,11 +3331,7 @@ def pieMenuStart():
         """ Set parameter to show or not 'Command names' """
         indexList = getIndexList()
         for i in indexList:
-            a = str(i)
-            try:
-                pieName = paramIndexGet.GetString(a).decode("UTF-8")
-            except AttributeError:
-                pieName = paramIndexGet.GetString(a)
+            pieName = getParamIndex(str(i))
             if pieName == cBox.currentText():
                 param = paramIndexGet.GetGroup(str(i))
                 param.SetBool("DisplayCommand", state)
@@ -3433,11 +3346,7 @@ def pieMenuStart():
         """ Set parameter to show or not 'Preselect button' """
         indexList = getIndexList()
         for i in indexList:
-            a = str(i)
-            try:
-                pieName = paramIndexGet.GetString(a).decode("UTF-8")
-            except AttributeError:
-                pieName = paramIndexGet.GetString(a)
+            pieName = getParamIndex(str(i))
             if pieName == cBox.currentText():
                 param = paramIndexGet.GetGroup(str(i))
                 param.SetBool("DisplayPreselect", state)
@@ -3462,11 +3371,7 @@ def pieMenuStart():
 
         indexList = getIndexList()
         for i in indexList:
-            a = str(i)
-            try:
-                pieName = paramIndexGet.GetString(a).decode("UTF-8")
-            except AttributeError:
-                pieName = paramIndexGet.GetString(a)
+            pieName = getParamIndex(str(i))
             if pieName == cBox.currentText():
                 param = paramIndexGet.GetGroup(str(i))
                 param.SetBool("EnableShorcut", state)
@@ -3486,11 +3391,7 @@ def pieMenuStart():
 
         indexList = getIndexList()
         for i in indexList:
-            a = str(i)
-            try:
-                pieName = paramIndexGet.GetString(a).decode("UTF-8")
-            except AttributeError:
-                pieName = paramIndexGet.GetString(a)
+            pieName = getParamIndex(str(i))
             if pieName == cBox.currentText():
                 param = paramIndexGet.GetGroup(str(i))
                 param.SetBool("DisplayShorcut", state)
@@ -3501,11 +3402,7 @@ def pieMenuStart():
         """ Set parameter for immediate trigger context mode """
         indexList = getIndexList()
         for i in indexList:
-            a = str(i)
-            try:
-                pieName = paramIndexGet.GetString(a).decode("UTF-8")
-            except AttributeError:
-                pieName = paramIndexGet.GetString(a)
+            pieName = getParamIndex(str(i))
             if pieName == cBox.currentText():
                 param = paramIndexGet.GetGroup(str(i))
                 param.SetBool("ImmediateTriggerContext", state)
@@ -3540,11 +3437,7 @@ def pieMenuStart():
         value = spinHoverDelay.value()
         indexList = getIndexList()
         for i in indexList:
-            a = str(i)
-            try:
-                pieName = paramIndexGet.GetString(a).decode("UTF-8")
-            except AttributeError:
-                pieName = paramIndexGet.GetString(a)
+            pieName = getParamIndex(str(i))
             if pieName == cBox.currentText():
                 param = paramIndexGet.GetGroup(str(i))
                 param.SetInt("HoverDelay", value)
@@ -3600,44 +3493,72 @@ def pieMenuStart():
 
 
     def toolList():
-        """ Handle  list of tools and checkboxes """
-        text = cBox.currentText()
+        """ Handle list of tools and checkboxes """
         actionMapAll = getGuiActionMapAll()
         toolListWidget.blockSignals(True)
-        toolListWidget.clear()
-        for i in actionMapAll:
-            item = QtGui.QListWidgetItem(toolListWidget)
-            item.setText(actionMapAll[i].text().replace("&", ""))
-            item.setIcon(actionMapAll[i].icon())
-            item.setCheckState(QtCore.Qt.CheckState(0))
-            item.setData(QtCore.Qt.UserRole, actionMapAll[i].objectName())
-            item.setToolTip(actionMapAll[i].toolTip())
+        toolListWidget.clearContents()
+        toolListWidget.setRowCount(0)
+        row = 0
 
+        # Remplissage du QTableWidget avec les actions
+        for i in actionMapAll:
+            toolListWidget.insertRow(row)
+
+            # Colonne 0 : Sélectionné (Checkbox)
+            checkbox_item = QtGui.QTableWidgetItem()
+            checkbox_item.setCheckState(QtCore.Qt.Unchecked)
+            checkbox_item.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
+            checkbox_item.setTextAlignment(QtCore.Qt.AlignCenter)
+            toolListWidget.setItem(row, 0, checkbox_item)
+
+            # Colonne 1 : Icône et Nom
+            actionItem = QtWidgets.QTableWidgetItem(actionMapAll[i].text().replace("&", ""))
+            actionItem.setData(QtCore.Qt.UserRole, i)
+            actionItem.setIcon(actionMapAll[i].icon())
+            actionItem.setFlags(QtCore.Qt.ItemIsEnabled)
+            actionItem.setToolTip(actionMapAll[i].toolTip())
+            toolListWidget.setItem(row, 1, actionItem)
+
+            # Colonne 2 : Workbench
+            workbench = extractWorkbench(i)
+            if workbench:
+                if workbench == "Std":
+                    workbench = "FreeCAD"
+                wb_item = QtGui.QTableWidgetItem(workbench)
+                wb_item.setFlags(QtCore.Qt.ItemIsEnabled)
+                toolListWidget.setItem(row, 2, wb_item)
+            else:
+                wb_item = QtGui.QTableWidgetItem(i)
+                wb_item.setFlags(QtCore.Qt.ItemIsEnabled)
+                toolListWidget.setItem(row, 2, wb_item)
+
+            row += 1
+
+        # Gestion de la liste des outils sélectionnés
         toolListOn = None
         indexList = getIndexList()
         for i in indexList:
-            a = str(i)
-            try:
-                pie = paramIndexGet.GetString(a).decode("UTF-8")
-            except AttributeError:
-                pie = paramIndexGet.GetString(a)
-            if pie == text:
-                group = paramIndexGet.GetGroup(a)
+            pie = getParamIndex(str(i))
+            if pie == cBox.currentText():
+                group = paramIndexGet.GetGroup(str(i))
                 toolListOn = group.GetString("ToolList")
             else:
                 pass
+
         if toolListOn:
             toolListOn = toolListOn.split(".,.")
         else:
             toolListOn = []
-        items = []
-        for index in range(toolListWidget.count()):
-            items.append(toolListWidget.item(index))
-        for i in items:
-            if i.data(QtCore.Qt.UserRole) in toolListOn:
-                i.setCheckState(QtCore.Qt.CheckState(2))
+
+        # Mise à jour des checkboxes selon la liste enregistrée
+        for row in range(toolListWidget.rowCount()):
+            item_name = toolListWidget.item(row, 1)
+            checkbox_item = toolListWidget.item(row, 0)
+            if item_name.data(QtCore.Qt.UserRole) in toolListOn:
+                checkbox_item.setCheckState(QtCore.Qt.Checked)
             else:
-                pass
+                checkbox_item.setCheckState(QtCore.Qt.Unchecked)
+
         toolListWidget.blockSignals(False)
 
 
@@ -3692,35 +3613,43 @@ def pieMenuStart():
         updatePiemenuPreview("toolBarTab")
 
 
-    def onToolListWidget():
-        """ Handle list of tool in tool list widget """
-        text = cBox.currentText()
-        items = []
-        for index in range(toolListWidget.count()):
-            items.append(toolListWidget.item(index))
+    def sortToolListByColumn(index):
+        """ Tri alterné des colonnes avec indicateur """
 
+        if index == 0:
+            toolListWidget.horizontalHeader().setSortIndicatorShown(False)
+            return
+        else :
+            global sortOrder
+            toolListWidget.horizontalHeader().setSortIndicatorShown(True)
+            toolListWidget.sortItems(index, sortOrder)
+            toolListWidget.horizontalHeader().setSortIndicator(index, sortOrder)
+            # Alterner le tri pour le prochain clic
+            sortOrder = QtCore.Qt.DescendingOrder if sortOrder == QtCore.Qt.AscendingOrder else QtCore.Qt.AscendingOrder
+
+
+    def onToolListWidget():
+        """ Handle list of tool selections in the QTableWidget """
         checkListOn = []
         checkListOff = []
 
-        for i in items:
-            if i.checkState() == QtCore.Qt.Checked:
-                checkListOn.append(i.data(QtCore.Qt.UserRole))
-            else:
-                checkListOff.append(i.data(QtCore.Qt.UserRole))
+        for row in range(toolListWidget.rowCount()):
+            checkbox_item = toolListWidget.item(row, 0)
+            if checkbox_item:
+                item_name = toolListWidget.item(row, 1)
+                # if checkbox_item.checkState(): !!! incompatible avec Qt6, utiliser à la place : if checkbox_item.checkState() == QtCore.Qt.Checked:
+                if checkbox_item.checkState() == QtCore.Qt.Checked:
+                    checkListOn.append(item_name.data(QtCore.Qt.UserRole))
+                else:
+                    checkListOff.append(item_name.data(QtCore.Qt.UserRole))
 
         toolList = None
         indexList = getIndexList()
         for i in indexList:
-            a = str(i)
-            try:
-                pie = paramIndexGet.GetString(a).decode("UTF-8")
-            except AttributeError:
-                pie = paramIndexGet.GetString(a)
-            if pie == text:
-                group = paramIndexGet.GetGroup(a)
+            pie = getParamIndex(str(i))
+            if pie == cBox.currentText():
+                group = paramIndexGet.GetGroup(str(i))
                 toolList = group.GetString("ToolList")
-            else:
-                pass
 
         if toolList:
             toolList = toolList.split(".,.")
@@ -3730,73 +3659,86 @@ def pieMenuStart():
         for i in checkListOn:
             if i not in toolList:
                 toolList.append(i)
-            else:
-                pass
 
         for i in checkListOff:
             if i in toolList:
                 toolList.remove(i)
-            else:
-                pass
 
         for i in indexList:
-            a = str(i)
-            try:
-                pie = paramIndexGet.GetString(a).decode("UTF-8")
-            except AttributeError:
-                pie = paramIndexGet.GetString(a)
-            if pie == text:
-                group = paramIndexGet.GetGroup(a)
+            pie = getParamIndex(str(i))
+            if pie == cBox.currentText():
+                group = paramIndexGet.GetGroup(str(i))
                 group.SetString("ToolList", ".,.".join(toolList))
-            else:
-                pass
+
         buttonList()
 
 
     def searchInToolList(search_text):
-        """ For searching a tool in tool list """
+        """ Rechercher un outil dans la liste des outils """
         search_text = search_text.lower()
-        toolListWidget.clear()
-
-        text = cBox.currentText()
         actionMapAll = getGuiActionMapAll()
+
         toolListWidget.blockSignals(True)
-        toolListWidget.clear()
+        toolListWidget.clearContents()
+        toolListWidget.setRowCount(0)
+        row = 0
+
+        # Remplir le QTableWidget avec uniquement les résultats de la recherche
         for i in actionMapAll:
             action_text = actionMapAll[i].text().replace("&", "")
-            if search_text in action_text.lower():
-                item = QListWidgetItem(toolListWidget)
-                item.setText(action_text)
-                item.setIcon(actionMapAll[i].icon())
-                item.setCheckState(QtCore.Qt.CheckState(0))
-                item.setData(QtCore.Qt.UserRole, actionMapAll[i].objectName())
-                item.setToolTip(actionMapAll[i].toolTip())
+            workbench = extractWorkbench(i)
+            if search_text in action_text.lower() or search_text in workbench.lower():
+                toolListWidget.insertRow(row)
+
+                # Colonne 0 : Checkbox
+                checkbox_item = QtGui.QTableWidgetItem()
+                checkbox_item.setCheckState(QtCore.Qt.Unchecked)
+                checkbox_item.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
+                toolListWidget.setItem(row, 0, checkbox_item)
+
+                # Colonne 1 : Icône et Nom
+                actionItem = QtWidgets.QTableWidgetItem(action_text)
+                actionItem.setData(QtCore.Qt.UserRole, i)
+                actionItem.setIcon(actionMapAll[i].icon())
+                actionItem.setFlags(QtCore.Qt.ItemIsEnabled)
+                actionItem.setToolTip(actionMapAll[i].toolTip())
+                toolListWidget.setItem(row, 1, actionItem)
+
+                # Colonne 2 : Workbench
+                if workbench:
+                    if workbench == "Std":
+                        workbench = "FreeCAD"
+                    wb_item = QtGui.QTableWidgetItem(workbench)
+                    wb_item.setFlags(QtCore.Qt.ItemIsEnabled)
+                    toolListWidget.setItem(row, 2, wb_item)
+                else:
+                    wb_item = QtGui.QTableWidgetItem(i)
+                    wb_item.setFlags(QtCore.Qt.ItemIsEnabled)
+                    toolListWidget.setItem(row, 2, wb_item)
+
+                    row += 1
 
         toolListOn = None
         indexList = getIndexList()
         for i in indexList:
-            a = str(i)
-            try:
-                pie = paramIndexGet.GetString(a).decode("UTF-8")
-            except AttributeError:
-                pie = paramIndexGet.GetString(a)
-            if pie == text:
-                group = paramIndexGet.GetGroup(a)
+            pie = getParamIndex(str(i))
+            if pie == cBox.currentText():
+                group = paramIndexGet.GetGroup(str(i))
                 toolListOn = group.GetString("ToolList")
-            else:
-                pass
+
         if toolListOn:
             toolListOn = toolListOn.split(".,.")
         else:
             toolListOn = []
-        items = []
-        for index in range(toolListWidget.count()):
-            items.append(toolListWidget.item(index))
-        for i in items:
-            if i.data(QtCore.Qt.UserRole) in toolListOn:
-                i.setCheckState(QtCore.Qt.CheckState(2))
+
+        for row in range(toolListWidget.rowCount()):
+            item_name = toolListWidget.item(row, 1)
+            checkbox_item = toolListWidget.item(row, 0)
+            if item_name.data(QtCore.Qt.UserRole) in toolListOn:
+                checkbox_item.setCheckState(QtCore.Qt.Checked)
             else:
-                pass
+                checkbox_item.setCheckState(QtCore.Qt.Unchecked)
+
         toolListWidget.blockSignals(False)
 
 
@@ -3816,10 +3758,6 @@ def pieMenuStart():
     def onButtonUp():
         """ Move up the selected tools in the list """
         selected_ranges = buttonListWidget.selectedRanges()
-                             
-                                                                          
-                                                                           
-
         if not selected_ranges:
             return
 
@@ -3863,9 +3801,6 @@ def pieMenuStart():
 
         selected_rows = sorted(selected_rows, reverse=True)
         rowCount = buttonListWidget.rowCount()
-                                       
-                                                                          
-                                                                           
 
         if rowCount - 1 in selected_rows:
             return
@@ -3909,8 +3844,6 @@ def pieMenuStart():
         buttonList2ToolList(buttonListWidget)
         buttonList()
         toolList()
-                                 
-                                                                    
 
         if rows_to_remove:
             last_removed_row = max(rows_to_remove)
@@ -3918,9 +3851,10 @@ def pieMenuStart():
             if new_index >= 0:
                 buttonListWidget.setCurrentCell(new_index, 1)
 
+
     def onButtonAddSeparator():
         """ Handle separator for PieMenus """
-        # we must create a custom toolbar "PieMenuTB" to 'activate' the command 'Std_PieMenuSeparator' otherwise the separators are not correctly handled
+        # we must create a custom toolbar "PieMenuTB" to 'activate' the command 'PieMenu_Separator' otherwise the separators are not correctly handled
         globaltoolbar = App.ParamGet('User parameter:BaseApp/Workbench/Global/Toolbar/Custom_PieMenu')
 
         pieMenuTB = globaltoolbar.GetString('Name')
@@ -3929,7 +3863,8 @@ def pieMenuStart():
         else:
             globaltoolbar.SetString('Name','PieMenuTB')
             App.saveParameter()
-        globaltoolbar.SetString('Std_PieMenuSeparator','FreeCAD')
+
+        globaltoolbar.SetString('PieMenu_Separator','FreeCAD')
 
         reloadWorkbench()
 
@@ -3939,22 +3874,17 @@ def pieMenuStart():
             if i.windowTitle() == 'PieMenuTB':
                 i.setVisible(False)
 
-        text = cBox.currentText()
-
         items = []
-        for index in range(toolListWidget.count()):
-            items.append(toolListWidget.item(index))
+        for row in range(toolListWidget.rowCount()):
+            items.append(toolListWidget.item(row, 0))
 
         toolList = None
         indexList = getIndexList()
         for i in indexList:
-            a = str(i)
-            try:
-                pie = paramIndexGet.GetString(a).decode("UTF-8")
-            except AttributeError:
-                pie = paramIndexGet.GetString(a)
-            if pie == text:
-                group = paramIndexGet.GetGroup(a)
+            pie = getParamIndex(str(i))
+                
+            if pie == cBox.currentText():
+                group = paramIndexGet.GetGroup(str(i))
                 toolList = group.GetString("ToolList")
             else:
                 pass
@@ -3964,17 +3894,13 @@ def pieMenuStart():
         else:
             toolList = []
 
-        i = "Std_PieMenuSeparator"
+        i = "PieMenu_Separator"
         toolList.append(i)
 
         for i in indexList:
-            a = str(i)
-            try:
-                pie = paramIndexGet.GetString(a).decode("UTF-8")
-            except AttributeError:
-                pie = paramIndexGet.GetString(a)
-            if pie == text:
-                group = paramIndexGet.GetGroup(a)
+            pie = getParamIndex(str(i))
+            if pie == cBox.currentText():
+                group = paramIndexGet.GetGroup(str(i))
                 toolList = group.SetString("ToolList", ".,.".join(toolList))
             else:
                 pass
@@ -4387,16 +4313,12 @@ def pieMenuStart():
         """ Set icon to the PieMenu """
         indexList = getIndexList()
         for i in indexList:
-            a = str(i)
-            try:
-                pieName = paramIndexGet.GetString(a).decode("UTF-8")
-            except AttributeError:
-                pieName = paramIndexGet.GetString(a)
+            pieName = getParamIndex(str(i))
             if pieName == cBox.currentText():
                 param = paramIndexGet.GetGroup(str(i))
                 param.SetString("IconPath", objIcon)
 
-        commandName = 'Std_PieMenu_' + cBox.currentText()
+        commandName = 'PieMenu_' + cBox.currentText()
         all_actions = Gui.getMainWindow().findChildren(QtGui.QAction)
 
         for action in all_actions:
@@ -4418,18 +4340,14 @@ def pieMenuStart():
         if file_path:
             indexList = getIndexList()
             for i in indexList:
-                a = str(i)
-                try:
-                    pieName = paramIndexGet.GetString(a).decode("UTF-8")
-                except AttributeError:
-                    pieName = paramIndexGet.GetString(a)
+                pieName = getParamIndex(str(i))
                 if pieName == cBox.currentText():
                     param = paramIndexGet.GetGroup(str(i))
                     param.SetString("IconPath", file_path)
                     buttonIconPieMenu.setIcon(QtGui.QIcon(file_path))
 
             globaltoolbar = App.ParamGet('User parameter:BaseApp/Workbench/Global/Toolbar/Custom_PieMenu')
-            globaltoolbar.SetString('Std_PieMenu_' + pieName, 'FreeCAD')
+            globaltoolbar.SetString('PieMenu_' + pieName, 'FreeCAD')
 
             updateIconsPieMenus()
             toolList()
@@ -4491,6 +4409,23 @@ def pieMenuStart():
         window_icons.close()
         pieMenuDialog.show()
 
+    def legacyFix():
+        """ Routine to fix old code """
+
+        # Since v1.10 : "Std_PieMenu_" replace by "PieMenu_" to comply with WB naming
+        indexList = getIndexList()
+        for i in indexList:
+            pie = getParamIndex(str(i))
+            group = paramIndexGet.GetGroup(str(i))
+            toolList = getParameterGroup(pie, "String", "ToolList")
+
+            if "Std_PieMenu_" in toolList:
+                toolList = toolList.replace("Std_PieMenu_", "PieMenu_")
+                group.SetString("ToolList", toolList)
+
+            if 'Std_PieMenuSeparator' in toolList:
+                toolList = toolList.replace("Std_PieMenuSeparator", "PieMenu_Separator")
+                group.SetString("ToolList", toolList)
 
     ### Begin QuickMenu  Def ###
     def quickMenu(buttonSize=20):
@@ -4517,20 +4452,13 @@ def pieMenuStart():
             pieList = []
             shortlist = []
             for i in indexList:
-                a = str(i)
-                try:
-                    pieName = paramIndexGet.GetString(a).decode("UTF-8")
-                except AttributeError:
-                    pieName = paramIndexGet.GetString(a)
+                pieName = getParamIndex(str(i))
                 pieList.append(pieName)
                 param = paramIndexGet.GetGroup(str(i))
                 shortcut = param.GetString("ShortcutKey")
                 shortlist.append(shortcut)
             if not paramGet.GetBool("ToolBar"):
-                try:
-                    text = paramGet.GetString("CurrentPie").decode("UTF-8")
-                except AttributeError:
-                    text = paramGet.GetString("CurrentPie")
+                text = getParam("CurrentPie")
             else:
                 text = None
 
@@ -4732,10 +4660,7 @@ def pieMenuStart():
         keyValue = getPieName(wbName)
 
         if keyValue is None:
-            try:
-                keyValue = paramGet.GetString("CurrentPie").decode("UTF-8")
-            except AttributeError:
-                keyValue = paramGet.GetString("CurrentPie")
+            keyValue = getParam("CurrentPie")
 
         cBoxUpdate(keyValue)
 
@@ -4750,6 +4675,7 @@ def pieMenuStart():
 
         contextPieMenu = getCheckContext()
         settingContextGroup.setChecked(contextPieMenu)
+        labelGlobalShortcut.setText(translate("GlobalSettingsTab", "Global shortcut: ") + globalShortcutKey)
 
         pieMenuDialog.show()
         shape = getShape(cBox.currentText())
@@ -5167,11 +5093,26 @@ def pieMenuStart():
     searchLayout.addWidget(searchLineEdit)
     searchLayout.addWidget(clearButton)
 
-    toolListWidget = QtGui.QListWidget()
-    toolListWidget.setSortingEnabled(True)
-    toolListWidget.sortItems(QtCore.Qt.AscendingOrder)
+    toolListWidget = QtGui.QTableWidget()
+    toolListWidget.setColumnCount(3)
+    toolListWidget.sortItems(1, QtCore.Qt.AscendingOrder)
     toolListWidget.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+    toolListWidget.verticalHeader().setVisible(False)
+    toolListWidget.setHorizontalHeaderLabels(["", translate("ToolsTab", "Tools"), translate("ToolsTab","Workbench")])
 
+    toolListWidget.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.Fixed)
+    toolListWidget.setColumnWidth(0, 10)
+    toolListWidget.horizontalHeader().setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
+    toolListWidget.horizontalHeader().setSectionResizeMode(2, QtWidgets.QHeaderView.Fixed)
+    toolListWidget.setColumnWidth(2, 120)
+    toolListWidget.horizontalHeader().setStretchLastSection(False)
+
+    toolListWidget.horizontalHeader().setSortIndicatorShown(True)
+    toolListWidget.horizontalHeader().setSortIndicator(1, QtCore.Qt.AscendingOrder)
+    toolListWidget.horizontalHeader().setSectionsClickable(True)
+    toolListWidget.horizontalHeader().setSectionsMovable(False)
+
+    toolListWidget.horizontalHeader().sectionClicked.connect(sortToolListByColumn)
     toolListWidget.itemChanged.connect(onToolListWidget)
 
     toolListLayout = QVBoxLayout()
@@ -5600,11 +5541,10 @@ def pieMenuStart():
     exportGroup.layout().addLayout(layoutParamExport)
     exportGroup.layout().addLayout(layoutParamImport)
 
+    globalShortcutKey = paramGet.GetString("GlobalShortcutKey")
+
     labelGlobalShortcut = QLabel()
     labelGlobalShortcut.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
-    labelGlobalShortcut.setText(translate("GlobalSettingsTab", "Global shortcut: ") + globalShortcutKey)
-
-    globalShortcutKey = paramGet.GetString("GlobalShortcutKey")
 
     globalShortcutLineEdit = CustomLineEdit()
     globalShortcutLineEdit.setText(globalShortcutKey)
@@ -5633,7 +5573,7 @@ def pieMenuStart():
     settingsTabLayout.insertLayout(4, layoutGlobalShortcut)
 
     # Create a fake command in FreeCAD to handle the PieMenu Separator
-    Gui.addCommand('Std_PieMenuSeparator', PieMenuSeparator())
+    Gui.addCommand('PieMenu_Separator', PieMenuSeparator())
     createNestedPieMenus()
 
     mw = Gui.getMainWindow()
@@ -5680,6 +5620,7 @@ def pieMenuStart():
         actionKey.triggered.connect(PieMenuInstance.showAtMouse)
         mw.addAction(actionKey)
         getShortcutList()
+        legacyFix()
         # let the addition of the accessoriesMenu wait until FC is ready for it
         t = QtCore.QTimer()
         t.timeout.connect(addAccessoriesMenu)

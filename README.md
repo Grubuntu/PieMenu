@@ -2,11 +2,16 @@
 PieMenu widget for FreeCAD 
 
 Quick customizable menus for FreeCAD.
+### Version 1.10 new feature:
 
-### Version 1.9 new feature:
-Add ability to choose an icon from the FreeCAD icons.
+A new ‘Workbench’ column has been added to the tool list window. Tools and Workbenches can be sorted in ascending or descending order.
 
-![Capture d’écran (258)](https://github.com/user-attachments/assets/881c37d0-704c-473a-9dc7-d7e465c2e5dc)
+![Capture d’écran (272)](https://github.com/user-attachments/assets/3952af32-b4ae-4b83-939f-3f40e55556de)
+
+
+The ‘PieMenu_’ header has been removed from nested PieMenus:
+
+![Piemenus](https://github.com/user-attachments/assets/7ee90d3a-66c9-463b-bc33-fe439e6d5510)
 
 
 # Presentation: PieMenu is a customizable menu, providing quick access to FreeCAD tools via keyboard shortcuts. You can choose from multiple shapes, themes, customize tools and shortcuts, and much more... 
@@ -300,19 +305,15 @@ Enable and display them (or only enable them without displaying). You can set th
 
 ### Oher features :
 
-- Ability to set icon for each PieMenu:
-  
-![Capture d’écran (200)](https://github.com/Grubuntu/PieMenu/assets/56045316/0bab416c-444a-41e5-9302-0a6d14c344d9)
+- Ability to set icon for each PieMenu: You can choose an icon from the FreeCAD icons.
+
+![Capture d’écran (258)](https://github.com/user-attachments/assets/881c37d0-704c-473a-9dc7-d7e465c2e5dc)
 
 - Ability to add nested PieMenu : a PieMenu can now call another PieMenu:
 
 ![Capture d’écran (201)](https://github.com/Grubuntu/PieMenu/assets/56045316/9082b6f5-5e5d-4c95-9fb3-d42eb1995330)
 ![Capture d’écran (205)](https://github.com/Grubuntu/PieMenu/assets/56045316/6364fc68-dc68-4f71-9aec-02cef1606133)
 
-
-- New ToolBars tab: Ability to create a pieMenu from an existing Freecad toolbar in the preferences menu:
-  
-![Capture d’écran (204)](https://github.com/Grubuntu/PieMenu/assets/56045316/03a3063c-6619-428f-9f4d-64f640c7bb34)
 
 - Experimental feature: long right click open the current PieMenu:
 #### (Try it at your own risk: this may cause unexpected behaviour depending on the mouse settings (CAD, Blender, OpenScad etc) 
@@ -343,7 +344,8 @@ You can set a single workbench in which the context will be triggered:
 
 ![Capture d’écran (221)](https://github.com/Grubuntu/PieMenu/assets/56045316/313185d9-cb42-4656-9abe-3228e7aff3fc)
 
-Add ability to export/import PieMenu settings.
+
+You can export/import PieMenu settings.
 
 ![Capture d’écran (231)](https://github.com/user-attachments/assets/796c8694-5d5f-471f-8d68-06bb63b7053f)
 
