@@ -5097,7 +5097,7 @@ def pieMenuStart():
     toolListWidget.sortItems(1, QtCore.Qt.AscendingOrder)
     toolListWidget.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
     toolListWidget.verticalHeader().setVisible(False)
-    toolListWidget.setHorizontalHeaderLabels(["Sel", "Tool", "Workbench"])
+    toolListWidget.setHorizontalHeaderLabels(["", translate("ToolsTab", "Tool"), translate("ToolsTab","Workbench")])
 
     toolListWidget.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.Fixed)
     toolListWidget.setColumnWidth(0, 10)
