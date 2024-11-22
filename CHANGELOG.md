@@ -1,4 +1,12 @@
 # CHANGELOG
+### 1.10
+- Added workbench in toollist 
+- Added ability to sort column tool and workbench column ascending or descending
+- Added ability to search WB in searchtool
+- Added fix for replace "Std_PieMenu_" by "PieMenu_" to comply with standard WB naming 
+- Factorize some code
+- Removal of the ‘PieMenu’ header from the name of nested menus https://github.com/Grubuntu/PieMenu/issues/112
+
 ### 1.9.5
 - Fix https://github.com/Grubuntu/PieMenu/issues/109 : circular central button was not circular with the Opentheme theme
   
