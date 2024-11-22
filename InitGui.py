@@ -4675,6 +4675,7 @@ def pieMenuStart():
 
         contextPieMenu = getCheckContext()
         settingContextGroup.setChecked(contextPieMenu)
+        labelGlobalShortcut.setText(translate("GlobalSettingsTab", "Global shortcut: ") + globalShortcutKey)
 
         pieMenuDialog.show()
         shape = getShape(cBox.currentText())
@@ -5097,7 +5098,7 @@ def pieMenuStart():
     toolListWidget.sortItems(1, QtCore.Qt.AscendingOrder)
     toolListWidget.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
     toolListWidget.verticalHeader().setVisible(False)
-    toolListWidget.setHorizontalHeaderLabels(["", translate("ToolsTab", "Tool"), translate("ToolsTab","Workbench")])
+    toolListWidget.setHorizontalHeaderLabels(["", translate("ToolsTab", "Tools"), translate("ToolsTab","Workbench")])
 
     toolListWidget.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.Fixed)
     toolListWidget.setColumnWidth(0, 10)
@@ -5540,11 +5541,10 @@ def pieMenuStart():
     exportGroup.layout().addLayout(layoutParamExport)
     exportGroup.layout().addLayout(layoutParamImport)
 
+    globalShortcutKey = paramGet.GetString("GlobalShortcutKey")
+
     labelGlobalShortcut = QLabel()
     labelGlobalShortcut.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
-    labelGlobalShortcut.setText(translate("GlobalSettingsTab", "Global shortcut: ") + globalShortcutKey)
-
-    globalShortcutKey = paramGet.GetString("GlobalShortcutKey")
 
     globalShortcutLineEdit = CustomLineEdit()
     globalShortcutLineEdit.setText(globalShortcutKey)
