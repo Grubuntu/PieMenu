@@ -3977,8 +3977,8 @@ def pieMenuStart():
 
 
     def onParamImport():
-        """ Import parameter from a file """
-        configDir = App.getUserAppDataDir()
+        """Import parameter from a file"""
+        configDir = App.getUserConfigDir()
         configDir = configDir.replace("\\", "/")
         userConfigFile = os.path.join(configDir, "user.cfg")
 
