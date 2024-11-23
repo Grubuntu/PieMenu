@@ -3960,6 +3960,8 @@ def pieMenuStart():
         file, _ = QFileDialog.getSaveFileName(None, translate("ExportSettingsWindow", "Export PieMenu settings to a file"), "" , "XML (*.FCParam)")
         if file:
             try:
+                if not file.endswith(".FCParam"):
+                    file += ".FCParam"
                 item = App.ParamGet("User parameter:BaseApp/PieMenu")
                 item.Export(file)
 
