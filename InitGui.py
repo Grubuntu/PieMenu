@@ -4004,8 +4004,18 @@ def pieMenuStart():
                 print(f"Backup of configuration file created at {backupFile}")
                 msg = QMessageBox()
                 msg.setIcon(QMessageBox.Information)
-                msg.setText(translate("GlobalSettingsTab", f"Backup of the current user configuration file successfully saved in: {backupFile}" ))
-                msg.setInformativeText(translate("GlobalSettingsTab", "Click OK to select the file to import PieMenu settings."))
+                msg.setText(
+                    translate(
+                        "GlobalSettingsTab",
+                        "Backup of the current user configuration file successfully saved in: {}",
+                    ).format(backupFile)
+                )
+                msg.setInformativeText(
+                    translate(
+                        "GlobalSettingsTab",
+                        "Click OK to select the file to import PieMenu settings.",
+                    )
+                )
                 msg.setWindowTitle(translate("GlobalSettingsTab", "Successful backup"))
                 msg.setStandardButtons(QMessageBox.Ok)
                 msg.exec()
