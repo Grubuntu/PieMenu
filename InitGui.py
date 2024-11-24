@@ -27,7 +27,7 @@
 #
 
 global PIE_MENU_VERSION
-PIE_MENU_VERSION = "1.10"
+PIE_MENU_VERSION = "1.10.1"
 
 def pieMenuStart():
     """Main function that starts the Pie Menu."""
@@ -3960,6 +3960,8 @@ def pieMenuStart():
         file, _ = QFileDialog.getSaveFileName(None, translate("ExportSettingsWindow", "Export PieMenu settings to a file"), "" , "XML (*.FCParam)")
         if file:
             try:
+                if not file.endswith(".FCParam"):
+                    file += ".FCParam"
                 item = App.ParamGet("User parameter:BaseApp/PieMenu")
                 item.Export(file)
 
@@ -3975,8 +3977,8 @@ def pieMenuStart():
 
 
     def onParamImport():
-        """ Import parameter from a file """
-        configDir = App.getUserAppDataDir()
+        """Import parameter from a file"""
+        configDir = App.getUserConfigDir()
         configDir = configDir.replace("\\", "/")
         userConfigFile = os.path.join(configDir, "user.cfg")
 
@@ -4002,8 +4004,18 @@ def pieMenuStart():
                 print(f"Backup of configuration file created at {backupFile}")
                 msg = QMessageBox()
                 msg.setIcon(QMessageBox.Information)
-                msg.setText(translate("GlobalSettingsTab", f"Backup of the current user configuration file successfully saved in: {backupFile}" ))
-                msg.setInformativeText(translate("GlobalSettingsTab", "Click OK to select the file to import PieMenu settings."))
+                msg.setText(
+                    translate(
+                        "GlobalSettingsTab",
+                        "Backup of the current user configuration file successfully saved in: {}",
+                    ).format(backupFile)
+                )
+                msg.setInformativeText(
+                    translate(
+                        "GlobalSettingsTab",
+                        "Click OK to select the file to import PieMenu settings.",
+                    )
+                )
                 msg.setWindowTitle(translate("GlobalSettingsTab", "Successful backup"))
                 msg.setStandardButtons(QMessageBox.Ok)
                 msg.exec()

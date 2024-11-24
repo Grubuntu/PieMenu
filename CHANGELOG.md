@@ -1,4 +1,8 @@
 # CHANGELOG
+## 1.10.1
+- Fix user config path and export settings extension (hasecilu)
+- Fix format for translation (hasecilu)
+
 ### 1.10
 - Added workbench in toollist 
 - Added ability to sort column tool and workbench column ascending or descending
