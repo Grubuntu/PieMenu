@@ -1,4 +1,7 @@
 # CHANGELOG
+## 1.10.2
+- Fix context not work with external geometry : https://github.com/Grubuntu/PieMenu/issues/116
+
 ## 1.10.1
 - Fix user config path and export settings extension (hasecilu)
 - Fix format for translation (hasecilu)
