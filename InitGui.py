@@ -27,7 +27,7 @@
 #
 
 global PIE_MENU_VERSION
-PIE_MENU_VERSION = "1.10.1"
+PIE_MENU_VERSION = "1.10.2"
 
 def pieMenuStart():
     """Main function that starts the Pie Menu."""
@@ -2145,9 +2145,9 @@ def pieMenuStart():
                     for a in i.SubElementNames:
                         allList.append(a)
             for i in allList:
-                if i.startswith('Vertex') or i.startswith('RootPoint'):
+                if i.startswith('Vertex') or i.startswith('ExternalVertex') or i.startswith('RootPoint'):
                     vertexes = vertexes + 1
-                elif i.startswith('Edge'):
+                elif i.startswith('Edge') or i.startswith('ExternalEdge') :
                     edges = edges + 1
                 elif i.startswith('Face'):
                     faces = faces + 1
