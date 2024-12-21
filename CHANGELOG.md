@@ -1,4 +1,8 @@
 # CHANGELOG
+## 1.11
+- Add ability to add up to 4 rules in context tab
+- Added to take account of X,Y and Z Axis (Edge in Context), XY, XZ and YZ Plane (Face in Context) in Context selection.
+
 ## 1.10.2
 - Fix context not work with external geometry : https://github.com/Grubuntu/PieMenu/issues/116
 
