@@ -2256,21 +2256,26 @@ def pieMenuStart():
             faces = 0
             objects = 0
             allList = []
+            listRootObjects = ['X_Axis', 'Y_Axis', 'Z_Axis', 'XY_Plane', 'XZ_Plane', 'YZ_Plane']
             for i in sel:
-                if not i.SubElementNames:
+                if i.ObjectName in listRootObjects:
+                    allList.append(i.ObjectName)
+                elif not i.SubElementNames:
                     objects = objects + 1
                 else:
                     for a in i.SubElementNames:
                         allList.append(a)
             for i in allList:
+                # print(i)
                 if i.startswith('Vertex') or i.startswith('ExternalVertex') or i.startswith('RootPoint'):
                     vertexes = vertexes + 1
-                elif i.startswith('Edge') or i.startswith('ExternalEdge'):
+                elif i.startswith('Edge') or i.startswith('ExternalEdge') or i.startswith('H_Axis') or i.startswith('V_Axis') or i.startswith('X_Axis') or i.startswith('Y_Axis') or i.startswith('Z_Axis'):
                     edges = edges + 1
-                elif i.startswith('Face'):
+                elif i.startswith('Face') or i.startswith('XY_Plane') or i.startswith('YZ_Plane') or i.startswith('XZ_Plane'):
                     faces = faces + 1
                 else:
                     pass
+            print("v,e,f,o:", vertexes, edges, faces, objects)
             pieIndex = getContextPie(vertexes,
                                      edges,
                                      faces,
@@ -4295,7 +4300,7 @@ def pieMenuStart():
                             translate("ContextTab", "Enabled"))
                         subgroupContextEnabled.setCheckable(True)
                         subgroupContextEnabled.setToolTip(translate(
-                            "ContextTab", "When the box is checked, the selection rule will be enabled."))
+                            "ContextTab", "Ticked the box to enable the contextual rule."))
 
                         subgroupContextEnabled.setChecked(
                             groupContext.GetBool("Enabled"))
@@ -4314,7 +4319,7 @@ def pieMenuStart():
                         conditionItem.setFlags(
                             Qt.ItemIsSelectable | Qt.ItemIsEnabled)
                         conditionItem.setToolTip(
-                            translate("ContextTab", "Select a rule to modify it"))
+                            translate("ContextTab", "Select a rule to modify it. If the rule is active and the selection matches the criteria chosen, this PieMenu will open."))
                         listContextConditions.setItem(row, 1, conditionItem)
 
                         # Add remove button
@@ -4341,7 +4346,7 @@ def pieMenuStart():
                                     item.setFont(font)
 
         labelListContext.setText(
-            translate("ContextTab", "List of current rules: {}/4").format(row+1))
+            translate("ContextTab", "List of current selection rules: {}/4").format(row+1))
 
         # Disable ability to add new rule when max (4) is reached (row : 0,1,2,3)
         if row > 2:
@@ -5436,25 +5441,25 @@ def pieMenuStart():
     vertexItem = QtGui.QTableWidgetItem()
     vertexItem.setText(translate("ContextTab", "Vertex"))
     vertexItem.setToolTip(
-        translate("ContextTab", "Set desired operator and vertex number"))
+        translate("ContextTab", "A vertex can be a point on a 2D or 3D object, a projected point, a point of origin, etc."))
     vertexItem.setFlags(QtCore.Qt.ItemIsEnabled)
 
     edgeItem = QtGui.QTableWidgetItem()
     edgeItem.setText(translate("ContextTab", "Edge"))
     edgeItem.setToolTip(
-        translate("ContextTab", "Set desired operator and edge number"))
+        translate("ContextTab", "An edge can be a 2D or 3D object, a main axis (X,Y,Z), a sketch axis, etc."))
     edgeItem.setFlags(QtCore.Qt.ItemIsEnabled)
 
     faceItem = QtGui.QTableWidgetItem()
     faceItem.setText(translate("ContextTab", "Face"))
     faceItem.setToolTip(
-        translate("ContextTab", "Set desired operator and face number"))
+        translate("ContextTab", "A face can be a face of a 2D or 3D object, a plane of origin (XY, XZ, YZ), etc. "))
     faceItem.setFlags(QtCore.Qt.ItemIsEnabled)
 
     objectItem = QtGui.QTableWidgetItem()
     objectItem.setText(translate("ContextTab", "Object"))
     objectItem.setToolTip(
-        translate("ContextTab", "Set desired operator and object number"))
+        translate("ContextTab", "An object can be any element contained in the construction tree: body, part, feature, etc."))
     objectItem.setFlags(QtCore.Qt.ItemIsEnabled)
 
     vertexComboBox = comboBox("VertexSign")
@@ -5468,7 +5473,7 @@ def pieMenuStart():
     objectSpin = spinBox("ObjectValue")
 
     labelContextTable = QLabel(
-        translate("ContextTab", "Modify or add context conditions:"))
+        translate("ContextTab", "Modify or add context selection conditions:"))
 
     contextTable = QtGui.QTableWidget(4, 3)
     contextTable.setMaximumHeight(120)
