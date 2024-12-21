@@ -2256,11 +2256,8 @@ def pieMenuStart():
             faces = 0
             objects = 0
             allList = []
-            listRootObjects = ['X_Axis', 'Y_Axis', 'Z_Axis', 'XY_Plane', 'XZ_Plane', 'YZ_Plane']
             for i in sel:
-                if i.ObjectName in listRootObjects:
-                    allList.append(i.ObjectName)
-                elif not i.SubElementNames:
+                if not i.SubElementNames:
                     objects = objects + 1
                 else:
                     for a in i.SubElementNames:
@@ -2268,9 +2265,9 @@ def pieMenuStart():
             for i in allList:
                 if i.startswith('Vertex') or i.startswith('ExternalVertex') or i.startswith('RootPoint'):
                     vertexes = vertexes + 1
-                elif i.startswith('Edge') or i.startswith('ExternalEdge') or i.startswith('H_Axis') or i.startswith('V_Axis') or i.startswith('X_Axis') or i.startswith('Y_Axis') or i.startswith('Z_Axis'):
+                elif i.startswith('Edge') or i.startswith('ExternalEdge'):
                     edges = edges + 1
-                elif i.startswith('Face') or i.startswith('XY_Plane') or i.startswith('YZ_Plane') or i.startswith('XZ_Plane'):
+                elif i.startswith('Face'):
                     faces = faces + 1
                 else:
                     pass
