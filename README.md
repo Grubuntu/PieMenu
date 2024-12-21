@@ -2,17 +2,14 @@
 PieMenu widget for FreeCAD 
 
 Quick customizable menus for FreeCAD.
-### Version 1.10 new feature:
 
-A new ‘Workbench’ column has been added to the tool list window. Tools and Workbenches can be sorted in ascending or descending order.
+### Version 1.11 new feature:
+Multi rules context :
+You can add up to 4 rules in context tab, each rule can be enabled individually
 
-![Capture d’écran (272)](https://github.com/user-attachments/assets/3952af32-b4ae-4b83-939f-3f40e55556de)
+![Capture d’écran (281)](https://github.com/user-attachments/assets/eddb64cd-b911-49fc-8c79-63dc05516b66)
 
-
-The ‘PieMenu_’ header has been removed from nested PieMenus:
-
-![Piemenus](https://github.com/user-attachments/assets/7ee90d3a-66c9-463b-bc33-fe439e6d5510)
-
+Now root Axis (X,Y,Z axis) and Planes (XY,XZ,YZ planes) are now taken into account as edge or face when they are selected for the context mode rules.
 
 # Presentation: PieMenu is a customizable menu, providing quick access to FreeCAD tools via keyboard shortcuts. You can choose from multiple shapes, themes, customize tools and shortcuts, and much more... 
 
@@ -304,6 +301,13 @@ Enable and display them (or only enable them without displaying). You can set th
 ![Capture d’écran (175)](https://github.com/Grubuntu/PieMenu/assets/56045316/fe63f92f-84ea-49c7-8c2c-f805434f8614)
 
 ### Oher features :
+A new ‘Workbench’ column has been added to the tool list window. Tools and Workbenches can be sorted in ascending or descending order.
+
+![Capture d’écran (272)](https://github.com/user-attachments/assets/3952af32-b4ae-4b83-939f-3f40e55556de)
+
+The ‘PieMenu_’ header has been removed from nested PieMenus:
+
+![Piemenus](https://github.com/user-attachments/assets/7ee90d3a-66c9-463b-bc33-fe439e6d5510)
 
 - Ability to set icon for each PieMenu: You can choose an icon from the FreeCAD icons.
 
