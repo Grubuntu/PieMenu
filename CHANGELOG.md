@@ -1,4 +1,7 @@
 # CHANGELOG
+## 1.11.1
+- Remove : take account of original axes and planes in the context in order to solve an issue
+  
 ## 1.11
 - Add ability to add up to 4 rules in context tab
 - Added to take account of X,Y and Z Axis (Edge in Context), XY, XZ and YZ Plane (Face in Context) in Context selection.
