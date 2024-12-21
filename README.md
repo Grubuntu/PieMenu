@@ -9,7 +9,6 @@ You can add up to 4 rules in context tab, each rule can be enabled individually
 
 ![Capture d’écran (281)](https://github.com/user-attachments/assets/eddb64cd-b911-49fc-8c79-63dc05516b66)
 
-Now root Axis (X,Y,Z axis) and Planes (XY,XZ,YZ planes) are now taken into account as edge or face when they are selected for the context mode rules.
 
 # Presentation: PieMenu is a customizable menu, providing quick access to FreeCAD tools via keyboard shortcuts. You can choose from multiple shapes, themes, customize tools and shortcuts, and much more... 
 
