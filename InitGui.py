@@ -2266,7 +2266,6 @@ def pieMenuStart():
                     for a in i.SubElementNames:
                         allList.append(a)
             for i in allList:
-                # print(i)
                 if i.startswith('Vertex') or i.startswith('ExternalVertex') or i.startswith('RootPoint'):
                     vertexes = vertexes + 1
                 elif i.startswith('Edge') or i.startswith('ExternalEdge') or i.startswith('H_Axis') or i.startswith('V_Axis') or i.startswith('X_Axis') or i.startswith('Y_Axis') or i.startswith('Z_Axis'):
@@ -2275,7 +2274,6 @@ def pieMenuStart():
                     faces = faces + 1
                 else:
                     pass
-            print("v,e,f,o:", vertexes, edges, faces, objects)
             pieIndex = getContextPie(vertexes,
                                      edges,
                                      faces,
