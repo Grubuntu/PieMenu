@@ -7,8 +7,9 @@ Quick customizable menus for FreeCAD.
 Multi rules context :
 You can add up to 4 rules in context tab, each rule can be enabled individually
 
-![Capture d’écran (281)](https://github.com/user-attachments/assets/eddb64cd-b911-49fc-8c79-63dc05516b66)
+![Capture2](https://github.com/user-attachments/assets/20d89511-5af3-421a-ac54-7fbfba54f5c3)
 
+Now Axis (X, Y, Z), Planes (XY, XZ, YZ) and Datum are taken into account for context rules.
 
 # Presentation: PieMenu is a customizable menu, providing quick access to FreeCAD tools via keyboard shortcuts. You can choose from multiple shapes, themes, customize tools and shortcuts, and much more... 
 
