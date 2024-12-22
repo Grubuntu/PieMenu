@@ -2183,7 +2183,7 @@ def pieMenuStart():
                     current["AxisValue"] = groupContext.GetInt("AxisValue")
 
                     current["PlaneSign"] = groupContext.GetString(
-                        "¨PlaneSign")
+                        "PlaneSign")
                     current["PlaneValue"] = groupContext.GetInt("PlaneValue")
                     contextAll[j] = current
                     j += 1
