@@ -1,4 +1,8 @@
 # CHANGELOG
+## 1.11.2
+- Fix issue in remove pie function
+- Fix issue with plane, axis and datum in context mode
+  
 ## 1.11.1
 - Remove : take account of original axes and planes in the context in order to solve an issue
   
