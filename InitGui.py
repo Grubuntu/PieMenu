@@ -27,7 +27,7 @@
 #
 
 global PIE_MENU_VERSION
-PIE_MENU_VERSION = "1.11.1"
+PIE_MENU_VERSION = "1.11.2"
 
 
 def pieMenuStart():
@@ -2178,12 +2178,19 @@ def pieMenuStart():
                     current["ObjectSign"] = groupContext.GetString(
                         "ObjectSign")
                     current["ObjectValue"] = groupContext.GetInt("ObjectValue")
+                    
+                    current["AxisSign"] = groupContext.GetString("AxisSign")
+                    current["AxisValue"] = groupContext.GetInt("AxisValue")
+
+                    current["PlaneSign"] = groupContext.GetString(
+                        "¨PlaneSign")
+                    current["PlaneValue"] = groupContext.GetInt("PlaneValue")
                     contextAll[j] = current
                     j += 1
                 else:
                     pass
 
-    def getContextPie(v, e, f, o):
+    def getContextPie(v, e, f, o, a, p):
         global globalContextPie
         global globalIndexPie
         global indexPie
@@ -2192,7 +2199,6 @@ def pieMenuStart():
         indexPie = None
         for i in contextAll:
             current = contextAll[i]
-
             def vertex():
                 if sign[current["VertexSign"]](v, current["VertexValue"]):
                     edge()
@@ -2207,10 +2213,34 @@ def pieMenuStart():
 
             def face():
                 if sign[current["FaceSign"]](f, current["FaceValue"]):
-                    obj()
+                    axis()
                 else:
                     pass
 
+            def axis():
+                try:
+                    if sign[current["AxisSign"]](a, current["AxisValue"]):
+                        planes()
+                    else:
+                        pass
+                except:
+                    # legacy fix : if there is no param for axis in parameters
+                    if (a == current["AxisValue"]):
+                        planes()
+                    else:
+                        pass
+            def planes():
+                try:
+                    if sign[current["PlaneSign"]](p, current["PlaneValue"]):
+                        obj()
+                    else:
+                        pass
+                except:
+                    # legacy fix : if there is no param for planes in parameters
+                    if (p == current["PlaneValue"]):
+                        obj()
+                    else:
+                        pass
             def obj():
                 if sign[current["ObjectSign"]](o, current["ObjectValue"]):
                     global globalContextPie
@@ -2255,9 +2285,21 @@ def pieMenuStart():
             edges = 0
             faces = 0
             objects = 0
+            axis = 0
+            planes = 0
             allList = []
+            listAxis = [ 'X_Axis', 'Y_Axis', 'Z_Axis', 'H_Axis', 'V_Axis' ]
+            listPlanes = [ 'XY_Plane', 'XZ_Plane', 'YZ_Plane' ]
             for i in sel:
-                if not i.SubElementNames:
+                if i.ObjectName in listAxis or i.ObjectName in listPlanes:
+                    allList.append(i.ObjectName)
+                elif i.ObjectName.startswith("DatumPlane"):
+                    planes = planes + 1
+                elif i.ObjectName.startswith("DatumLine"):
+                    axis = axis + 1
+                elif i.ObjectName.startswith("DatumPoint"):
+                    vertexes = vertexes + 1
+                elif not i.SubElementNames:
                     objects = objects + 1
                 else:
                     for a in i.SubElementNames:
@@ -2269,12 +2311,19 @@ def pieMenuStart():
                     edges = edges + 1
                 elif i.startswith('Face'):
                     faces = faces + 1
+                elif i.startswith('X_Axis') or i.startswith('Y_Axis') or i.startswith('Z_Axis') or i.startswith('H_Axis') or i.startswith('V_Axis') :
+                    axis = axis + 1
+                elif i.startswith('XY_Plane') or i.startswith('XZ_Plane') or i.startswith('YZ_Plane') :
+                    planes = planes + 1
                 else:
                     pass
+            print(vertexes, edges, faces, objects, axis, planes)
             pieIndex = getContextPie(vertexes,
                                      edges,
                                      faces,
-                                     objects)
+                                     objects,
+                                     axis,
+                                     planes)
 
             if pieIndex:
                 pieName = getParamIndex(pieIndex)
@@ -3018,19 +3067,16 @@ def pieMenuStart():
         for i in indexList:
             pie = getParamIndex(str(i))
             if pie == cBox.currentText():
-                indexList.remove(i)
-
-                temp = []
-
-                for i in indexList:
-                    temp.append(str(i))
-
-                indexList = temp
-
-                paramIndexGet.SetString("IndexList", ".,.".join(indexList))
-
                 paramIndexGet.RemGroup(str(i))
                 paramIndexGet.RemString(str(i))
+
+                indexList.remove(i)
+                print(indexList)
+                temp = []
+                for n in indexList:
+                    temp.append(str(n))
+                indexList = temp
+                paramIndexGet.SetString("IndexList", ".,.".join(indexList))
 
                 globaltoolbar = App.ParamGet(
                     'User parameter:BaseApp/Workbench/Global/Toolbar/Custom_PieMenu')
@@ -3064,7 +3110,7 @@ def pieMenuStart():
                         toolListe.remove(stringToFind)
                         toolListe = group.SetString(
                             "ToolList", ".,.".join(toolListe))
-
+                break
             else:
                 pass
 
@@ -4237,11 +4283,17 @@ def pieMenuStart():
                             "FaceSign", faceComboBox.currentText())
                         groupContext.SetString(
                             "ObjectSign", objectComboBox.currentText())
+                        groupContext.SetString(
+                            "AxisSign", axisComboBox.currentText())
+                        groupContext.SetString(
+                            "PlaneSign", planeComboBox.currentText())
 
                         groupContext.SetInt("VertexValue", vertexSpin.value())
                         groupContext.SetInt("EdgeValue", edgeSpin.value())
                         groupContext.SetInt("FaceValue", faceSpin.value())
                         groupContext.SetInt("ObjectValue", objectSpin.value())
+                        groupContext.SetInt("AxisValue", axisSpin.value())
+                        groupContext.SetInt("PlaneValue", planeSpin.value())
 
                         groupContext.SetBool("Enabled", 1)
 
@@ -4291,8 +4343,9 @@ def pieMenuStart():
                         listContextConditions.insertRow(row)
 
                         # Add checkbox for enabling/disabling
+                        # subgroupContextEnabled = QCheckBox(
                         subgroupContextEnabled = QCheckBox(
-                            translate("ContextTab", "Enabled"))
+                            translate("ContextTab", ""))
                         subgroupContextEnabled.setCheckable(True)
                         subgroupContextEnabled.setToolTip(translate(
                             "ContextTab", "Ticked the box to enable the contextual rule."))
@@ -4390,6 +4443,12 @@ def pieMenuStart():
                     updateComboBox(
                         objectComboBox, groupContext.GetString("ObjectSign"))
                     objectSpin.setValue(groupContext.GetInt("ObjectValue"))
+                    updateComboBox(
+                        axisComboBox, groupContext.GetString("AxisSign"))
+                    axisSpin.setValue(groupContext.GetInt("AxisValue"))
+                    updateComboBox(
+                        planeComboBox, groupContext.GetString("PlaneSign"))
+                    planeSpin.setValue(groupContext.GetInt("PlaneValue"))
 
                 updateContextConditions()
 
@@ -4464,6 +4523,10 @@ def pieMenuStart():
         faceSpin.setValue(10)
         updateComboBox(objectComboBox, "==")
         objectSpin.setValue(10)
+        updateComboBox(axisComboBox, "==")
+        axisSpin.setValue(10)
+        updateComboBox(planeComboBox, "==")
+        planeSpin.setValue(10)
         updateContextConditions()
 
     def setContextConditions():
@@ -4514,6 +4577,10 @@ def pieMenuStart():
                     update_value(group_context, "FaceValue", faceSpin)
                     update_sign(group_context, "ObjectSign", objectComboBox)
                     update_value(group_context, "ObjectValue", objectSpin)
+                    update_sign(group_context, "AxisSign", axisComboBox)
+                    update_value(group_context, "AxisValue", axisSpin)
+                    update_sign(group_context, "PlaneSign", planeComboBox)
+                    update_value(group_context, "PlaneValue", planeSpin)
         contextList()
 
     def setDefaultPie(restore=False):
@@ -5436,19 +5503,19 @@ def pieMenuStart():
     vertexItem = QtGui.QTableWidgetItem()
     vertexItem.setText(translate("ContextTab", "Vertex"))
     vertexItem.setToolTip(
-        translate("ContextTab", "A vertex can be a point on a 2D or 3D object, a projected point, a point of origin, etc."))
+        translate("ContextTab", "A vertex can be a point on a 2D or 3D object, a projected point, a point of origin, DatumPoint etc."))
     vertexItem.setFlags(QtCore.Qt.ItemIsEnabled)
 
     edgeItem = QtGui.QTableWidgetItem()
     edgeItem.setText(translate("ContextTab", "Edge"))
     edgeItem.setToolTip(
-        translate("ContextTab", "An edge can be a 2D or 3D object, a main axis (X,Y,Z), a sketch axis, etc."))
+        translate("ContextTab", "An edge can be an line, circle, etc. spline on a 2D or 3D object."))
     edgeItem.setFlags(QtCore.Qt.ItemIsEnabled)
 
     faceItem = QtGui.QTableWidgetItem()
     faceItem.setText(translate("ContextTab", "Face"))
     faceItem.setToolTip(
-        translate("ContextTab", "A face can be a face of a 2D or 3D object, a plane of origin (XY, XZ, YZ), etc. "))
+        translate("ContextTab", "A face can be a face, a curve etc. of a 2D or 3D object."))
     faceItem.setFlags(QtCore.Qt.ItemIsEnabled)
 
     objectItem = QtGui.QTableWidgetItem()
@@ -5456,22 +5523,38 @@ def pieMenuStart():
     objectItem.setToolTip(
         translate("ContextTab", "An object can be any element contained in the construction tree: body, part, feature, etc."))
     objectItem.setFlags(QtCore.Qt.ItemIsEnabled)
+    
+    axisItem = QtGui.QTableWidgetItem()
+    axisItem.setText(translate("ContextTab", "Axis"))
+    axisItem.setToolTip(
+        translate("ContextTab", "An axis can be X, Y, Z axis, H or V axis in Sketcher or DatumLine"))
+    axisItem.setFlags(QtCore.Qt.ItemIsEnabled)
+    
+    planeItem = QtGui.QTableWidgetItem()
+    planeItem.setText(translate("ContextTab", "Plane"))
+    planeItem.setToolTip(
+        translate("ContextTab", "An plane can be XY, XZ or YZ plane or DatumPlane"))
+    planeItem.setFlags(QtCore.Qt.ItemIsEnabled)
 
     vertexComboBox = comboBox("VertexSign")
     edgeComboBox = comboBox("EdgeSign")
     faceComboBox = comboBox("FaceSign")
     objectComboBox = comboBox("ObjectSign")
+    axisComboBox = comboBox("AxisSign")
+    planeComboBox = comboBox("PlaneSign")
 
     vertexSpin = spinBox("VertexValue")
     edgeSpin = spinBox("EdgeValue")
     faceSpin = spinBox("FaceValue")
     objectSpin = spinBox("ObjectValue")
+    axisSpin = spinBox("AxisValue")
+    planeSpin = spinBox("PlaneValue")
 
     labelContextTable = QLabel(
         translate("ContextTab", "Modify or add context selection conditions:"))
 
-    contextTable = QtGui.QTableWidget(4, 3)
-    contextTable.setMaximumHeight(120)
+    contextTable = QtGui.QTableWidget(6, 3)
+    contextTable.setMaximumHeight(160)
     contextTable.setFrameStyle(QtGui.QFrame.NoFrame)
     contextTable.verticalHeader().setVisible(False)
     contextTable.horizontalHeader().setVisible(False)
@@ -5498,6 +5581,14 @@ def pieMenuStart():
     contextTable.setItem(3, 0, objectItem)
     contextTable.setCellWidget(3, 1, objectComboBox)
     contextTable.setCellWidget(3, 2, objectSpin)
+    
+    contextTable.setItem(4, 0, axisItem)
+    contextTable.setCellWidget(4, 1, axisComboBox)
+    contextTable.setCellWidget(4, 2, axisSpin)
+
+    contextTable.setItem(5, 0, planeItem)
+    contextTable.setCellWidget(5, 1, planeComboBox)
+    contextTable.setCellWidget(5, 2, planeSpin)
 
     resetContextButton = QtGui.QToolButton()
     resetContextButton.setIcon(QtGui.QIcon(iconReset))
