@@ -2317,7 +2317,6 @@ def pieMenuStart():
                     planes = planes + 1
                 else:
                     pass
-            print(vertexes, edges, faces, objects, axis, planes)
             pieIndex = getContextPie(vertexes,
                                      edges,
                                      faces,
@@ -3071,7 +3070,6 @@ def pieMenuStart():
                 paramIndexGet.RemString(str(i))
 
                 indexList.remove(i)
-                print(indexList)
                 temp = []
                 for n in indexList:
                     temp.append(str(n))
