@@ -1981,7 +1981,7 @@ def pieMenuStart():
             shortcut = QShortcut(QKeySequence(shortcutKey), mw)
             namePie = namePie.split("PieMenu_")[1]
             shortcut.activated.connect(lambda keyValue=namePie:
-                                       PieMenuInstance.showAtMouse(keyValue=keyValue))
+                                       PieMenuInstance.showAtMouseInstance(keyValue=keyValue))
             shortcut.setEnabled(True)
         return shortcutList
 
