@@ -831,6 +831,9 @@ def pieMenuStart():
                     keyValue, "Int", "CommandPerCircle")
                 shortcutLabelSize = getParameterGroup(
                     keyValue, "Int", "ShortcutLabelSize")
+                ### Fix https://github.com/Grubuntu/PieMenu/issues/124
+                if shortcutLabelSize < 6:
+                    shortcutLabelSize = 6
             except:
                 None
 
@@ -3034,6 +3037,7 @@ def pieMenuStart():
             group.SetInt("HoverDelay", 100)
             group.SetBool("EnableShorcut", False)
             group.SetBool("DisplayPreselect", False)
+            group.SetInt("ShortcutLabelSize", 8)
 
             createNestedPieMenus()
             reloadWorkbench()
@@ -4605,6 +4609,7 @@ def pieMenuStart():
             group.SetInt("HoverDelay", 100)
             group.SetBool("EnableShorcut", False)
             group.SetBool("DisplayPreselect", False)
+            group.SetInt("ShortcutLabelSize", 8)
 
             paramIndexGet.SetString("1", "PartDesign")
             group = paramIndexGet.GetGroup("1")
@@ -4616,6 +4621,7 @@ def pieMenuStart():
             group.SetInt("HoverDelay", 100)
             group.SetBool("EnableShorcut", False)
             group.SetBool("DisplayPreselect", False)
+            group.SetInt("ShortcutLabelSize", 8)
 
             paramIndexGet.SetString("2", "Sketcher")
             group = paramIndexGet.GetGroup("2")
@@ -4628,6 +4634,7 @@ def pieMenuStart():
             group.SetString("DefaultWorkbench", "Sketcher")
             group.SetBool("EnableShorcut", False)
             group.SetBool("DisplayPreselect", False)
+            group.SetInt("ShortcutLabelSize", 8)
 
         paramGet.SetBool("ToolBar", False)
         paramGet.RemString("ToolBar")
