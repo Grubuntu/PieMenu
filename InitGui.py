@@ -3030,20 +3030,23 @@ def pieMenuStart():
             cBoxUpdate(text)
             # set defaults values
             group = getGroup()
-            group.SetInt("Radius", 80)
-            group.SetInt("Button", 32)
-            group.SetString("Shape", "Pie")
-            group.SetString("TriggerMode", "Press")
-            group.SetInt("HoverDelay", 100)
-            group.SetBool("EnableShorcut", False)
-            group.SetBool("DisplayPreselect", False)
-            group.SetInt("ShortcutLabelSize", 8)
-
+            setDefaultValues(group)
             createNestedPieMenus()
             reloadWorkbench()
             onPieChange()
 
         return paramIndexGet.GetGroup(indexNumber)
+
+    def setDefaultValues(group):
+        """ Add defaults values in user.cfg """
+        group.SetInt("Radius", 80)
+        group.SetInt("Button", 32)
+        group.SetString("Shape", "Pie")
+        group.SetString("TriggerMode", "Press")
+        group.SetInt("HoverDelay", 100)
+        group.SetBool("EnableShorcut", False)
+        group.SetBool("DisplayPreselect", False)
+        group.SetInt("ShortcutLabelSize", 8)
 
     def onButtonAddPieMenu():
         """ Dialog to add PieMenu """
@@ -4602,39 +4605,18 @@ def pieMenuStart():
 
             group = paramIndexGet.GetGroup("0")
             group.SetString("ToolList", ".,.".join(defaultTools))
-            group.SetInt("Radius", 80)
-            group.SetInt("Button", 32)
-            group.SetString("Shape", "Pie")
-            group.SetString("TriggerMode", "Press")
-            group.SetInt("HoverDelay", 100)
-            group.SetBool("EnableShorcut", False)
-            group.SetBool("DisplayPreselect", False)
-            group.SetInt("ShortcutLabelSize", 8)
+            setDefaultValues(group)
 
             paramIndexGet.SetString("1", "PartDesign")
             group = paramIndexGet.GetGroup("1")
             group.SetString("ToolList", ".,.".join(defaultToolsPartDesign))
-            group.SetInt("Radius", 80)
-            group.SetInt("Button", 32)
-            group.SetString("Shape", "Pie")
-            group.SetString("TriggerMode", "Press")
-            group.SetInt("HoverDelay", 100)
-            group.SetBool("EnableShorcut", False)
-            group.SetBool("DisplayPreselect", False)
-            group.SetInt("ShortcutLabelSize", 8)
+            setDefaultValues(group)
 
             paramIndexGet.SetString("2", "Sketcher")
             group = paramIndexGet.GetGroup("2")
             group.SetString("ToolList", ".,.".join(defaultToolsSketcher))
-            group.SetInt("Radius", 80)
-            group.SetInt("Button", 32)
-            group.SetString("Shape", "Pie")
-            group.SetString("TriggerMode", "Press")
-            group.SetInt("HoverDelay", 100)
+            setDefaultValues(group)
             group.SetString("DefaultWorkbench", "Sketcher")
-            group.SetBool("EnableShorcut", False)
-            group.SetBool("DisplayPreselect", False)
-            group.SetInt("ShortcutLabelSize", 8)
 
         paramGet.SetBool("ToolBar", False)
         paramGet.RemString("ToolBar")
