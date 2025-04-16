@@ -27,7 +27,7 @@
 #
 
 global PIE_MENU_VERSION
-PIE_MENU_VERSION = "1.11.2"
+PIE_MENU_VERSION = "1.11.3"
 
 
 def pieMenuStart():
@@ -78,7 +78,6 @@ def pieMenuStart():
     shortcutKey = ""
     globalShortcutKey = "TAB"
     shortcutList = []
-    flagVisi = False
     sortOrder = QtCore.Qt.AscendingOrder
     subGroupSelected = None
 
@@ -295,7 +294,7 @@ def pieMenuStart():
                     except:
                         pass
                     if (module is not None and module != 'SketcherGui'):
-                        PieMenuInstance.showAtMouse()
+                        PieMenuInstance.showAtMouseInstance()
             else:
                 pass
 
@@ -325,7 +324,7 @@ def pieMenuStart():
                         fonctionActive = g.Object
 
                         if (module is not None and module != 'SketcherGui' and str(fonctionActive) in listSpinboxFeatures):
-                            PieMenuInstance.showAtMouse()
+                            PieMenuInstance.showAtMouseInstance()
                     except:
                         pass
             else:
@@ -361,7 +360,7 @@ def pieMenuStart():
                         fonctionActive = g.Object
 
                         if (module is not None and module != 'SketcherGui' and str(fonctionActive) in listSpinboxFeatures):
-                            PieMenuInstance.showAtMouse()
+                            PieMenuInstance.showAtMouseInstance()
                     except:
                         pass
             else:
@@ -410,7 +409,7 @@ def pieMenuStart():
 
         def Activated(self):
             """Run the following code when the command is activated (button press)."""
-            PieMenuInstance.showAtMouse(self.keyValue)
+            PieMenuInstance.showAtMouseInstance(self.keyValue)
 
         def IsActive(self):
             """Return True when the command should be active or False when it should be disabled (greyed)."""
@@ -702,7 +701,7 @@ def pieMenuStart():
                                         g = Gui.ActiveDocument.getInEdit()
                                         module = g.Module
                                         if (module is not None and module != 'SketcherGui'):
-                                            PieMenuInstance.showAtMouse()
+                                            PieMenuInstance.showAtMouseInstance()
                                     except:
                                         pass
                                 j += 1
@@ -735,7 +734,7 @@ def pieMenuStart():
                                         g = Gui.ActiveDocument.getInEdit()
                                         module = g.Module
                                         if (module is not None and module != 'SketcherGui'):
-                                            PieMenuInstance.showAtMouse()
+                                            PieMenuInstance.showAtMouseInstance()
                                     except:
                                         pass
                                 j += 1
@@ -832,6 +831,9 @@ def pieMenuStart():
                     keyValue, "Int", "CommandPerCircle")
                 shortcutLabelSize = getParameterGroup(
                     keyValue, "Int", "ShortcutLabelSize")
+                ### Fix https://github.com/Grubuntu/PieMenu/issues/124
+                if shortcutLabelSize < 6:
+                    shortcutLabelSize = 6
             except:
                 None
 
@@ -1603,6 +1605,7 @@ def pieMenuStart():
                 self.menu.popup(QtCore.QPoint(
                     pos.x() - self.menuSize / 2, pos.y() - self.menuSize / 2))
 
+
         def showPiemenuPreview(self, keyValue=None):
             """ Preview of PieMenu in widgetTable on Preferences Tab """
             # get BackgroundColor value in parameters, if 0 then we have a fresh install
@@ -1692,15 +1695,6 @@ def pieMenuStart():
                 self.menu.popup(QtCore.QPoint(
                     posX - self.menuSize / 2, posY - self.menuSize / 2))
 
-        def showAtMouse(self, keyValue=None):
-            global flagVisi
-
-            if not flagVisi:
-                self.showAtMouseInstance(keyValue)
-                flagVisi = False
-            else:
-                self.menu.hide()
-                flagVisi = False
 
         def spin_interactif(self):
             """ Handle spinbox in fast edit mode """
@@ -1990,7 +1984,7 @@ def pieMenuStart():
             shortcut = QShortcut(QKeySequence(shortcutKey), mw)
             namePie = namePie.split("PieMenu_")[1]
             shortcut.activated.connect(lambda keyValue=namePie:
-                                       PieMenuInstance.showAtMouse(keyValue=keyValue))
+                                       PieMenuInstance.showAtMouseInstance(keyValue=keyValue))
             shortcut.setEnabled(True)
         return shortcutList
 
@@ -2344,7 +2338,7 @@ def pieMenuStart():
                     immediateTrigger = getParameterGroup(
                         pieName, "Bool", "ImmediateTriggerContext")
                     if immediateTrigger:
-                        PieMenuInstance.showAtMouse()
+                        PieMenuInstance.showAtMouseInstance()
             else:
                 contextPhase = False
         return contextPhase
@@ -3036,19 +3030,23 @@ def pieMenuStart():
             cBoxUpdate(text)
             # set defaults values
             group = getGroup()
-            group.SetInt("Radius", 80)
-            group.SetInt("Button", 32)
-            group.SetString("Shape", "Pie")
-            group.SetString("TriggerMode", "Press")
-            group.SetInt("HoverDelay", 100)
-            group.SetBool("EnableShorcut", False)
-            group.SetBool("DisplayPreselect", False)
-
+            setDefaultValues(group)
             createNestedPieMenus()
             reloadWorkbench()
             onPieChange()
 
         return paramIndexGet.GetGroup(indexNumber)
+
+    def setDefaultValues(group):
+        """ Add defaults values in user.cfg """
+        group.SetInt("Radius", 80)
+        group.SetInt("Button", 32)
+        group.SetString("Shape", "Pie")
+        group.SetString("TriggerMode", "Press")
+        group.SetInt("HoverDelay", 100)
+        group.SetBool("EnableShorcut", False)
+        group.SetBool("DisplayPreselect", False)
+        group.SetInt("ShortcutLabelSize", 8)
 
     def onButtonAddPieMenu():
         """ Dialog to add PieMenu """
@@ -4607,36 +4605,18 @@ def pieMenuStart():
 
             group = paramIndexGet.GetGroup("0")
             group.SetString("ToolList", ".,.".join(defaultTools))
-            group.SetInt("Radius", 80)
-            group.SetInt("Button", 32)
-            group.SetString("Shape", "Pie")
-            group.SetString("TriggerMode", "Press")
-            group.SetInt("HoverDelay", 100)
-            group.SetBool("EnableShorcut", False)
-            group.SetBool("DisplayPreselect", False)
+            setDefaultValues(group)
 
             paramIndexGet.SetString("1", "PartDesign")
             group = paramIndexGet.GetGroup("1")
             group.SetString("ToolList", ".,.".join(defaultToolsPartDesign))
-            group.SetInt("Radius", 80)
-            group.SetInt("Button", 32)
-            group.SetString("Shape", "Pie")
-            group.SetString("TriggerMode", "Press")
-            group.SetInt("HoverDelay", 100)
-            group.SetBool("EnableShorcut", False)
-            group.SetBool("DisplayPreselect", False)
+            setDefaultValues(group)
 
             paramIndexGet.SetString("2", "Sketcher")
             group = paramIndexGet.GetGroup("2")
             group.SetString("ToolList", ".,.".join(defaultToolsSketcher))
-            group.SetInt("Radius", 80)
-            group.SetInt("Button", 32)
-            group.SetString("Shape", "Pie")
-            group.SetString("TriggerMode", "Press")
-            group.SetInt("HoverDelay", 100)
+            setDefaultValues(group)
             group.SetString("DefaultWorkbench", "Sketcher")
-            group.SetBool("EnableShorcut", False)
-            group.SetBool("DisplayPreselect", False)
 
         paramGet.SetBool("ToolBar", False)
         paramGet.RemString("ToolBar")
@@ -4861,7 +4841,7 @@ def pieMenuStart():
                 text = pieGroup.checkedAction().text()
                 paramGet.SetString("CurrentPie", text)
             PieMenuInstance.hide()
-            PieMenuInstance.showAtMouse()
+            PieMenuInstance.showAtMouseInstance()
 
         def onMenuToolBar():
             """Handle the toolbar menu setup event."""
@@ -4944,7 +4924,7 @@ def pieMenuStart():
                 toolbar_desc = toolbar_desc + ': ' + sender.data()
                 paramGet.SetString("ToolBar", toolbar_desc)
                 PieMenuInstance.hide()
-                PieMenuInstance.showAtMouse()
+                PieMenuInstance.showAtMouseInstance()
 
         def onPrefButton():
             """Handle the preferences button event."""
@@ -6103,7 +6083,7 @@ def pieMenuStart():
         # fix shortcut not trigger on fresh install
         globalShortcutKey = paramGet.GetString("GlobalShortcutKey")
         actionKey.setShortcut(QtGui.QKeySequence(globalShortcutKey))
-        actionKey.triggered.connect(PieMenuInstance.showAtMouse)
+        actionKey.triggered.connect(PieMenuInstance.showAtMouseInstance)
         mw.addAction(actionKey)
         getShortcutList()
         legacyFix()

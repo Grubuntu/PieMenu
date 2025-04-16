@@ -1,4 +1,9 @@
 # CHANGELOG
+## 1.11.3
+- Fix useless code
+- Fix https://github.com/Grubuntu/PieMenu/issues/124
+- Code factorization
+
 ## 1.11.2
 - Fix issue in remove pie function
 - Fix issue with plane, axis and datum in context mode
