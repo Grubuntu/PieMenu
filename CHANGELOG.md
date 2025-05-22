@@ -1,4 +1,11 @@
 # CHANGELOG
+## 1.12
+- Add setting to show directly Quick Spinbox or not https://github.com/Grubuntu/PieMenu/issues/126
+- Increase spinbox size a little bit
+- Pre fix qt6 issues in context tab https://github.com/Grubuntu/PieMenu/issues/125
+- Fix issues with Freecad version 1.1.0 (41789) : PieMenus didn't work : Rewrite self.menu : QMenu > QWidget to complie with Qt6
+- Remove some redondant code
+
 ## 1.11.3
 - Fix useless code
 - Fix https://github.com/Grubuntu/PieMenu/issues/124
