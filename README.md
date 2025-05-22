@@ -3,13 +3,14 @@ PieMenu widget for FreeCAD
 
 Quick customizable menus for FreeCAD.
 
-### Version 1.11 new feature:
-Multi rules context :
-You can add up to 4 rules in context tab, each rule can be enabled individually
+### Version 1.12 new feature:
 
-![Capture2](https://github.com/user-attachments/assets/20d89511-5af3-421a-ac54-7fbfba54f5c3)
+The Quick Spinbox can now be deactivated so that it does not open immediately after a pocket, fillet, chamfer or protrusion command. 
+It can still be displayed by pressing the current PieMenu shortcut while editing the function.
 
-Now Axis (X, Y, Z), Planes (XY, XZ, YZ) and Datum are taken into account for context rules.
+![Capture d’écran (5)](https://github.com/user-attachments/assets/7e4ac035-0800-4c7c-940e-f32aadd3f95e)
+![Capture d’écran (4)](https://github.com/user-attachments/assets/ea0d9a4d-2b4b-4d4a-b568-ecdaddb67dc4)
+![Capture d’écran (6)](https://github.com/user-attachments/assets/e6bd27ed-e9d4-4bb2-8205-9ea53d0ad0eb)
 
 # Presentation: PieMenu is a customizable menu, providing quick access to FreeCAD tools via keyboard shortcuts. You can choose from multiple shapes, themes, customize tools and shortcuts, and much more... 
 
@@ -168,7 +169,12 @@ Important note: The "Context" mode takes priority over all other modes. Therefor
 
 ![Capture d’écran (177)](https://github.com/Grubuntu/PieMenu/assets/56045316/cdaa6f6a-e3f8-465d-ae7b-f2d8d3c821ac)
 
+Multi rules context :
+You can add up to 4 rules in context tab, each rule can be enabled individually
 
+![Capture2](https://github.com/user-attachments/assets/20d89511-5af3-421a-ac54-7fbfba54f5c3)
+
+Now Axis (X, Y, Z), Planes (XY, XZ, YZ) and Datum are taken into account for context rules.
 
 ### 4) Global settings tab :
 
