@@ -3589,7 +3589,7 @@ def pieMenuStart():
 
     def onDisplaySpinBox(state):
         """ Set parameter to show or not fast SpinBox """
-        if state == 2:
+        if state == 2 or state == 1:
             paramGet.SetBool("DisplaySpinBox", True)
         else:
             paramGet.SetBool("DisplaySpinBox", False)
@@ -3711,6 +3711,8 @@ def pieMenuStart():
         """ Set visibility of Quickmenu """
         if state == 2:
             paramGet.SetBool("ShowQuickMenu", True)
+            contextList()
+            addObserver()
         else:
             paramGet.SetBool("ShowQuickMenu", False)
         updatePiemenuPreview()
@@ -3726,10 +3728,12 @@ def pieMenuStart():
 
     def onContext(state):
         """ Set context mode activation """
-        if state == 2:
+        if state == 2 or state == 1:
             paramGet.SetBool("EnableContext", True)
+            contextList()
         else:
             paramGet.SetBool("EnableContext", False)
+        addObserver()
 
     def toolList():
         """ Handle list of tools and checkboxes """
@@ -4861,6 +4865,11 @@ def pieMenuStart():
                 toolList = toolList.replace(
                     "Std_PieMenuSeparator", "PieMenu_Separator")
                 group.SetString("ToolList", toolList)
+                
+        # v1.12: Introduce a new setting to choose whether to show the fast spinbox or not. Set the default value to True if the setting does not exist
+        settingContent = paramGet.GetContents()
+        if not any(item[1] == "DisplaySpinBox" for item in settingContent):
+            paramGet.SetBool("DisplaySpinBox", True)
 
     #### Preferences dialog ####
     def onControl():
@@ -4897,18 +4906,6 @@ def pieMenuStart():
     ### Begin QuickMenu  Def ###
     def quickMenu(buttonSize=20):
         """Build and style the QuickMenu button."""
-        
-
-        def onActionContext():
-            """ Set state of Context mode"""
-            if actionContext.isChecked():
-                paramGet.SetBool("EnableContext", True)
-                checkboxGlobalContext.setChecked(True)
-                contextList()
-            else:
-                paramGet.SetBool("EnableContext", False)
-                checkboxGlobalContext.setChecked(False)
-            addObserver()
 
         def pieList():
             """Populate the menuPieMenu with actions based on user parameters."""
@@ -5056,7 +5053,13 @@ def pieMenuStart():
         actionContext.setText(translate("QuickMenu", "Global context"))
         actionContext.setCheckable(True)
         actionContext.setChecked(paramGet.GetBool("EnableContext"))
-        actionContext.triggered.connect(onActionContext)
+        actionContext.triggered.connect(lambda checked: onContext(checked))
+
+        actionDisplaySpinBox = QtGui.QAction(menu)
+        actionDisplaySpinBox.setText(translate("QuickMenu", "Direct SpinBox display"))
+        actionDisplaySpinBox.setCheckable(True)
+        actionDisplaySpinBox.setChecked(paramGet.GetBool("DisplaySpinBox"))
+        actionDisplaySpinBox.triggered.connect(lambda checked: onDisplaySpinBox(checked))
 
         menuPieMenu = QtGui.QMenu()
         menuPieMenu.setTitle(translate("QuickMenu", "PieMenu"))
@@ -5088,6 +5091,7 @@ def pieMenuStart():
         prefButtonWidgetAction.setDefaultWidget(prefButton)
 
         menu.addAction(actionContext)
+        menu.addAction(actionDisplaySpinBox)
         menu.addSeparator()
         menu.addMenu(menuPieMenu)
         menu.addMenu(menuToolBar)
@@ -6074,6 +6078,21 @@ def pieMenuStart():
     layoutRightClick.addWidget(labelDelayRightClick)
     layoutRightClick.addWidget(spinDelayRightClick)
 
+    checkboxDisplaySpinBox = QCheckBox()
+    checkboxDisplaySpinBox.setCheckable(True)
+    checkboxDisplaySpinBox.setChecked(paramGet.GetBool("DisplaySpinBox"))
+
+    checkboxDisplaySpinBox.stateChanged.connect(
+        lambda state: onDisplaySpinBox(state))
+
+    labelSpinBox = QLabel(
+        translate("GlobalSettingsTab", "Direct SpinBox display"))
+    labelSpinBox.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
+    layoutSpinBox = QtGui.QHBoxLayout()
+    layoutSpinBox.addWidget(checkboxDisplaySpinBox)
+    layoutSpinBox.addWidget(labelSpinBox)
+    layoutSpinBox.addStretch(1)
+
     globalSettingsGroup = QGroupBox(
         translate("GlobalSettingsTab", "Global settings"))
     globalSettingsGroup.setLayout(QtGui.QVBoxLayout())
@@ -6081,6 +6100,7 @@ def pieMenuStart():
     globalSettingsGroup.layout().addLayout(layoutShowQuickMenu)
     globalSettingsGroup.layout().addLayout(layoutGlobalContext)
     globalSettingsGroup.layout().addLayout(layoutGlobalToggle)
+    globalSettingsGroup.layout().addLayout(layoutSpinBox)
 
     experimentalGroup = QGroupBox(
         translate("GlobalSettingsTab", "Experimental"))
@@ -6116,24 +6136,9 @@ def pieMenuStart():
     exportGroup.layout().addLayout(layoutParamExport)
     exportGroup.layout().addLayout(layoutParamImport)
 
-    checkboxDisplaySpinBox = QCheckBox()
-    checkboxDisplaySpinBox.setCheckable(True)
-    checkboxDisplaySpinBox.setChecked(paramGet.GetBool("DisplaySpinBox"))
-
-    checkboxDisplaySpinBox.stateChanged.connect(
-        lambda state: onDisplaySpinBox(state))
-
-    labelSpinBox = QLabel(
-        translate("GlobalSettingsTab", "Enable Fast SpinBox "))
-    labelSpinBox.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
-    layoutSpinBox = QtGui.QHBoxLayout()
-    layoutSpinBox.addWidget(labelSpinBox)
-    layoutSpinBox.addStretch(1)
-    layoutSpinBox.addWidget(checkboxDisplaySpinBox)
-
-    spinBoxGroup = QGroupBox(translate("GlobalSettingsTab", "SpinBox settings"))
-    spinBoxGroup.setLayout(QtGui.QVBoxLayout())
-    spinBoxGroup.layout().addLayout(layoutSpinBox)
+    # spinBoxGroup = QGroupBox(translate("GlobalSettingsTab", "SpinBox settings"))
+    # spinBoxGroup.setLayout(QtGui.QVBoxLayout())
+    # spinBoxGroup.layout().addLayout(layoutSpinBox)
 
     globalShortcutKey = paramGet.GetString("GlobalShortcutKey")
 
@@ -6165,12 +6170,12 @@ def pieMenuStart():
     layoutGlobalShortcut.addWidget(deleteGlobalShortcutButton)
 
     settingsTabLayout.insertWidget(0, globalSettingsGroup)
-    settingsTabLayout.insertWidget(1, spinBoxGroup)
-    settingsTabLayout.insertWidget(2, experimentalGroup)
-    settingsTabLayout.insertWidget(3, exportGroup)
+    # settingsTabLayout.insertWidget(1, spinBoxGroup)
+    settingsTabLayout.insertWidget(1, experimentalGroup)
+    settingsTabLayout.insertWidget(2, exportGroup)
     settingsTabLayout.addStretch(1)
-    settingsTabLayout.insertSpacing(4, 42)
-    settingsTabLayout.insertLayout(5, layoutGlobalShortcut)
+    settingsTabLayout.insertSpacing(3, 42)
+    settingsTabLayout.insertLayout(4, layoutGlobalShortcut)
 
     # Create a fake command in FreeCAD to handle the PieMenu Separator
     Gui.addCommand('PieMenu_Separator', PieMenuSeparator())
