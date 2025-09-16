@@ -485,10 +485,9 @@ def pieMenuStart():
                 actionKey.trigger()
 
         def validation(self):
-            # workaround to fix https://github.com/Grubuntu/PieMenu/issues/106
-            # https://forum.freecad.org/viewtopic.php?t=92023
-            # run an other command in Sketcher:
-            Gui.runCommand('Sketcher_ConstrainParallel', 0)
+            # fix https://github.com/Grubuntu/PieMenu/issues/130
+            # quit current sketcher operation:
+            Gui.runCommand("Sketcher_StopOperation")
             # to avoid that 'Sketcher_CompDimensionTools' being activated before resetEdit()
             Gui.ActiveDocument.resetEdit()
             App.ActiveDocument.recompute()
@@ -496,6 +495,8 @@ def pieMenuStart():
 
         def cancel(self):
             docName = App.ActiveDocument.Name
+            # quit current sketcher operation:
+            Gui.runCommand("Sketcher_StopOperation")
             App.closeActiveTransaction(True)
             Gui.Control.closeDialog()
             App.getDocument(docName).recompute()
