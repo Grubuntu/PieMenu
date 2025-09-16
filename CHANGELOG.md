@@ -1,4 +1,7 @@
 # CHANGELOG
+## 1.12.1
+Fix https://github.com/Grubuntu/PieMenu/issues/130
+
 ## 1.12
 - Add setting to show directly Quick Spinbox or not https://github.com/Grubuntu/PieMenu/issues/126
 - Increase spinbox size a little bit
