@@ -27,7 +27,7 @@
 #
 
 global PIE_MENU_VERSION
-PIE_MENU_VERSION = "1.12"
+PIE_MENU_VERSION = "1.12.1"
 
 
 def pieMenuStart():
