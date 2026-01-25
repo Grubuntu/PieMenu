@@ -27,7 +27,7 @@
 #
 
 global PIE_MENU_VERSION
-PIE_MENU_VERSION = "1.12.1"
+PIE_MENU_VERSION = "1.12.2"
 
 
 def pieMenuStart():
@@ -1801,11 +1801,16 @@ def pieMenuStart():
 
                 # midplane
                 if featureSymToPlane:
+                    #App.getDocument(docName).getObject(
+                        # featureName).Midplane = 1
                     App.getDocument(docName).getObject(
-                        featureName).Midplane = 1
+                        featureName).SideType = 1
+                        
                 else:
+                    # App.getDocument(docName).getObject(
+                        # featureName).Midplane = 0                    
                     App.getDocument(docName).getObject(
-                        featureName).Midplane = 0
+                        featureName).SideType = 0
 
                 if (str(fonctionActive) == '<PartDesign::Pocket>'):
                     # through all
