@@ -1,4 +1,7 @@
 # CHANGELOG
+## 1.12.2
+- Fix 'Midplane' property being set for the extrusion of Sketch is deprecated and has been replaced by the 'SideType' property in FeatureExtrude.
+
 ## 1.12.1
 Fix https://github.com/Grubuntu/PieMenu/issues/130
 
