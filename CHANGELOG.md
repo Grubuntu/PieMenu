@@ -1,4 +1,8 @@
 # CHANGELOG
+
+## 1.12.3
+- Fix SideType/MidPlane parameter depending FreeCAD version
+
 ## 1.12.2
 - Fix 'Midplane' property being set for the extrusion of Sketch is deprecated and has been replaced by the 'SideType' property in FeatureExtrude.
 

@@ -1800,17 +1800,29 @@ def pieMenuStart():
                         featureName).Reversed = 0
 
                 # midplane
+                fc_version = App.Version()[0:3]  # ex: ['1', '0', '2']
+                major = int(fc_version[0])
+                minor = int(fc_version[1])
+                patch = int(fc_version[2])
+
                 if featureSymToPlane:
-                    #App.getDocument(docName).getObject(
-                        # featureName).Midplane = 1
-                    App.getDocument(docName).getObject(
-                        featureName).SideType = 1
-                        
+                    if (major, minor, patch) <= (1, 0, 2):
+                        # code valide pour les versions Freecad inférieures ou égale à 1.02
+                        App.getDocument(docName).getObject(
+                        featureName).Midplane = 1
+                    else:
+                        # code valide pour les versions Freecad supérieures à 1.02
+                        App.getDocument(docName).getObject(
+                        featureName).SideType = 2
                 else:
-                    # App.getDocument(docName).getObject(
-                        # featureName).Midplane = 0                    
-                    App.getDocument(docName).getObject(
-                        featureName).SideType = 0
+                    if (major, minor, patch) <= (1, 0, 2):
+                        # code valide pour les versions Freecad inférieures ou égale à 1.02
+                        App.getDocument(docName).getObject(
+                            featureName).Midplane = 0                    
+                    else:
+                        # code valide pour les versions Freecad supérieures à 1.02
+                        App.getDocument(docName).getObject(
+                            featureName).SideType = 0
 
                 if (str(fonctionActive) == '<PartDesign::Pocket>'):
                     # through all
