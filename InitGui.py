@@ -49,8 +49,6 @@ def pieMenuStart():
 
     from functools import partial
 
-    global shortcutList
-    shortcutList = []
     global listCommands
     listCommands = []
     global listShortcutCode
