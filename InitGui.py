@@ -51,8 +51,6 @@ def pieMenuStart():
 
     global shortcutList
     shortcutList = []
-    global hoverDelay
-    hoverDelay = 100
     global listCommands
     listCommands = []
     global listShortcutCode
@@ -216,13 +214,12 @@ def pieMenuStart():
             self.isMouseOver = False
 
         def enterEvent(self, event):
-            global hoverDelay
 
             if not self.enterEventConnected:
-                self.hoverTimer.start(hoverDelay)
+                self.hoverTimer.start(state.app_state.hover_delay)
                 self.enterEventConnected = True
             self.hoverTimer.stop()
-            self.hoverTimer.start(hoverDelay)
+            self.hoverTimer.start(state.app_state.hover_delay)
             self.isMouseOver = True
 
         def mouseReleaseEvent(self, event):
@@ -2481,7 +2478,6 @@ def pieMenuStart():
         # keyValue = None > Global shortcut
         # keyValue != None > Custom shortcut
         global triggerMode
-        global hoverDelay
         global loadedWorkbenches
 
         if not keyValue or keyValue is None:
@@ -2587,7 +2583,7 @@ def pieMenuStart():
             Gui.activateWorkbench(lastWorkbench.__class__.__name__)
 
             triggerMode = getParameterGroup(text, "String", "TriggerMode")
-            hoverDelay = getParameterGroup(text, "Int", "HoverDelay")
+            state.app_state.hover_delay = getParameterGroup(text, "Int", "HoverDelay")
 
         else:
             pass
