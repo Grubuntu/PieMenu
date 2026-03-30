@@ -49,8 +49,6 @@ def pieMenuStart():
 
     from functools import partial
 
-    global shortcutKey
-    shortcutKey = ""
     global globalShortcutKey
     globalShortcutKey = "TAB"
     global shortcutList
@@ -2814,27 +2812,26 @@ def pieMenuStart():
                 break
 
     def updateShortcutKey(newShortcut):
-        global shortcutKey
         if not newShortcut:
-            shortcutKey = newShortcut
+            state.app_state.shortcut_key = newShortcut
             setParameterGroup(cBox.currentText(), "String",
-                              "ShortcutKey", shortcutKey)
+                              "ShortcutKey", state.app_state.shortcut_key)
             labelShortcut.setText(translate(
-                "PieMenuTab", "Shortcut deleted! No shortcut assigned ") + shortcutKey)
+                "PieMenuTab", "Shortcut deleted! No shortcut assigned ") + state.app_state.shortcut_key)
 
         else:
             parties = set(newShortcut.replace(',', '+').split('+'))
             for partie in parties:
                 if partie not in constants.touches_speciales and len(partie) > 1:
                     labelShortcut.setText(
-                        translate("PieMenuTab", "Invalid shortcut! Current shortcut: ") + shortcutKey)
+                        translate("PieMenuTab", "Invalid shortcut! Current shortcut: ") + state.app_state.shortcut_key)
                 else:
-                    shortcutKey = newShortcut
+                    state.app_state.shortcut_key = newShortcut
                     setParameterGroup(cBox.currentText(),
-                                      "String", "ShortcutKey", shortcutKey)
+                                      "String", "ShortcutKey", state.app_state.shortcut_key)
                     labelShortcut.setText(
-                        translate("PieMenuTab", "New shortcut assigned: ") + shortcutKey)
-        shortcutLineEdit.setText(shortcutKey)
+                        translate("PieMenuTab", "New shortcut assigned: ") + state.app_state.shortcut_key)
+        shortcutLineEdit.setText(state.app_state.shortcut_key)
         getShortcutList()
 
     def updateGlobalShortcutKey(newShortcut):
