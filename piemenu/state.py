@@ -11,7 +11,7 @@ class AppState:
 
     # # simple collections
     list_commands: list = field(default_factory=list)
-    # list_shortcut_code: list = field(default_factory=list)
+    list_shortcut_code: list = field(default_factory=list)
 
 app_state = AppState()
 

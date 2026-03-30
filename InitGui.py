@@ -49,8 +49,6 @@ def pieMenuStart():
 
     from functools import partial
 
-    global listShortcutCode
-    listShortcutCode = []
     global subGroupSelected
     subGroupSelected = None
     global rowSubGroupMap
@@ -513,10 +511,10 @@ def pieMenuStart():
                         charKey = chr(key)
                     except:
                         charKey = ''
-                    if charKey in listShortcutCode:
+                    if charKey in state.app_state.list_shortcut_code:
                         self.menu.hide()
                         j = 0
-                        for i in listShortcutCode:
+                        for i in state.app_state.list_shortcut_code:
                             if i == charKey:
                                 # set flag here
                                 state.app_state.flag_shortcut_override = True
@@ -589,11 +587,11 @@ def pieMenuStart():
                         except:
                             charKey = ''
 
-                        if charKey in listShortcutCode:
+                        if charKey in state.app_state.list_shortcut_code:
                             self.menu.hide()
                             event.accept()
                             j = 0
-                            for i in listShortcutCode:
+                            for i in state.app_state.list_shortcut_code:
                                 if i == charKey:
                                     # trigger tool shortcut action
                                     state.app_state.list_commands[j].trigger()
@@ -624,11 +622,11 @@ def pieMenuStart():
                         except:
                             charKey = ''
 
-                        if charKey in listShortcutCode:
+                        if charKey in state.app_state.list_shortcut_code:
                             self.menu.hide()
                             event.accept()
                             j = 0
-                            for i in listShortcutCode:
+                            for i in state.app_state.list_shortcut_code:
                                 if i == charKey:
                                     # trigger tool shortcut action
                                     state.app_state.list_commands[j].trigger()
@@ -856,8 +854,7 @@ def pieMenuStart():
                 ### 48 = code ascii pour le chiffre 0 ###
                 shortcutCode = 48
                 state.app_state.list_commands = []
-                global listShortcutCode
-                listShortcutCode = []
+                state.app_state.list_shortcut_code = []
                 maxTextLength = 0
                 for i in commands:
                     """ show PieMenu in Edit Feature and in Sketcher """
@@ -1350,7 +1347,7 @@ def pieMenuStart():
 
                                 state.app_state.list_commands.append(
                                     commands[commands.index(i)])
-                                listShortcutCode.append(chr(shortcutCode))
+                                state.app_state.list_shortcut_code.append(chr(shortcutCode))
 
                                 if shortcutCode == 57:
                                     shortcutCode = 64
