@@ -242,7 +242,7 @@ def pieMenuStart():
                         fonctionActive = g.Object
                         displaySpinBox = getParameterGlobal("Bool", "DisplaySpinBox")
 
-                        if (module is not None and module != 'SketcherGui' and str(fonctionActive) in listSpinboxFeatures) and displaySpinBox:
+                        if (module is not None and module != 'SketcherGui' and str(fonctionActive) in constants.listSpinboxFeatures) and displaySpinBox:
                             PieMenuInstance.showAtMouseInstance()
                     except:
                         pass
@@ -278,7 +278,7 @@ def pieMenuStart():
                         module = g.Module
                         fonctionActive = g.Object
                         displaySpinBox = getParameterGlobal("Bool", "DisplaySpinBox")
-                        if (module is not None and module != 'SketcherGui' and str(fonctionActive) in listSpinboxFeatures) and displaySpinBox:
+                        if (module is not None and module != 'SketcherGui' and str(fonctionActive) in constants.listSpinboxFeatures) and displaySpinBox:
                             PieMenuInstance.showAtMouseInstance()
                     except:
                         pass
