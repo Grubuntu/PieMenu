@@ -30,7 +30,7 @@ global PIE_MENU_VERSION
 PIE_MENU_VERSION = "1.12.3"
 def pieMenuStart():
     # piemenu directory imports
-    from piemenu import constants, config, resources
+    from piemenu import constants, config, resources, state
 
     """Main function that starts the Pie Menu."""
     import datetime
@@ -2179,7 +2179,7 @@ def pieMenuStart():
         return button
 
     def contextList():
-        contextAll.clear()
+        state.app_state.context_all.clear()
         indexList = getIndexList()
         j = 0
         for i in indexList:
@@ -2209,7 +2209,7 @@ def pieMenuStart():
                     current["PlaneSign"] = groupContext.GetString(
                         "PlaneSign")
                     current["PlaneValue"] = groupContext.GetInt("PlaneValue")
-                    contextAll[j] = current
+                    state.app_state.context_all[j] = current
                     j += 1
                 else:
                     pass
@@ -2221,8 +2221,8 @@ def pieMenuStart():
         globalContextPie = False
         globalIndexPie = None
         indexPie = None
-        for i in contextAll:
-            current = contextAll[i]
+        for i in state.app_state.context_all:
+            current = state.app_state.context_all[i]
             def vertex():
                 if sign[current["VertexSign"]](v, current["VertexValue"]):
                     edge()
@@ -6147,7 +6147,6 @@ def pieMenuStart():
         else:
             pass
 
-        contextAll = {}
         contextList()
         selObserver = SelObserver()
         addObserver()
