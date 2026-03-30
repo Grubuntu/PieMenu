@@ -55,8 +55,6 @@ def pieMenuStart():
     listCommands = []
     global listShortcutCode
     listShortcutCode = []
-    global flagShortcutOverride
-    flagShortcutOverride = False
     global firstLoad
     firstLoad = True
     global subGroupSelected
@@ -507,9 +505,8 @@ def pieMenuStart():
 
             # Special case when shortcut is assigned to tool PieMenu AND also other there
             if event.type() == QtCore.QEvent.ShortcutOverride and self.menu.isVisible():
-                # we need to set "flagShortcutOverride" to advertise that we go through Event.ShortcutOverride for this tool shortcut for the step "KeyRelease" below
-                global flagShortcutOverride
-                flagShortcutOverride = False
+                # we need to set "state.app_state.flag_shortcut_override" to advertise that we go through Event.ShortcutOverride for this tool shortcut for the step "KeyRelease" below
+                state.app_state.flag_shortcut_override = False
                 key = event.key()
                 event.accept()
                 try:
@@ -528,7 +525,7 @@ def pieMenuStart():
                         for i in listShortcutCode:
                             if i == charKey:
                                 # set flag here
-                                flagShortcutOverride = True
+                                state.app_state.flag_shortcut_override = True
                             j += 1
                         return True
                     # Handle toggle mode for global shortcut###
@@ -585,7 +582,7 @@ def pieMenuStart():
 
             if event.type() == QtCore.QEvent.KeyRelease:
                 """ Handle tool shortcut in PieMenu """
-                if flagShortcutOverride:
+                if state.app_state.flag_shortcut_override:
                     key = event.key()
                     try:
                         # if fast spinbox is open, we do nothing with shortcuts
@@ -606,7 +603,7 @@ def pieMenuStart():
                                 if i == charKey:
                                     # trigger tool shortcut action
                                     listCommands[j].trigger()
-                                    flagShortcutOverride = False
+                                    state.app_state.flag_shortcut_override = False
                                     module = None
                                     event.accept()
                                     try:
@@ -620,7 +617,7 @@ def pieMenuStart():
                                 j += 1
                             return True
 
-                if self.menu.isVisible() and flagShortcutOverride:
+                if self.menu.isVisible() and state.app_state.flag_shortcut_override:
                     key = event.key()
                     try:
                         # if fast spinbox is open, we do nothing with shortcuts
