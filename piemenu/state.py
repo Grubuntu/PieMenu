@@ -12,6 +12,7 @@ class AppState:
     # # simple collections
     list_commands: list = field(default_factory=list)
     list_shortcut_code: list = field(default_factory=list)
+    row_subgroup_map: dict = field(default_factory=dict)
 
 app_state = AppState()
 

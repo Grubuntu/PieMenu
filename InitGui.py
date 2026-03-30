@@ -51,8 +51,6 @@ def pieMenuStart():
 
     global subGroupSelected
     subGroupSelected = None
-    global rowSubGroupMap
-    rowSubGroupMap = {}
     global loadedWorkbenches
     loadedWorkbenches = config.get_loaded_workbenches()
     global sign
@@ -4334,7 +4332,6 @@ def pieMenuStart():
     def updateContextConditions():
         """ Update context rules in Context Tab """
         global subGroupSelected
-        global rowSubGroupMap
 
         indexList = getIndexList()
         selectedPie = cBox.currentText()
@@ -4343,7 +4340,7 @@ def pieMenuStart():
         listContextConditions.setUpdatesEnabled(False)
         listContextConditions.setRowCount(0)
 
-        rowSubGroupMap.clear()
+        state.app_state.row_subgroup_map.clear()
         row = -1
         for index in indexList:
             pieName = getParamIndex(str(index))
@@ -4402,7 +4399,7 @@ def pieMenuStart():
                             row, 2, buttonRemoveCondition)
 
                         # Map the row number to subGroup
-                        rowSubGroupMap[row] = subGroup
+                        state.app_state.row_subgroup_map[row] = subGroup
 
                         # Mettre en gras si le subGroup correspond au subGroupSelected global
                         if subGroupSelected == subGroup:
@@ -4427,13 +4424,12 @@ def pieMenuStart():
     def onRowSelected():
         """ Update values in comboboxes and spinboxes according to selected rule """
         global subGroupSelected
-        global rowSubGroupMap
         selectedItems = listContextConditions.currentItem()
         if not selectedItems:
             return
 
         row = selectedItems.row()  # Récupère la ligne sélectionnée
-        subGroup = rowSubGroupMap.get(row)  # Récupère le subGroup associé
+        subGroup = state.app_state.row_subgroup_map.get(row)  # Récupère le subGroup associé
 
         # if already selectd, we deselect it
         if subGroup == subGroupSelected:
