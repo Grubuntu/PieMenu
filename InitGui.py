@@ -49,8 +49,6 @@ def pieMenuStart():
 
     from functools import partial
 
-    global globalShortcutKey
-    globalShortcutKey = "TAB"
     global shortcutList
     shortcutList = []
     global hoverDelay
@@ -538,7 +536,7 @@ def pieMenuStart():
                         return True
                     # Handle toggle mode for global shortcut###
                     elif checkboxGlobalKeyToggle.isChecked():
-                        if event.key() == QtGui.QKeySequence(globalShortcutKey):
+                        if event.key() == QtGui.QKeySequence(state.app_state.global_shortcut_key):
                             if self.menu.isVisible():
                                 self.menu.hide()
                                 return True
@@ -1955,7 +1953,6 @@ def pieMenuStart():
     #Qt6
     def getShortcutList():
         """Get keyboard shortcut and namePie from user parameters"""
-        global globalShortcutKey
 
         # Supprimer les anciens QShortcut
         for shortcut in mw.findChildren(QShortcut):
@@ -1991,7 +1988,6 @@ def pieMenuStart():
     #Qt5
     # def getShortcutList():
         # """Get keyboard shortcut and  namePie from user parameters"""
-        # global globalShortcutKey
         # for shortcut in mw.findChildren(QShortcut):
             # if shortcut.activated is not None:
                 # shortcut.activated.disconnect()
@@ -2835,13 +2831,12 @@ def pieMenuStart():
         getShortcutList()
 
     def updateGlobalShortcutKey(newShortcut):
-        global globalShortcutKey
         if not newShortcut:
-            globalShortcutKey = newShortcut
-            config.get_params()["main"].SetString("GlobalShortcutKey", globalShortcutKey)
+            state.app_state.global_shortcut_key = newShortcut
+            config.get_params()["main"].SetString("GlobalShortcutKey", state.app_state.global_shortcut_key)
             labelGlobalShortcut.setText(translate("GlobalSettingsTab",
                                                   "Shortcut deleted ! No shortcut assigned ")
-                                        + globalShortcutKey)
+                                        + state.app_state.global_shortcut_key)
 
         else:
             parties = set(newShortcut.replace(',', '+').split('+'))
@@ -2849,15 +2844,15 @@ def pieMenuStart():
                 if partie not in constants.touches_speciales and len(partie) > 1:
                     labelGlobalShortcut.setText(translate("GlobalSettingsTab",
                                                           "Invalid shortcut ! Current global shortcut : ")
-                                                + globalShortcutKey)
+                                                + state.app_state.global_shortcut_key)
                 else:
-                    globalShortcutKey = newShortcut
-                    config.get_params()["main"].SetString("GlobalShortcutKey", globalShortcutKey)
+                    state.app_state.global_shortcut_key = newShortcut
+                    config.get_params()["main"].SetString("GlobalShortcutKey", state.app_state.global_shortcut_key)
                     labelGlobalShortcut.setText(translate("GlobalSettingsTab",
                                                           "New global shortcut assigned: ")
-                                                + globalShortcutKey)
-        actionKey.setShortcut(QtGui.QKeySequence(globalShortcutKey))
-        globalShortcutLineEdit.setText(globalShortcutKey)
+                                                + state.app_state.global_shortcut_key)
+        actionKey.setShortcut(QtGui.QKeySequence(state.app_state.global_shortcut_key))
+        globalShortcutLineEdit.setText(state.app_state.global_shortcut_key)
 
     def infoPopup():
         msg = """
@@ -4828,7 +4823,7 @@ def pieMenuStart():
                 pass
 
         labelGlobalShortcut.setText(
-            translate("GlobalSettingsTab", "Global shortcut: ") + globalShortcutKey)
+            translate("GlobalSettingsTab", "Global shortcut: ") + state.app_state.global_shortcut_key)
 
         pieMenuDialog.show()
         shape = getShape(cBox.currentText())
@@ -6074,14 +6069,14 @@ def pieMenuStart():
     # spinBoxGroup.setLayout(QtGui.QVBoxLayout())
     # spinBoxGroup.layout().addLayout(layoutSpinBox)
 
-    globalShortcutKey = config.get_params()["main"].GetString("GlobalShortcutKey")
+    state.app_state.global_shortcut_key = config.get_params()["main"].GetString("GlobalShortcutKey")
 
     labelGlobalShortcut = QLabel()
     labelGlobalShortcut.setAlignment(
         QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
 
     globalShortcutLineEdit = CustomLineEdit()
-    globalShortcutLineEdit.setText(globalShortcutKey)
+    globalShortcutLineEdit.setText(state.app_state.global_shortcut_key)
     globalShortcutLineEdit.setToolTip(
         translate("GlobalSettingsTab", "For TAB press CTRL+TAB"))
 
@@ -6153,8 +6148,8 @@ def pieMenuStart():
         actionKey.setText("Invoke pie menu")
         actionKey.setObjectName("PieMenuShortCut")
         # fix shortcut not trigger on fresh install
-        globalShortcutKey = config.get_params()["main"].GetString("GlobalShortcutKey")
-        actionKey.setShortcut(QtGui.QKeySequence(globalShortcutKey))
+        state.app_state.global_shortcut_key = config.get_params()["main"].GetString("GlobalShortcutKey")
+        actionKey.setShortcut(QtGui.QKeySequence(state.app_state.global_shortcut_key))
         actionKey.triggered.connect(PieMenuInstance.showAtMouseInstance)
         mw.addAction(actionKey)
         getShortcutList()
