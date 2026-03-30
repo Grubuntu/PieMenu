@@ -49,8 +49,6 @@ def pieMenuStart():
 
     from functools import partial
 
-    global listCommands
-    listCommands = []
     global listShortcutCode
     listShortcutCode = []
     global subGroupSelected
@@ -598,7 +596,7 @@ def pieMenuStart():
                             for i in listShortcutCode:
                                 if i == charKey:
                                     # trigger tool shortcut action
-                                    listCommands[j].trigger()
+                                    state.app_state.list_commands[j].trigger()
                                     state.app_state.flag_shortcut_override = False
                                     module = None
                                     event.accept()
@@ -633,7 +631,7 @@ def pieMenuStart():
                             for i in listShortcutCode:
                                 if i == charKey:
                                     # trigger tool shortcut action
-                                    listCommands[j].trigger()
+                                    state.app_state.list_commands[j].trigger()
                                     module = None
                                     event.accept()
                                     try:
@@ -857,8 +855,7 @@ def pieMenuStart():
 
                 ### 48 = code ascii pour le chiffre 0 ###
                 shortcutCode = 48
-                global listCommands
-                listCommands = []
+                state.app_state.list_commands = []
                 global listShortcutCode
                 listShortcutCode = []
                 maxTextLength = 0
@@ -1351,7 +1348,7 @@ def pieMenuStart():
                                 shortcutLabel.setText(chr(shortcutCode))
                                 shortcutLabel.setToolTip(None)
 
-                                listCommands.append(
+                                state.app_state.list_commands.append(
                                     commands[commands.index(i)])
                                 listShortcutCode.append(chr(shortcutCode))
 
