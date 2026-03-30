@@ -7,7 +7,7 @@ class AppState:
     global_shortcut_key: str = "TAB"
     hover_delay: int = 100
     flag_shortcut_override: bool = False
-    # first_load: bool = True
+    first_load: bool = True
 
     # # simple collections
     # shortcut_list: list = field(default_factory=list)

@@ -55,8 +55,6 @@ def pieMenuStart():
     listCommands = []
     global listShortcutCode
     listShortcutCode = []
-    global firstLoad
-    firstLoad = True
     global subGroupSelected
     subGroupSelected = None
     global rowSubGroupMap
@@ -681,11 +679,10 @@ def pieMenuStart():
 
         def add_commands(self, commands, context=False, keyValue=None):
             """ Add commands to mieMenus """
-            global firstLoad
-            if firstLoad:
+            if state.app_state.first_load:
                 # Load the needed workbenches at the first launch
                 updateIconsPieMenus()
-                firstLoad = False
+                state.app_state.first_load = False
 
             styleCurrentTheme = getStyle()
             try:
