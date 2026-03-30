@@ -49,8 +49,6 @@ def pieMenuStart():
 
     from functools import partial
 
-    global subGroupSelected
-    subGroupSelected = None
     global loadedWorkbenches
     loadedWorkbenches = config.get_loaded_workbenches()
     global sign
@@ -2885,8 +2883,7 @@ def pieMenuStart():
 
     def onPieChange():
         """ Update values for all settings """
-        global subGroupSelected
-        subGroupSelected = None
+        state.app_state.sub_group_selected = None
         onResetContextTable()
         buttonList()
         toolList()
@@ -4232,10 +4229,9 @@ def pieMenuStart():
         comboBoxSign.setStyleSheet(styleCurrentTheme)
 
         def onCurrentIndexChanged():
-            global subGroupSelected
-            if subGroupSelected:
+            if state.app_state.sub_group_selected:
                 group = getGroup()
-                groupContext = group.GetGroup(subGroupSelected)
+                groupContext = group.GetGroup(state.app_state.sub_group_selected)
                 text = comboBoxSign.currentText()
                 topo = comboBoxSign.itemData(comboBoxSign.currentIndex(),
                                              QtCore.Qt.UserRole)
@@ -4255,10 +4251,9 @@ def pieMenuStart():
         spinBox.setFrame(False)
 
         def onSpinBox():
-            global subGroupSelected
-            if subGroupSelected:
+            if state.app_state.sub_group_selected:
                 group = getGroup()
-                groupContext = group.GetGroup(subGroupSelected)
+                groupContext = group.GetGroup(state.app_state.sub_group_selected)
                 value = spinBox.value()
                 groupContext.SetInt(TopoValue, value)
                 contextList()
@@ -4331,7 +4326,6 @@ def pieMenuStart():
 
     def updateContextConditions():
         """ Update context rules in Context Tab """
-        global subGroupSelected
 
         indexList = getIndexList()
         selectedPie = cBox.currentText()
@@ -4401,8 +4395,8 @@ def pieMenuStart():
                         # Map the row number to subGroup
                         state.app_state.row_subgroup_map[row] = subGroup
 
-                        # Mettre en gras si le subGroup correspond au subGroupSelected global
-                        if subGroupSelected == subGroup:
+                        # Mettre en gras si le subGroup correspond au state.app_state.sub_group_selected global
+                        if state.app_state.sub_group_selected == subGroup:
                             for c in range(listContextConditions.columnCount()):
                                 item = listContextConditions.item(row, c)
                                 if item:
@@ -4423,7 +4417,6 @@ def pieMenuStart():
 
     def onRowSelected():
         """ Update values in comboboxes and spinboxes according to selected rule """
-        global subGroupSelected
         selectedItems = listContextConditions.currentItem()
         if not selectedItems:
             return
@@ -4432,10 +4425,10 @@ def pieMenuStart():
         subGroup = state.app_state.row_subgroup_map.get(row)  # Récupère le subGroup associé
 
         # if already selectd, we deselect it
-        if subGroup == subGroupSelected:
+        if subGroup == state.app_state.sub_group_selected:
             onClearContextSelection()
         else:
-            subGroupSelected = subGroup
+            state.app_state.sub_group_selected = subGroup
             if subGroup:
                 indexList = getIndexList()
                 group = None
@@ -4520,16 +4513,14 @@ def pieMenuStart():
 
     def onClearContextSelection():
         """ Clear the selection in the list of rules """
-        global subGroupSelected
-        subGroupSelected = None
+        state.app_state.sub_group_selected = None
         updateContextConditions()
 
     def onResetContextTable():
         """ Reset combobox and spinbox values in context tab """
-        global subGroupSelected
         group = getGroup()
-        if subGroupSelected:
-            groupContext = group.GetGroup(subGroupSelected)
+        if state.app_state.sub_group_selected:
+            groupContext = group.GetGroup(state.app_state.sub_group_selected)
             groupContext.SetBool("Enabled", 0)
 
         # Initialisation des combobox et spinbox
