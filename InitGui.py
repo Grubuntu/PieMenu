@@ -1479,7 +1479,7 @@ def pieMenuStart():
                 buttonQuickMenu.hide()
 
             try:
-                if (Gui.ActiveDocument.getInEdit() is None):
+                if (Gui.ActiveDocument.getInEdit() is None or (module == 'AssemblyGui')):
                     buttonClose = closeButton()
                     buttonClose.setParent(self.menu)
                     self.buttons.append(buttonClose)
@@ -1487,7 +1487,7 @@ def pieMenuStart():
                 None
 
             try:
-                if (Gui.ActiveDocument.getInEdit() is not None):
+                if (Gui.ActiveDocument.getInEdit() is not None and not (module == 'AssemblyGui')):
                     """ or show Valid and Cancel buttons in Edit Feature Only """
                     buttonValid = self.validButton()
                     buttonValid.setStyleSheet(styleCurrentTheme)
