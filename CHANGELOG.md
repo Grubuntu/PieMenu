@@ -1,5 +1,6 @@
 # CHANGELOG
-
+## 1.12.4
+- Fix https://github.com/Grubuntu/PieMenu/issues/138
 ## 1.12.3
 - Fix SideType/MidPlane parameter depending FreeCAD version
 
