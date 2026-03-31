@@ -27,7 +27,7 @@
 #
 
 global PIE_MENU_VERSION
-PIE_MENU_VERSION = "1.12.3"
+PIE_MENU_VERSION = "1.12.4"
 
 
 def pieMenuStart():
@@ -931,7 +931,7 @@ def pieMenuStart():
             showPie = False
             # handle case when not in edit mode or if  Sketcher is open
             try:
-                if (Gui.ActiveDocument.getInEdit() is None) or (module == 'SketcherGui'):
+                if (Gui.ActiveDocument.getInEdit() is None) or (module == 'SketcherGui') or (module == 'AssemblyGui'):
                     showPie = True
             except:
                 None
