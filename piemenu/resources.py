@@ -1,0 +1,26 @@
+
+import os
+import PieMenuLocator as locator
+path = locator.path()
+respath = os.path.join(path, "Resources", "icons")
+stylepath = os.path.join(path, "Resources", "Stylesheets")
+transpath = os.path.join(path, "Resources", "translation")
+
+iconUp = os.path.join(respath, "PieMenuUp.svg")
+iconDown = os.path.join(respath, "PieMenuDown.svg")
+iconAdd = os.path.join(respath, "PieMenuAdd.svg")
+iconRemove = os.path.join(respath, "PieMenuRemove.svg")
+iconRename = os.path.join(respath, "PieMenuRename.svg")
+iconReset = os.path.join(respath, "PieMenuReload.svg")
+iconCopy = os.path.join(respath, "PieMenuCopy.svg")
+iconRemoveCommand = os.path.join(respath, "PieMenuRemoveCommand.svg")
+iconBackspace = os.path.join(respath, "PieMenuBackspace.svg")
+iconInfo = os.path.join(respath, "PieMenuInfo.svg")
+iconAddSeparator = os.path.join(respath, "PieMenuAddSeparator.svg")
+iconSeparator = os.path.join(respath, "PieMenuSeparator.svg")
+iconDocumentation = os.path.join(respath, "PieMenuDocumentation.svg")
+iconPieMenuLogo = os.path.join(respath, "PieMenu_Logo.svg")
+iconLeft = os.path.join(respath, "PieMenuLeft.svg")
+iconRight = os.path.join(respath, "PieMenuRight.svg")
+iconArrowDown = os.path.join(respath, "PieMenuArrowDown.svg")
+iconBlank = os.path.join(respath, "PieMenuBlank.svg")

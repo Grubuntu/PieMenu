@@ -3,7 +3,11 @@ PieMenu widget for FreeCAD
 
 Quick customizable menus for FreeCAD.
 
-### Version 1.12 new feature:
+### Version 1.13 :
+
+Major code refactoring by Ben-PH, thank you !
+
+### Version 1.12 :
 
 The Quick Spinbox can now be deactivated so that it does not open immediately after a pocket, fillet, chamfer or protrusion command. 
 It can still be displayed by pressing the current PieMenu shortcut while editing the function.
