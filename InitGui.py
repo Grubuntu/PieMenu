@@ -1,5 +1,6 @@
 # PieMenu widget for FreeCAD
 
+# Copyright (C) 2026 Ben-PH,
 # Copyright (C) 2024 Grubuntu, Pgilfernandez, hasecilu @ FreeCAD
 # Copyright (C) 2022, 2023 mdkus @ FreeCAD
 # Copyright (C) 2016, 2017 triplus @ FreeCAD
