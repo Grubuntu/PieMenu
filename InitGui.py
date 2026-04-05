@@ -2131,7 +2131,7 @@ def pieMenuStart():
         icon = buttonSize / 3 * 2
         return icon
 
-    def (buttonSize=32):
+    def closeButton(buttonSize=32):
         """Style the close button."""
         icon = iconSize(buttonSize)
         radius = radiusSize(buttonSize)
