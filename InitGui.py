@@ -27,7 +27,7 @@
 #
 
 global PIE_MENU_VERSION
-PIE_MENU_VERSION = "1.12.3"
+PIE_MENU_VERSION = "1.13"
 def pieMenuStart():
     # piemenu directory imports
     from piemenu import constants, config, resources, state
@@ -825,7 +825,7 @@ def pieMenuStart():
             showPie = False
             # handle case when not in edit mode or if  Sketcher is open
             try:
-                if (Gui.ActiveDocument.getInEdit() is None) or (module == 'SketcherGui'):
+                if (Gui.ActiveDocument.getInEdit() is None) or (module == 'SketcherGui') or (module == 'AssemblyGui'):
                     showPie = True
             except:
                 None
@@ -1371,7 +1371,7 @@ def pieMenuStart():
                 buttonQuickMenu.hide()
 
             try:
-                if (Gui.ActiveDocument.getInEdit() is None):
+                if (Gui.ActiveDocument.getInEdit() is None or (module == 'AssemblyGui')):
                     buttonClose = closeButton()
                     buttonClose.setParent(self.menu)
                     self.buttons.append(buttonClose)
@@ -1379,7 +1379,7 @@ def pieMenuStart():
                 None
 
             try:
-                if (Gui.ActiveDocument.getInEdit() is not None):
+                if (Gui.ActiveDocument.getInEdit() is not None and not (module == 'AssemblyGui')):
                     """ or show Valid and Cancel buttons in Edit Feature Only """
                     buttonValid = self.validButton()
                     buttonValid.setStyleSheet(styleCurrentTheme)
@@ -1627,7 +1627,7 @@ def pieMenuStart():
                     i.setVisible(True)
                     i.setAttribute(Qt.WA_Disabled, True)
                     i.setParent(showPiemenu)
-                    # disable quickMenu and (central) closebutton
+                    # disable quickMenu and (central) 
                     if i.objectName() == "styleButtonMenu" or i.objectName() == "styleMenuClose":
                         i.setEnabled(False)
 
@@ -1642,7 +1642,7 @@ def pieMenuStart():
                     i.setAttribute(Qt.WA_Disabled, True)
                     i.setParent(showPiemenu)
 
-                    # disable quickMenu and (central) closebutton
+                    # disable quickMenu and (central) 
                     if i.objectName() == "styleButtonMenu" or i.objectName() == "styleMenuClose":
                         i.setEnabled(False)
 
@@ -2130,7 +2130,7 @@ def pieMenuStart():
         icon = buttonSize / 3 * 2
         return icon
 
-    def closeButton(buttonSize=32):
+    def (buttonSize=32):
         """Style the close button."""
         icon = iconSize(buttonSize)
         radius = radiusSize(buttonSize)
