@@ -1,7 +1,7 @@
 # CHANGELOG
 
 ## 1.13
-- Refactor monolithic codec https://github.com/Grubuntu/PieMenu/pull/137 (Ben-PH)
+- Refactor monolithic code https://github.com/Grubuntu/PieMenu/pull/137 (Ben-PH)
 
 ## 1.12.4
 - Fix https://github.com/Grubuntu/PieMenu/issues/138
