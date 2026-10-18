@@ -79,6 +79,16 @@ Windows:
 ### Discussion
 FreeCAD forum thread: https://forum.freecad.org/viewtopic.php?t=84101
 
+### Architecture (for developers)
+- Entry point: `InitGui.py` (`pieMenuStart`).
+- Package: `piemenu/` (core logic) + `piemenu/ui/` (UI builders and handlers).
+- See [ARCHITECTURE.md](ARCHITECTURE.md) for the module map and the `publish()` pattern.
+
+### Tests
+- `run_tests.bat` : `py_compile` + unit tests (headless, via `freecadcmd`).
+- Tests live in `tests/` and cover constants, state, config, defaults, context, workbench and module imports.
+- GUI smoke tests require a display and are run manually.
+
 
 Thanks to all the work done by mdkus, triplus, looo, microelly.
 

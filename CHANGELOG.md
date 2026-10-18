@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## 1.14
+- Refactor: extract `preferences.py`, `bootstrap.py`, `tab_piemenu.py`, `tab_context.py`, `tab_toolbar.py`, `tab_settings.py` from `InitGui.py` (InitGui reduced from 2033 to ~400 lines).
+- Refactor: parameter names ("CurrentPie", "EnableShorcut", ...) centralized as `constants.PARAM_*` constants across all modules (typo `EnableShorcut` preserved for backward compatibility).
+- Improvement: real failures (workbench activation, parameter reads, spinbox/icon setup, workbench reload, `eventFilter`) are now reported through `piemenu.log` instead of being silently swallowed; expected probes (widget absent, not in edit mode) are annotated with comments.
+- Improvement: `log.log_warning_once()` keeps retried warnings (workbench/icon refresh) from flooding the console.
+- Fix: `update_icons_pie_menus()` passed a `QIcon` to `extract_workbench()` (expects a string) -> the "load workbench for icon resources" feature silently never ran; it now uses `iconPath`.
+- Fix: workbench ids are no longer double-suffixed (`PartDesignWorkbenchWorkbench`, `StartWorkbenchWorkbench`); new `workbench.resolve_workbench_name()` keeps names already ending in "Workbench".
+- Fix: wheel event no longer logs a spurious "cannot set spinbox step" warning when the fast spinbox does not exist yet (`None` guards in `eventFilter` / `add_commands`).
+- Fix: BOM (U+FEFF) removal from generated modules.
+- Fix: corrupted identifier names from substring replacement in tab builders.
+- Tests: `tests/test_log.py` (helpers + dedup) and `tests/test_workbench.py` (`resolve_workbench_name`) extended (32 tests total).
+
 ## 1.13
 - Refactor monolithic code https://github.com/Grubuntu/PieMenu/pull/137 (Ben-PH)
 
