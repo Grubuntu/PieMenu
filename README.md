@@ -79,6 +79,16 @@ Windows:
 ### Discussion
 FreeCAD forum thread: https://forum.freecad.org/viewtopic.php?t=84101
 
+### Architecture (for developers)
+- Entry point: `InitGui.py` (`pieMenuStart`).
+- Package: `piemenu/` (core logic) + `piemenu/ui/` (UI builders and handlers).
+- See [ARCHITECTURE.md](ARCHITECTURE.md) for the module map and the `publish()` pattern.
+
+### Tests
+- `run_tests.bat` : `py_compile` + unit tests (headless, via `freecadcmd`).
+- Tests live in `tests/` and cover constants, state, config, defaults, context, workbench, logging, module imports and the `add_commands` helpers (`read_pie_settings`, `should_show_pie`, `resolve_pie_group`).
+- GUI smoke tests require a display and are run manually in FreeCAD 1.1.4.
+
 
 Thanks to all the work done by mdkus, triplus, looo, microelly.
 
@@ -120,6 +130,12 @@ The *QuickMenu* is the contextual menu displayed when clicking on the integrated
 The QuickMenu allows for quickly adjusting certain settings. If the QuickMenu is not visible, it must be enabled in the "Preferences" by activating the "Show QuickMenu" option.
 
 ![Capture d’écran (177)](https://github.com/Grubuntu/PieMenu/assets/56045316/fef43f63-8ab5-4d91-9b64-32c4d2bf47e0)
+
+### Assistant panel:
+
+On the left of the preferences window, an assistant panel explains the tab you are currently on: what it is used for, the steps to follow, and a few shortcuts to the features you need (for instance *Create a menu* or *Add tools*). It follows the tab you select, so you never have to look for the right setting.
+
+The panel can be closed to give the room back to the settings: click the *Hide assistant* button at the bottom of the window, or drag the separator between the panel and the tabs. The button stays visible, so the panel can be shown again at any time.
 
 
 ### 1) PieMenu Tab:
